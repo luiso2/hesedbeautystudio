@@ -21,10 +21,13 @@ npm run dev
 npm run build   # genera /dist
 ```
 
-## Deploy (Cloudflare Pages)
+## Deploy (Cloudflare Workers · static assets)
 
 ```bash
-npx wrangler pages deploy dist --project-name hesedbeautystudio
+npm run deploy   # = vite build + wrangler deploy
 ```
 
 Requiere `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` en el entorno.
+La configuración del Worker se genera en `dist/wrangler.json` a partir de `wrangler.jsonc`.
+
+Live: https://hesedbeautystudio.odd-forest-9504.workers.dev
