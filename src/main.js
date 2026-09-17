@@ -252,8 +252,9 @@ $$(".card--video, .reel, .result, .step").forEach((box) => {
   }
 });
 // Autoplay videos: only run when visible (saves battery)
-$$("video[autoplay]").forEach((v) => {
-  ScrollTrigger.create({ trigger: v, start: "top bottom", end: "bottom top", onEnter: () => v.play().catch(() => {}), onEnterBack: () => v.play().catch(() => {}), onLeave: () => v.pause(), onLeaveBack: () => v.pause() });
+$$("video[autoplay], video[data-autoplay]").forEach((v) => {
+  const play = () => { if (v.preload === "none") v.preload = "auto"; v.play().catch(() => {}); };
+  ScrollTrigger.create({ trigger: v, start: "top bottom", end: "bottom top", onEnter: play, onEnterBack: play, onLeave: () => v.pause(), onLeaveBack: () => v.pause() });
 });
 
 /* ───────────────────────── Ritual horizontal scroll ───────────────────────── */

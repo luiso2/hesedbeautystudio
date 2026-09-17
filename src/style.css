@@ -361,7 +361,7 @@ p { margin: 0; }
 .footer__name em { color: var(--gold-2); }
 .footer__tag { color: var(--muted); max-width: 320px; font-size: .92rem; }
 .footer__col { display: flex; flex-direction: column; gap: 10px; font-size: .9rem; color: var(--sand); }
-.footer__col h4 { font-size: .66rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.footer__col h3 { font-size: .66rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
 .footer__col a:hover { color: var(--gold-2); }
 .footer__col--cta .btn { align-self: flex-start; }
 .footer__bottom { position: relative; z-index: 1; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 22px 0 28px; border-top: 1px solid rgba(201,169,110,.12); font-size: .7rem; letter-spacing: .14em; color: var(--muted); }
