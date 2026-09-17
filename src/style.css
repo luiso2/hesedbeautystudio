@@ -163,7 +163,7 @@ p { margin: 0; }
 .nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
 .nav__right { display: flex; align-items: center; gap: 22px; }
 .lang { display: flex; align-items: center; gap: 6px; font-size: .72rem; letter-spacing: .18em; }
-.lang__btn { color: var(--muted); padding: 4px 2px; transition: color .3s; }
+.lang__btn { color: var(--muted); padding: 10px 6px; min-height: 40px; transition: color .3s; }
 .lang__btn.is-active, .lang__btn:hover { color: var(--gold); }
 .lang__sep { color: rgba(201,169,110,.4); }
 .burger { display: none; width: 44px; height: 44px; position: relative; }
@@ -260,7 +260,7 @@ p { margin: 0; }
 .card__list li { position: relative; padding-left: 16px; }
 .card__list li::before { content: "✦"; position: absolute; left: 0; color: var(--gold); font-size: .55rem; top: .35em; }
 .card__meta { display: flex; justify-content: space-between; gap: 12px; font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-3); margin-top: auto; padding-top: 14px; border-top: 1px solid rgba(201,169,110,.12); }
-.card__link { display: inline-flex; align-items: center; gap: 10px; font-size: .7rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-2); margin-top: 6px; }
+.card__link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: .7rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-2); margin-top: 2px; }
 .card__link i { font-style: normal; transition: transform .5s var(--ease); }
 .card__link:hover i { transform: translateX(6px); }
 .services__note { margin-top: 44px; max-width: 640px; color: var(--muted); font-size: .92rem; }
