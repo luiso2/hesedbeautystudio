@@ -163,35 +163,10 @@ function closeMenu() {
 }
 burger.addEventListener("click", () => (menuOpen ? closeMenu() : openMenu()));
 
-/* ───────────────────────── Cursor ───────────────────────── */
-const cursor = $("#cursor");
-if (!isTouch && cursor) {
-  const dot = $(".cursor__dot", cursor);
-  const ring = $(".cursor__ring", cursor);
-  const label = $(".cursor__label", cursor);
-  const pos = { x: innerWidth / 2, y: innerHeight / 2 };
-  const ringPos = { x: pos.x, y: pos.y };
-  window.addEventListener("mousemove", (e) => { pos.x = e.clientX; pos.y = e.clientY; }, { passive: true });
-  gsap.ticker.add(() => {
-    ringPos.x += (pos.x - ringPos.x) * 0.16;
-    ringPos.y += (pos.y - ringPos.y) * 0.16;
-    dot.style.transform = `translate(${pos.x}px, ${pos.y}px) translate(-50%,-50%)`;
-    ring.style.transform = `translate(${ringPos.x}px, ${ringPos.y}px) translate(-50%,-50%)`;
-    label.style.transform = `translate(${ringPos.x}px, ${ringPos.y}px) translate(-50%,-50%)`;
-  });
-  document.addEventListener("mouseover", (e) => {
-    const t = e.target.closest("a, button, [data-cursor]");
-    cursor.classList.toggle("is-hover", !!t);
-    const lbl = t?.dataset.cursor;
-    cursor.classList.toggle("is-label", !!lbl);
-    label.textContent = lbl || "";
-  });
-}
-
 /* ───────────────────────── Magnetic buttons ───────────────────────── */
 if (!isTouch) {
   $$(".magnetic").forEach((el) => {
-    const strength = 0.35;
+    const strength = 0.18;
     el.addEventListener("mousemove", (e) => {
       const r = el.getBoundingClientRect();
       const x = e.clientX - r.left - r.width / 2;
@@ -201,40 +176,6 @@ if (!isTouch) {
     el.addEventListener("mouseleave", () => gsap.to(el, { x: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.4)" }));
   });
 }
-
-/* ───────────────────────── Particles (hero) ───────────────────────── */
-(function particles() {
-  const canvas = $("#particles");
-  if (!canvas || reduceMotion) return;
-  const ctx = canvas.getContext("2d");
-  let w, h, pts = [], raf;
-  const N = isMobile() ? 34 : 70;
-  const resize = () => {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    w = canvas.clientWidth; h = canvas.clientHeight;
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-  const spawn = () => ({ x: Math.random() * w, y: h + Math.random() * h * 0.3, r: 0.6 + Math.random() * 1.8, vy: 0.12 + Math.random() * 0.35, vx: (Math.random() - 0.5) * 0.18, a: 0.2 + Math.random() * 0.6, t: Math.random() * Math.PI * 2 });
-  resize();
-  for (let i = 0; i < N; i++) { const p = spawn(); p.y = Math.random() * h; pts.push(p); }
-  const draw = () => {
-    ctx.clearRect(0, 0, w, h);
-    for (const p of pts) {
-      p.t += 0.01; p.y -= p.vy; p.x += p.vx + Math.sin(p.t) * 0.12;
-      if (p.y < -10) Object.assign(p, spawn());
-      const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
-      glow.addColorStop(0, `rgba(232,211,166,${p.a})`);
-      glow.addColorStop(1, "rgba(232,211,166,0)");
-      ctx.fillStyle = glow;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2); ctx.fill();
-    }
-    raf = requestAnimationFrame(draw);
-  };
-  draw();
-  window.addEventListener("resize", resize);
-  ScrollTrigger.create({ trigger: "#hero", start: "top bottom", end: "bottom top", onLeave: () => cancelAnimationFrame(raf), onEnterBack: () => draw() });
-})();
 
 /* ───────────────────────── Hero parallax on scroll ───────────────────────── */
 gsap.to(".hero__content", { yPercent: 18, opacity: 0.2, ease: "none", scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: true } });
