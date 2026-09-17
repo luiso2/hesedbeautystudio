@@ -396,8 +396,16 @@ p { margin: 0; }
   .ritual__progress { display: none; }
 }
 @media (max-width: 640px) {
-  .hero { align-items: flex-end; padding-bottom: 90px; }
-  .hero__title { font-size: clamp(2.8rem, 14vw, 4.4rem); }
+  .nav { padding: 16px var(--gutter); }
+  .nav__wordmark { font-size: 1.15rem; white-space: nowrap; }
+  .nav__wordmark em { display: none; }
+  .nav__mark { width: 32px; height: 32px; }
+  .hero { align-items: flex-end; padding-top: 120px; padding-bottom: 80px; }
+  .hero__eyebrow { font-size: .62rem; letter-spacing: .26em; margin-bottom: 18px; }
+  .hero__title { font-size: clamp(2.6rem, 12vw, 3.8rem); margin-bottom: 22px; }
+  .hero__lead { font-size: .98rem; margin-bottom: 28px; }
+  .hero__actions { margin-bottom: 32px; }
+  .hero__creds { gap: 6px 18px; font-size: .62rem; }
   .hero__scroll, .hero__signature { display: none; }
   .panel { grid-template-columns: 1fr; }
   .card--wide { grid-column: span 1; }
