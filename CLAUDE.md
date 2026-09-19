@@ -30,7 +30,7 @@ Cada categoría muestra inicialmente tres tarjetas si contiene más de tres. Man
 
 ## Contenido pendiente de confirmar
 
-Dirección exacta, precios y duraciones reales, testimonios, dominio propio y foto de Maria de alta resolución. El retrato actual tiene 150 px; evitar ampliarlo excesivamente. No inventar estos datos ni estadísticas comerciales.
+Dirección exacta, precios de los tratamientos aún no confirmados, duraciones reales, testimonios y dominio propio. No inventar estos datos ni estadísticas comerciales.
 
 Al cambiar el dominio, actualizar canonical, OG y JSON-LD. El material de video se mantiene H.264, yuv420p, faststart, con póster, muted y playsinline.
 
@@ -39,3 +39,5 @@ Al cambiar el dominio, actualizar canonical, OG y JSON-LD. El material de video 
 Compilar sin errores y revisar escritorio y móvil, ES/EN, las cuatro pestañas, expansión del catálogo, menú (Escape y foco), FAQ, enlaces internos, WhatsApp, movimiento reducido y consola. Ejecutar comprobaciones de contraste y accesibilidad tras cambios visuales.
 
 Marca vigente: María Hesed · Estética Avanzada. Monograma M | H; lema Ciencia · Belleza · Bienestar. Conservar los URLs técnicos y el Instagram existente hasta que la clienta indique nuevos. Precios confirmados: drenaje linfático US$85, maderoterapia US$80 y metaloterapia US$80. Brazilian Body Sculpt es diferente de Brazilian Slim Body y no se añade sin material propio.
+
+La sección de la fundadora usa `public/img/maria-hesed-portrait.jpg`, foto vertical completa suministrada por la clienta. Reemplaza el bloque anterior de retrato circular, firma y credenciales.
