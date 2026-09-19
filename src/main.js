@@ -8,7 +8,11 @@ $$("[data-i18n]").forEach((el) => {
   ES[el.dataset.i18n] ??= el.innerHTML;
 });
 let lang = "es";
-let videosPaused = motionPreference.matches;
+// Video playback is an explicit site preference, separate from decorative motion.
+let videosPaused = false;
+try {
+  videosPaused = localStorage.getItem("hesed-videos-paused") === "true";
+} catch {}
 const copy = (es, en) => (lang === "en" ? en : es);
 
 function setLang(next) {
@@ -213,38 +217,45 @@ $$("[data-category]").forEach((link) =>
 );
 selectTab("corporal");
 
-// Only visible media runs. One global control also honors reduced-motion changes.
+// Play every visible video on desktop and touch; pause offscreen media.
 const visibleVideos = new Set();
 const videos = $$("video");
 function play(video) {
   if (videosPaused || document.hidden || !video.getClientRects().length) return;
-  video.play().catch(() => {
-    /* Posters remain visible if autoplay is unavailable. */
-  });
+  video.muted = true;
+  video.playsInline = true;
+  video
+    .play()
+    .then(() => {
+      // An observer or a tab change may have paused playback while play() resolved.
+      if (
+        videosPaused ||
+        document.hidden ||
+        !visibleVideos.has(video) ||
+        !video.getClientRects().length
+      )
+        video.pause();
+      else video.controls = false;
+    })
+    .catch((error) => {
+      // Browser autoplay restrictions need a real, accessible playback control.
+      if (error.name === "NotAllowedError") video.controls = true;
+    });
 }
 const videoObserver = new IntersectionObserver(
   (entries) =>
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
         visibleVideos.add(entry.target);
-        if (entry.target.hasAttribute("data-autoplay")) play(entry.target);
+        play(entry.target);
       } else {
         visibleVideos.delete(entry.target);
         entry.target.pause();
       }
     }),
-  { threshold: 0.15 },
+  { threshold: [0, 0.15] },
 );
-videos.forEach((video) => {
-  videoObserver.observe(video);
-  const box = video.closest(".card, .reel, .result, .step");
-  if (box) {
-    box.addEventListener("pointerenter", () => play(video));
-    box.addEventListener("pointerleave", () => video.pause());
-    box.addEventListener("focusin", () => play(video));
-    box.addEventListener("focusout", () => video.pause());
-  }
-});
+videos.forEach((video) => videoObserver.observe(video));
 function updateMotionButton() {
   const button = $(".motion-toggle");
   button.setAttribute("aria-pressed", String(videosPaused));
@@ -253,17 +264,15 @@ function updateMotionButton() {
 function syncVideos() {
   videos.forEach((video) => {
     if (videosPaused || document.hidden) video.pause();
-    else if (visibleVideos.has(video) && video.hasAttribute("data-autoplay"))
-      play(video);
+    else if (visibleVideos.has(video)) play(video);
   });
   updateMotionButton();
 }
 $(".motion-toggle").addEventListener("click", () => {
   videosPaused = !videosPaused;
-  syncVideos();
-});
-motionPreference.addEventListener("change", (event) => {
-  videosPaused = event.matches;
+  try {
+    localStorage.setItem("hesed-videos-paused", String(videosPaused));
+  } catch {}
   syncVideos();
 });
 document.addEventListener("visibilitychange", syncVideos);

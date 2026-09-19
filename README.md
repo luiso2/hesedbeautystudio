@@ -19,7 +19,7 @@ La configuración de despliegue se genera en `dist/wrangler.json`. `npm run depl
 - Tres tratamientos iniciales por categoría; botón para explorar el catálogo completo.
 - Navegación móvil con Escape, control de foco y contenido de fondo inerte.
 - Español por defecto; inglés seleccionable y preferencia persistida.
-- Videos visibles bajo demanda, pausa global y respeto de movimiento reducido.
+- Videos visibles con reproducción automática en móvil y escritorio, pausa global persistente y animaciones que respetan movimiento reducido.
 - Acordeones nativos y contenido visible sin depender de animaciones.
 
 ## Contenido

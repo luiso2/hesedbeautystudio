@@ -24,7 +24,7 @@ Portada dividida, acceso directo a las cuatro categorías, catálogo, manifiesto
 
 La renovación de septiembre de 2026 elimina GSAP, Lenis, el preloader y el desplazamiento horizontal fijado. No introducir esperas artificiales, partículas, grano animado, cursores personalizados ni anillos giratorios.
 
-Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. Las imágenes permanecen visibles cuando los videos no se reproducen. El control de video de portada pausa todos los videos.
+Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. Los videos visibles se reproducen automáticamente en móvil y escritorio. Un control fijo pausa todos los videos y guarda la preferencia explícita; la reproducción es independiente del movimiento reducido de las animaciones. Si el navegador bloquea autoplay, se muestran controles nativos.
 
 Cada categoría muestra inicialmente tres tarjetas si contiene más de tres. Mantener acceso al catálogo completo mediante el botón, traducciones y enlaces a WhatsApp específicos del tratamiento.
 
