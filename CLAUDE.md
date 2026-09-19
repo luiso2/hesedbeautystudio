@@ -1,103 +1,39 @@
 # Hesed Beauty Studio — guía del proyecto
 
-Web premium de una sola página para **Hesed Beauty Studio** (Miami, FL), estética facial y corporal de **Maria Hesed**.
-Instagram del negocio: https://www.instagram.com/hesedbeautystudio · WhatsApp: +1 (786) 709-5791.
-Referencia de calidad que pidió el cliente: https://clinicyolystudiofit.com/es.
+Website de una página para Hesed Beauty Studio, Miami, de Maria Hesed.
+GitHub: https://github.com/luiso2/hesedbeautystudio
+Producción: https://hesedbeautystudio.odd-forest-9504.workers.dev
+Instagram: https://www.instagram.com/hesedbeautystudio
+WhatsApp: +1 (786) 709-5791.
 
-## URLs y despliegue
+## Stack y estructura
 
-| Qué | Dónde |
-|---|---|
-| Código local | `D:\02_Proyectos\hesedbeautystudio` (equipo original) · `C:\Trabajo\hesedbeautystudio` (clon, sep 2026) |
-| GitHub | https://github.com/luiso2/hesedbeautystudio (rama `main`) |
-| Producción | https://hesedbeautystudio.odd-forest-9504.workers.dev |
-| Cloudflare | cuenta `e79469132f614c7f418a0e7a65466e88`, Worker `hesedbeautystudio` con static assets |
+- Vite + HTML/CSS/JavaScript nativo; Cloudflare Vite plugin.
+- `index.html`: contenido español, semántica y metadatos.
+- `src/style.css`: diseño editorial responsive, marfil / tinta / dorado.
+- `src/main.js`: idioma, menú accesible, pestañas, catálogo progresivo y reproducción de videos.
+- `src/i18n.js`: diccionario inglés. Cada nuevo texto requiere traducción.
+- `public/img` y `public/videos`: material real del estudio.
+- `wrangler.jsonc`: Worker con assets estáticos. El plugin genera `dist/wrangler.json`.
 
-**Importante:** wrangler convirtió el `pages deploy` inicial al flujo "Pages sobre Workers". No existe un proyecto Pages clásico ni dominio `pages.dev`; el sitio es un Worker que sirve `dist/` como assets estáticos. Para volver al Pages clásico habría que redeployar con `wrangler pages deploy dist --force` (solo si el cliente lo pide).
+`npm ci`, `npm run dev`, `npm run build`. `npm run deploy` publica en Cloudflare con credenciales de entorno. Nunca guardar secretos en el repositorio.
 
-```bash
-npm install
-npm run dev              # desarrollo en http://localhost:5173
-npm run build            # genera dist/ (Vite + @cloudflare/vite-plugin)
-npx wrangler deploy      # publica. Necesita CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID en el entorno
-```
+## Diseño y comportamiento
 
-La config real del Worker la genera el plugin de Vite en `dist/wrangler.json` a partir de `wrangler.jsonc`; `.wrangler/deploy/config.json` redirige a ella. No editar `dist/` a mano.
+Portada dividida, acceso directo a las cuatro categorías, catálogo, manifiesto, ritual de cuatro pasos, resultados, fundadora, Instagram, FAQ y reserva.
 
-Los tokens de Cloudflare **nunca** van en el repo. El token usado en la primera publicación se pegó en un chat: conviene rotarlo en el panel de Cloudflare.
+La renovación de septiembre de 2026 elimina GSAP, Lenis, el preloader y el desplazamiento horizontal fijado. No introducir esperas artificiales, partículas, grano animado, cursores personalizados ni anillos giratorios.
 
-## Stack
+Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. Las imágenes permanecen visibles cuando los videos no se reproducen. El control de video de portada pausa todos los videos.
 
-- **Vite 6** + HTML/CSS/JS vanilla (sin framework).
-- **GSAP 3 + ScrollTrigger**: preloader, split-text del hero, reveals, contadores, sección horizontal pinned, parallax, acordeón.
-- **Lenis**: smooth scroll (se desactiva con `prefers-reduced-motion`).
-- **Google Fonts**: Cormorant Garamond (display), Jost (cuerpo), Pinyon Script (firma "by Maria Hesed").
-- Vídeos H.264 en `public/videos/`, transcodificados con `ffmpeg-static` desde los reels del Instagram.
+Cada categoría muestra inicialmente tres tarjetas si contiene más de tres. Mantener acceso al catálogo completo mediante el botón, traducciones y enlaces a WhatsApp específicos del tratamiento.
 
-## Estructura
+## Contenido pendiente de confirmar
 
-```
-index.html          Toda la página. Copy en ESPAÑOL (fuente de verdad) con atributos data-i18n
-src/style.css       Sistema de diseño (variables en :root), secciones, responsive al final
-src/main.js         i18n, Lenis, preloader, nav, menú móvil, magnetic, reveals, tabs, vídeos, ritual, FAQ
-src/i18n.js         Diccionario EN (claves = data-i18n). El ES se captura del DOM en runtime
-public/videos/      16 clips (≤15 s, ≤1.3 MB c/u). Del IG (720p): slimbody, lipo4d, drenaje, drenaje2, moldeo, reafirmante, piedras, firmup.
-                    Enviados por la clienta (480p, sep 2026): metaloterapia, metaloterapia-res, woodtherapy, gimnasia, kinesio, quemadores, plasmapen, fibroblast
-public/img/         Pósters *-poster.jpg (frame de cada vídeo), maria.jpg (150 px, del IG), fotos antes/después
-                    (facial-deepclean-*, facial-detox-*, drenaje-antes/despues) y kinesiotape.jpg
-public/_headers     Cache inmutable para videos/img/assets, nosniff, referrer-policy
-public/robots.txt
-wrangler.jsonc      Config base del Worker (assets SPA)
-vite.config.js      Plugin de Cloudflare (lo añadió wrangler)
-```
+Dirección exacta, precios y duraciones reales, testimonios, dominio propio y foto de Maria de alta resolución. El retrato actual tiene 150 px; evitar ampliarlo excesivamente. No inventar estos datos ni estadísticas comerciales.
 
-## Secciones de la página (orden)
+Al cambiar el dominio, actualizar canonical, OG y JSON-LD. El material de video se mantiene H.264, yuv420p, faststart, con póster, muted y playsinline.
 
-1. Preloader (monograma H + "HESED")
-2. Nav fija con selector ES/EN, CTA WhatsApp, burger en móvil
-3. Hero con vídeo `drenaje.mp4`, título split-text, firma script
-4. Marquee de tratamientos
-5. Manifiesto "Hesed = bondad, gracia y cuidado" + contadores + 2 vídeos
-6. Tratamientos en pestañas: Corporal (11), Facial (4, dos con antes/después), Fibroblast (3), Cejas (3). Cada tarjeta enlaza a WhatsApp con mensaje prellenado
-7. El Ritual: 4 pasos con scroll horizontal pinned en escritorio, vertical en móvil
-8. Resultados: grid de vídeos + cita + antes/después de drenaje, resultados de metaloterapia y foto de kinesio tape
-9. La fundadora (Maria Hesed)
-10. Reels (6, enlazan a los reels originales en IG)
-11. FAQ (5 preguntas, acordeón animado)
-12. CTA de reserva con vídeo de fondo
-13. Footer + botón flotante WhatsApp
+## Validación
 
-## Decisiones de diseño y branding
-
-- Paleta del Instagram: negro/onyx, marfil y dorado champán. Variables `--ink`, `--onyx`, `--ivory`, `--sand`, `--gold`, `--gold-2`.
-- El cliente pidió quitar "brillos de IA" (partículas), el grano animado y el cursor personalizado porque parpadeaban. **No volver a añadirlos.**
-- Botones con superficie 3D (degradado + relieve + sombra). Efecto magnético suave (`strength = 0.18`).
-- El retrato de Maria lleva anillo sólido fino; el cliente rechazó el anillo punteado giratorio.
-- Idioma por defecto: español siempre. Solo cambia si el usuario pulsa EN (se guarda en `localStorage["hesed-lang"]`).
-- Ningún vídeo salvo el hero tiene `autoplay`; los de fondo usan `data-autoplay` + `preload="none"` y se reproducen al entrar en vista (ScrollTrigger). Las tarjetas reproducen al hover (escritorio) o al entrar en vista (táctil).
-
-## Cómo editar contenido
-
-- **Texto**: cambia el español en `index.html` y la clave equivalente en `src/i18n.js`. Si añades un elemento nuevo con texto, dale `data-i18n="seccion.clave"` y añade la clave al diccionario EN.
-- **Tratamiento nuevo**: copia un `<article class="card">` dentro del `<div class="panel" data-panel="...">` correspondiente. Actualiza el `card__num`.
-- **Tarjeta con media lateral**: `card--split` (ocupa 2 columnas, media a la izquierda). Con fotos antes/después usa `card__media card__media--ba` + dos `.ba__cell` con `.ba__tag`. Con vídeo que no debe recortarse (collages con rótulos) añade `card--contain`.
-- **Antes/después en Resultados**: `<figure class="result result--ba">` con dos `.ba__cell`.
-- **Precios**: no se inventaron. Las tarjetas añadidas en sep 2026 muestran "Según valoración" en vez de duración porque la clienta no la indicó. Los `card__meta` muestran duración orientativa y "Sesión o paquete". Cambiar cuando el cliente confirme.
-- **Material de la clienta**: si llega como collage vertical (antes arriba, después abajo), se parte en dos mitades con ffmpeg `crop`. Si el vídeo trae bandas negras, `cropdetect` y recortar.
-- **Vídeo nuevo**: H.264 (yuv420p, faststart), ≤15 s, 720p, sin audio necesario (van en `muted`). Genera su póster con ffmpeg (`-ss 1 -frames:v 1`).
-- **Dominio propio**: al conectarlo, cambiar las URLs absolutas en `index.html` (canonical, og:image, og:url y el JSON-LD `url`/`image`).
-
-## Pendiente de confirmar con la clienta
-
-- Dirección postal exacta (ahora solo "Miami, Florida").
-- Precios y duraciones reales de cada tratamiento.
-- Testimonios reales (no hay sección de reseñas para no inventar ninguna).
-- Foto de Maria en alta resolución (la actual es la miniatura de 150 px del IG).
-- Dominio definitivo.
-
-## Verificación antes de publicar
-
-1. `npm run build` sin errores.
-2. Abrir `npx vite preview` y comprobar hero, pestañas, ritual (escritorio y móvil), FAQ y selector de idioma.
-3. Sin errores en consola. Última auditoría (17 sep 2026): 0 errores JS, 0 violaciones axe WCAG 2 AA, carga 0,75 s, vídeo total 5,7 MB.
-4. `git push` y `npx wrangler deploy`.
+Compilar sin errores y revisar escritorio y móvil, ES/EN, las cuatro pestañas, expansión del catálogo, menú (Escape y foco), FAQ, enlaces internos, WhatsApp, movimiento reducido y consola. Ejecutar comprobaciones de contraste y accesibilidad tras cambios visuales.
