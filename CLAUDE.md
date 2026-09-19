@@ -8,7 +8,7 @@ Referencia de calidad que pidió el cliente: https://clinicyolystudiofit.com/es.
 
 | Qué | Dónde |
 |---|---|
-| Código local | `D:\02_Proyectos\hesedbeautystudio` |
+| Código local | `D:\02_Proyectos\hesedbeautystudio` (equipo original) · `C:\Trabajo\hesedbeautystudio` (clon, sep 2026) |
 | GitHub | https://github.com/luiso2/hesedbeautystudio (rama `main`) |
 | Producción | https://hesedbeautystudio.odd-forest-9504.workers.dev |
 | Cloudflare | cuenta `e79469132f614c7f418a0e7a65466e88`, Worker `hesedbeautystudio` con static assets |
@@ -41,8 +41,10 @@ index.html          Toda la página. Copy en ESPAÑOL (fuente de verdad) con atr
 src/style.css       Sistema de diseño (variables en :root), secciones, responsive al final
 src/main.js         i18n, Lenis, preloader, nav, menú móvil, magnetic, reveals, tabs, vídeos, ritual, FAQ
 src/i18n.js         Diccionario EN (claves = data-i18n). El ES se captura del DOM en runtime
-public/videos/      8 clips (15 s, 720p, ≤1.3 MB c/u). Nombres: slimbody, lipo4d, drenaje, drenaje2, moldeo, reafirmante, piedras, firmup
-public/img/         Pósters *-poster.jpg (frame de cada vídeo) y maria.jpg (150 px, del IG)
+public/videos/      16 clips (≤15 s, ≤1.3 MB c/u). Del IG (720p): slimbody, lipo4d, drenaje, drenaje2, moldeo, reafirmante, piedras, firmup.
+                    Enviados por la clienta (480p, sep 2026): metaloterapia, metaloterapia-res, woodtherapy, gimnasia, kinesio, quemadores, plasmapen, fibroblast
+public/img/         Pósters *-poster.jpg (frame de cada vídeo), maria.jpg (150 px, del IG), fotos antes/después
+                    (facial-deepclean-*, facial-detox-*, drenaje-antes/despues) y kinesiotape.jpg
 public/_headers     Cache inmutable para videos/img/assets, nosniff, referrer-policy
 public/robots.txt
 wrangler.jsonc      Config base del Worker (assets SPA)
@@ -56,9 +58,9 @@ vite.config.js      Plugin de Cloudflare (lo añadió wrangler)
 3. Hero con vídeo `drenaje.mp4`, título split-text, firma script
 4. Marquee de tratamientos
 5. Manifiesto "Hesed = bondad, gracia y cuidado" + contadores + 2 vídeos
-6. Tratamientos en pestañas: Corporal (6), Facial (4), Fibroblast (2), Cejas (3). Cada tarjeta enlaza a WhatsApp con mensaje prellenado
+6. Tratamientos en pestañas: Corporal (11), Facial (4, dos con antes/después), Fibroblast (3), Cejas (3). Cada tarjeta enlaza a WhatsApp con mensaje prellenado
 7. El Ritual: 4 pasos con scroll horizontal pinned en escritorio, vertical en móvil
-8. Resultados: grid de vídeos + cita
+8. Resultados: grid de vídeos + cita + antes/después de drenaje, resultados de metaloterapia y foto de kinesio tape
 9. La fundadora (Maria Hesed)
 10. Reels (6, enlazan a los reels originales en IG)
 11. FAQ (5 preguntas, acordeón animado)
@@ -78,7 +80,10 @@ vite.config.js      Plugin de Cloudflare (lo añadió wrangler)
 
 - **Texto**: cambia el español en `index.html` y la clave equivalente en `src/i18n.js`. Si añades un elemento nuevo con texto, dale `data-i18n="seccion.clave"` y añade la clave al diccionario EN.
 - **Tratamiento nuevo**: copia un `<article class="card">` dentro del `<div class="panel" data-panel="...">` correspondiente. Actualiza el `card__num`.
-- **Precios**: no se inventaron. Los `card__meta` muestran duración orientativa y "Sesión o paquete". Cambiar cuando el cliente confirme.
+- **Tarjeta con media lateral**: `card--split` (ocupa 2 columnas, media a la izquierda). Con fotos antes/después usa `card__media card__media--ba` + dos `.ba__cell` con `.ba__tag`. Con vídeo que no debe recortarse (collages con rótulos) añade `card--contain`.
+- **Antes/después en Resultados**: `<figure class="result result--ba">` con dos `.ba__cell`.
+- **Precios**: no se inventaron. Las tarjetas añadidas en sep 2026 muestran "Según valoración" en vez de duración porque la clienta no la indicó. Los `card__meta` muestran duración orientativa y "Sesión o paquete". Cambiar cuando el cliente confirme.
+- **Material de la clienta**: si llega como collage vertical (antes arriba, después abajo), se parte en dos mitades con ffmpeg `crop`. Si el vídeo trae bandas negras, `cropdetect` y recortar.
 - **Vídeo nuevo**: H.264 (yuv420p, faststart), ≤15 s, 720p, sin audio necesario (van en `muted`). Genera su póster con ffmpeg (`-ss 1 -frames:v 1`).
 - **Dominio propio**: al conectarlo, cambiar las URLs absolutas en `index.html` (canonical, og:image, og:url y el JSON-LD `url`/`image`).
 
