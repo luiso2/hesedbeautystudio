@@ -1,6 +1,6 @@
-# Hesed Beauty Studio — guía del proyecto
+# María Hesed · Estética Avanzada — guía del proyecto
 
-Website de una página para Hesed Beauty Studio, Miami, de Maria Hesed.
+Website de una página para María Hesed · Estética Avanzada, Miami, de María Hesed.
 GitHub: https://github.com/luiso2/hesedbeautystudio
 Producción: https://hesedbeautystudio.odd-forest-9504.workers.dev
 Instagram: https://www.instagram.com/hesedbeautystudio
@@ -37,3 +37,5 @@ Al cambiar el dominio, actualizar canonical, OG y JSON-LD. El material de video 
 ## Validación
 
 Compilar sin errores y revisar escritorio y móvil, ES/EN, las cuatro pestañas, expansión del catálogo, menú (Escape y foco), FAQ, enlaces internos, WhatsApp, movimiento reducido y consola. Ejecutar comprobaciones de contraste y accesibilidad tras cambios visuales.
+
+Marca vigente: María Hesed · Estética Avanzada. Monograma M | H; lema Ciencia · Belleza · Bienestar. Conservar los URLs técnicos y el Instagram existente hasta que la clienta indique nuevos. Precios confirmados: drenaje linfático US$85, maderoterapia US$80 y metaloterapia US$80. Brazilian Body Sculpt es diferente de Brazilian Slim Body y no se añade sin material propio.

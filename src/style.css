@@ -1665,3 +1665,141 @@ video[controls] {
   position: relative;
   z-index: 3;
 }
+
+/* Confirmed treatment prices, in US dollars. */
+.card .card__price {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.card__price span {
+  font: 32px var(--font-display);
+  color: var(--ink);
+}
+.card__price small {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.card__price + .card__meta {
+  margin-top: 0;
+  padding-top: 4px;
+}
+
+/* María Hesed — the M | H identity supplied by the studio. */
+.brand-monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font: 400 46px/1 var(--font-display);
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.brand-monogram i {
+  flex: 0 0 1px;
+  display: block;
+  width: 1px;
+  height: 54px;
+  background: var(--gold);
+}
+.nav .nav__mark {
+  width: 70px;
+  height: 58px;
+}
+.nav__wordmark {
+  font-size: 23px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+.nav__wordmark em {
+  font-size: 8px;
+  letter-spacing: 0.2em;
+}
+.footer__mark {
+  width: 110px;
+  height: 80px;
+  font-size: 74px;
+  gap: 8px;
+}
+.footer__mark i {
+  height: 80px;
+}
+.footer__name {
+  text-transform: uppercase;
+  font-size: 24px;
+  letter-spacing: 0.12em;
+}
+.footer__name em {
+  display: block;
+  font: 10px/2 var(--font-body);
+  letter-spacing: 0.24em;
+  margin-top: 8px;
+}
+.brand-motto {
+  margin-top: 18px;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.care-mark {
+  border: 0;
+  border-radius: 0;
+  gap: 3px;
+  width: 54px;
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+}
+.care-mark > span {
+  font: 200 32px var(--font-display);
+}
+.footer__giant {
+  font-size: clamp(44px, 12vw, 185px);
+  letter-spacing: 0.06em;
+}
+@media (max-width: 1150px) {
+  .nav__links {
+    gap: 15px;
+  }
+  .nav__wordmark {
+    font-size: 20px;
+  }
+}
+@media (max-width: 650px) {
+  .nav__logo {
+    gap: 8px;
+  }
+  .nav .nav__mark {
+    width: 58px;
+    height: 44px;
+    font-size: 33px;
+    gap: 3px;
+  }
+  .nav__mark i {
+    height: 40px;
+  }
+  .nav__wordmark {
+    font-size: 17px;
+    letter-spacing: 0.08em;
+  }
+  .nav__wordmark em {
+    font-size: 6px;
+    letter-spacing: 0.15em;
+  }
+  .nav {
+    gap: 8px;
+    padding-inline: 16px;
+  }
+  .nav__right {
+    gap: 2px;
+  }
+  .lang__btn {
+    min-width: 27px;
+    padding-inline: 4px;
+  }
+  .footer__giant {
+    margin-bottom: 55px;
+  }
+}

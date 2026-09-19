@@ -4,7 +4,7 @@ export const EN = {
   "nav.services": "Treatments",
   "nav.ritual": "The Ritual",
   "nav.results": "Results",
-  "nav.about": "Maria Hesed",
+  "nav.about": "María Hesed",
   "nav.faq": "FAQ",
   "nav.cta": "Book now",
 
@@ -27,7 +27,7 @@ export const EN = {
   "man.p1":
     "We don't transform bodies. We help them feel better. And when that happens, beauty shows up on its own.",
   "man.p2":
-    "Every protocol at Hesed Beauty Studio combines latest-generation technology with precise manual technique: drainage, sculpting, radiofrequency and firming actives applied with rigor, in a space designed so you feel cared for from start to finish.",
+    "Every protocol at María Hesed · Estética Avanzada combines latest-generation technology with precise manual technique: drainage, sculpting, radiofrequency and firming actives applied with rigor, in a space designed so you feel cared for from start to finish.",
   "man.s1": "Instagram community",
   "man.s2": "Exclusive protocols",
   "man.s3": "Personalized care",
@@ -173,7 +173,7 @@ export const EN = {
   "abt.t1": "Hands that listen,",
   "abt.t2": "technique that transforms.",
   "abt.p1":
-    "Maria Hesed is a licensed esthetician, specialist in facial and body treatments, Master in Fibroblast and Brow Artist. She founded Hesed Beauty Studio with one clear idea: aesthetic care should be as rigorous as it is human.",
+    "María Hesed is a licensed esthetician, specialist in facial and body treatments, Master in Fibroblast and Brow Artist. She founded María Hesed · Estética Avanzada with one clear idea: aesthetic care should be as rigorous as it is human.",
   "abt.p2":
     "Her approach unites the best of two worlds: the precision of aesthetic technology (radiofrequency, cavitation, plasma, LED light) and the sensitivity of manual technique (drainage, sculpting, wood therapy, kinesiology). The result is protocols that are not only seen, but felt.",
   "abt.p3":
@@ -234,7 +234,7 @@ Object.assign(EN, {
     "A moment for yourself. Care tailored to you. Discover treatments that bring together technique, wellbeing and natural beauty.",
   "hero.cta1": "Explore treatments",
   "hero.cta2": "Book my assessment",
-  "hero.care": "In the hands of Maria Hesed",
+  "hero.care": "In the hands of María Hesed",
   "hero.image": "Your wellbeing.<br />Our ritual.",
   "hero.foot": "INTENTIONAL CARE. BEAUTY WITH SOUL.",
   "hero.scroll": "Discover Hesed",
@@ -245,4 +245,14 @@ Object.assign(EN, {
   "man.s3": "We guide you",
   "ui.skip": "Skip to content",
   "ui.pause": "Pause videos",
+});
+
+Object.assign(EN, { "srv.wood": "Wood Therapy Body Sculpting" });
+
+Object.assign(EN, {
+  "brand.motto": "Science · Beauty · Wellbeing",
+  "hero.foot": "SCIENCE · BEAUTY · WELLBEING",
+  "hero.scroll": "Discover María Hesed",
+  "rit.eyebrow": "The María Hesed ritual",
+  "rl.t1": "From our space,",
 });

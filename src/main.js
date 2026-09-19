@@ -39,7 +39,10 @@ function setLang(next) {
   $(".lang").setAttribute("aria-label", copy("Idioma", "Language"));
   $(".hero__video").setAttribute(
     "aria-label",
-    copy("Masaje en Hesed Beauty Studio", "Massage at Hesed Beauty Studio"),
+    copy(
+      "Masaje en María Hesed · Estética Avanzada",
+      "Massage at María Hesed · Estética Avanzada",
+    ),
   );
   updateMenuLabel();
   updateShowMore();
