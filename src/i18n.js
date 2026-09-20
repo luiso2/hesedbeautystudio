@@ -298,3 +298,5 @@ Object.assign(EN, {
     "Salmon DNA facial protocol. During your assessment, we review your skin and explain the products, application technique and session aftercare.",
   "srv.askPrice": "Ask for pricing",
 });
+
+Object.assign(EN, { "media.illustrative": "Illustrative image" });
