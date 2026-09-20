@@ -256,3 +256,9 @@ Object.assign(EN, {
   "rit.eyebrow": "The María Hesed ritual",
   "rl.t1": "From our space,",
 });
+
+Object.assign(EN, {
+  "srv.eyelidTitle": "Eyelid Fibroblast",
+  "srv.eyelidDescription":
+    "Targeted fibroblast treatment for the eyelid area. Request a personalized assessment to discuss the protocol, aftercare and pricing.",
+});
