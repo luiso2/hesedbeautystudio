@@ -262,3 +262,39 @@ Object.assign(EN, {
   "srv.eyelidDescription":
     "Targeted fibroblast treatment for the eyelid area. Request a personalized assessment to discuss the protocol, aftercare and pricing.",
 });
+
+Object.assign(EN, {
+  "srv.menu12n": "Wood Therapy + Metal Therapy",
+  "srv.menu12d":
+    "Combines wooden and metal tools in one body treatment, tailored to the areas you would like to address.",
+  "srv.menu13n": "Sculpting Massage + Wood Therapy",
+  "srv.menu13d":
+    "Combines manual sculpting massage with wooden tools to work on body contours through a personalized protocol.",
+  "srv.menu14n": "Massage + Hypopressives",
+  "srv.menu14d":
+    "Combines body massage with guided hypopressive breathing and posture exercises, adapted to your assessment and goals.",
+  "srv.menu15n": "Body Radiofrequency",
+  "srv.menu15d":
+    "A radiofrequency session that applies controlled heat to selected body areas, focused on skin firmness and appearance.",
+  "srv.menu16n": "Cavitation",
+  "srv.menu16d":
+    "A body treatment using ultrasound on localized areas. An initial assessment determines the treatment areas and appropriate protocol.",
+  "srv.menu17n": "Vacuum Therapy",
+  "srv.menu17d":
+    "A body technique using controlled suction to mobilize tissue in selected areas. Intensity is adjusted during the session.",
+  "srv.menu18n": "Cavitation + Radiofrequency",
+  "srv.menu18d":
+    "Combines ultrasound and radiofrequency in a body protocol that brings together localized treatment and care for skin appearance.",
+  "srv.menu19n": "Cavitation + Vacuum",
+  "srv.menu19d":
+    "Combines ultrasound cavitation and controlled suction in one session, with treatment areas and intensity determined through assessment.",
+  "srv.menu20n": "Radiofrequency + Vacuum",
+  "srv.menu20d":
+    "Combines controlled radiofrequency heat with vacuum suction for a body treatment tailored to your skin and goals.",
+});
+
+Object.assign(EN, {
+  "srv.salmonDescription":
+    "Salmon DNA facial protocol. During your assessment, we review your skin and explain the products, application technique and session aftercare.",
+  "srv.askPrice": "Ask for pricing",
+});

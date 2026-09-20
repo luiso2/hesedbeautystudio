@@ -1805,6 +1805,26 @@ video[controls] {
 }
 
 /* Full portrait supplied by María, preserving the original framing. */
-.about__media--photo { width:100%; max-width:390px; justify-self:center; }
-.about__photo { display:block; width:100%; height:auto; border:1px solid var(--line); }
-@media(max-width:650px) { .about__media--photo { order:0; max-width:340px; } }
+.about__media--photo {
+  width: 100%;
+  max-width: 390px;
+  justify-self: center;
+}
+.about__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+@media (max-width: 650px) {
+  .about__media--photo {
+    order: 0;
+    max-width: 340px;
+  }
+}
+
+/* Reserved media space until the studio supplies each treatment's footage. */
+.card__media--empty {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
