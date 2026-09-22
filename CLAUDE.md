@@ -5,7 +5,7 @@ GitHub: https://github.com/luiso2/hesedbeautystudio
 Producción: https://mariahesed.com
 Dominio adicional: https://www.mariahesed.com
 URL técnica: https://hesedbeautystudio.odd-forest-9504.workers.dev
-Instagram: https://www.instagram.com/mariahesed
+Instagram: https://www.instagram.com/mariahesed.esthetics
 WhatsApp: +1 (786) 709-5791.
 
 ## Stack y estructura
@@ -40,7 +40,7 @@ Al cambiar el dominio, actualizar canonical, OG y JSON-LD. El material de video 
 
 Compilar sin errores y revisar escritorio y móvil, ES/EN, las cuatro pestañas, expansión del catálogo, menú (Escape y foco), FAQ, enlaces internos, WhatsApp, movimiento reducido y consola. Ejecutar comprobaciones de contraste y accesibilidad tras cambios visuales.
 
-Marca vigente: María Hesed · Estética Avanzada. Monograma M | H; lema Ciencia · Belleza · Bienestar. Conservar los URLs técnicos y el Instagram existente hasta que la clienta indique nuevos. Precios confirmados: drenaje linfático US$85, maderoterapia US$80 y metaloterapia US$80. Brazilian Body Sculpt es diferente de Brazilian Slim Body y no se añade sin material propio.
+Marca vigente: María Hesed · Estética Avanzada. Monograma M | H; lema Ciencia · Belleza · Bienestar. Conservar la URL técnica. El Instagram oficial indicado por la clienta es @mariahesed.esthetics. Precios confirmados: drenaje linfático US$85, maderoterapia US$80 y metaloterapia US$80. Brazilian Body Sculpt es diferente de Brazilian Slim Body y no se añade sin material propio.
 
 La sección de la fundadora usa `public/img/maria-hesed-portrait.jpg`, foto vertical completa suministrada por la clienta. Reemplaza el bloque anterior de retrato circular, firma y credenciales.
 
@@ -56,4 +56,4 @@ Maderoterapia tiene una sola tarjeta (data-service=maderoterapia), US$80, con vi
 
 La clienta solicitó eliminar la tarjeta individual de Metaloterapia (srv.n7) del catálogo. No volver a añadirla sin indicación.
 
-Instagram vigente: @mariahesed. Facial Detox incluye hidratación con ácido hialurónico y el video facial-detox-hialuronico.mp4, sin tarjeta adicional.
+Instagram vigente: @mariahesed.esthetics. Facial Detox incluye hidratación con ácido hialurónico y el video facial-detox-hialuronico.mp4, sin tarjeta adicional.
