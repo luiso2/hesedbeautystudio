@@ -53,3 +53,5 @@ La clienta exige una imagen específica y diferente por servicio, sin collages d
 Los dominios mariahesed.com y www.mariahesed.com están vinculados al mismo Worker mediante routes con custom_domain en wrangler.jsonc. Canonical, Open Graph y JSON-LD usan https://mariahesed.com.
 
 Maderoterapia tiene una sola tarjeta (data-service=maderoterapia), US$80, con video de sesión y fotos originales antes/después enviadas el 22 de septiembre. No crear servicios adicionales para añadir medios. La clienta pidió eliminar Maderoterapia + Metaloterapia y Masaje moldeador + Maderoterapia; conservar únicamente Maderoterapia de US$80.
+
+La clienta solicitó eliminar la tarjeta individual de Metaloterapia (srv.n7) del catálogo. No volver a añadirla sin indicación.
