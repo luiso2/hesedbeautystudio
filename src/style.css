@@ -923,6 +923,18 @@ summary:focus-visible,
   color: var(--gold);
   font-style: normal;
 }
+.results__poster {
+  width: min(100%, 900px);
+  margin: 36px auto 0;
+}
+.results__poster a,
+.results__poster img {
+  display: block;
+  width: 100%;
+}
+.results__poster img {
+  height: auto;
+}
 .benefits {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
