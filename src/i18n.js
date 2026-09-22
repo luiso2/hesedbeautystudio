@@ -99,7 +99,7 @@ export const EN = {
   "srv.f3":
     "Facial radiofrequency, chromotherapy and active peptides to stimulate collagen, tighten and improve skin texture.",
   "srv.fm3": "75 min",
-  "srv.f4n": "Facial Yoga & Facial Drainage",
+  "srv.f4n": "Facial Yoga & Facial Lymphatic Drainage",
   "srv.f4":
     "Manual maneuvers that de-puff, define the facial oval and restore radiance. A natural lifting effect without needles.",
   "srv.fm4": "45 min",
