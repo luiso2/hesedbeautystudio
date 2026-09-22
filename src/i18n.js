@@ -311,4 +311,4 @@ Object.assign(EN, {"fibro.prices": "Prices by treatment area", "fibro.from300": 
 
 Object.assign(EN, {"srv.pigmentName": "Body Hyperpigmentation Care", "srv.pigmentDesc": "Aesthetic care focused on the appearance of uneven skin tone, with an individual assessment of the treatment area.", "srv.pigmentAreas": "Underarms, bikini area and buttocks"});
 
-Object.assign(EN, {"srv.deluxDesc": "A personalized facial care session. Ask about the treatment steps and how they can be adapted to your skin\u2019s needs."});
+Object.assign(EN, {"srv.deluxDesc": "Delux facial treatment for skin with laxity and signs of aging, adapted to each person's needs."});
