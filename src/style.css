@@ -1680,11 +1680,12 @@ video[controls] {
 
 /* Confirmed treatment prices, in US dollars. */
 .card .card__price {
-  margin-top: auto;
-  padding-top: 12px;
+  margin: 0;
+  padding: 6px 0 12px;
   display: flex;
   align-items: baseline;
   gap: 8px;
+  border-bottom: 1px solid var(--line);
 }
 .card__price span {
   font: 32px var(--font-display);
@@ -1693,6 +1694,23 @@ video[controls] {
 .card__price small {
   font-size: 10px;
   letter-spacing: 0.1em;
+}
+.card .card__price--consult {
+  width: fit-content;
+  max-width: 100%;
+  margin: 4px 0 8px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+.card__price--consult span {
+  font: inherit;
+  color: inherit;
 }
 .card__price + .card__meta {
   margin-top: 0;
@@ -2164,8 +2182,9 @@ video[controls] {
   }
 }
 
-.wax-prices { margin: 20px 0; }
-.wax-prices h4 { margin: 20px 0 8px; font-size: 15px; }
+.wax-prices { margin: 12px 0 20px; padding: 16px; border: 1px solid var(--line); background: var(--ivory); }
+.wax-prices h4 { margin: 12px 0 8px; font-size: 16px; }
+.wax-prices h4:first-child { margin-top: 0; }
 .wax-prices dl { margin: 0; }
-.wax-prices dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid #e6ddce; font-size: 13px; }
-.wax-prices dd { margin: 0; text-align: right; font-weight: 600; }
+.wax-prices dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid #d9d4c9; font-size: 14px; }
+.wax-prices dd { margin: 0; text-align: right; font-size: 15px; font-weight: 600; color: var(--ink); }

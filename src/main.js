@@ -2,7 +2,6 @@ import { EN } from "./i18n.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
 const ES = {};
 $$("[data-i18n]").forEach((el) => {
   ES[el.dataset.i18n] ??= el.innerHTML;
@@ -45,7 +44,6 @@ function setLang(next) {
     ),
   );
   updateMenuLabel();
-  updateShowMore();
   updateMotionButton();
   try {
     localStorage.setItem("hesed-lang", lang);
@@ -134,28 +132,9 @@ $$('a[href^="#"]').forEach((link) =>
   }),
 );
 
-// Accessible tabs, roving focus and progressive disclosure of the full catalog.
+// Accessible tabs with every treatment visible in its selected category.
 const tabs = $$(".tab");
 const panels = $$(".panel");
-const showMore = $("#show-treatments");
-const expanded = new Set();
-function updateShowMore() {
-  const panel = $(".panel.is-active");
-  const cards = $$(".card", panel);
-  const isExpanded = expanded.has(panel.dataset.panel);
-  cards.forEach((card, index) => {
-    card.hidden = cards.length > 3 && !isExpanded && index >= 3;
-  });
-  showMore.hidden = cards.length <= 3;
-  showMore.setAttribute("aria-controls", panel.id);
-  showMore.setAttribute("aria-expanded", String(isExpanded));
-  showMore.textContent = isExpanded
-    ? copy("Ver menos tratamientos −", "Show fewer treatments −")
-    : copy(
-        `Ver los ${cards.length} tratamientos +`,
-        `View all ${cards.length} treatments +`,
-      );
-}
 function selectTab(key, focus = false) {
   tabs.forEach((tab) => {
     const active = tab.dataset.tab === key;
@@ -170,7 +149,6 @@ function selectTab(key, focus = false) {
     panel.hidden = !active;
     if (!active) $$("video", panel).forEach((video) => video.pause());
   });
-  updateShowMore();
 }
 tabs.forEach((tab, index) => {
   tab.id = `tab-${tab.dataset.tab}`;
@@ -194,26 +172,6 @@ panels.forEach((panel) => {
   panel.setAttribute("role", "tabpanel");
   panel.setAttribute("aria-labelledby", `tab-${panel.dataset.panel}`);
   panel.tabIndex = 0;
-});
-showMore.addEventListener("click", () => {
-  const panel = $(".panel.is-active");
-  const key = panel.dataset.panel;
-  if (expanded.has(key)) {
-    expanded.delete(key);
-    updateShowMore();
-    $(".tabs").scrollIntoView({
-      behavior: motionPreference.matches ? "instant" : "smooth",
-      block: "start",
-    });
-    $(".tab.is-active").focus({ preventScroll: true });
-  } else {
-    expanded.add(key);
-    updateShowMore();
-    // Move keyboard focus into the newly revealed content.
-    const firstNew = $$(".card", panel)[3];
-    firstNew.tabIndex = -1;
-    firstNew.focus({ preventScroll: true });
-  }
 });
 $$("[data-category]").forEach((link) =>
   link.addEventListener("click", () => selectTab(link.dataset.category)),

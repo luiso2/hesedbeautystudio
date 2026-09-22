@@ -28,7 +28,7 @@ La renovación de septiembre de 2026 elimina GSAP, Lenis, el preloader y el desp
 
 Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. Los videos visibles se reproducen automáticamente en móvil y escritorio. Un control fijo pausa todos los videos y guarda la preferencia explícita; la reproducción es independiente del movimiento reducido de las animaciones. Si el navegador bloquea autoplay, se muestran controles nativos.
 
-Cada categoría muestra inicialmente tres tarjetas si contiene más de tres. Mantener acceso al catálogo completo mediante el botón, traducciones y enlaces a WhatsApp específicos del tratamiento.
+Cada categoría muestra todas sus tarjetas al seleccionarla, con imagen o video y precio confirmado junto al nombre. Para tratamientos sin importe confirmado, mostrar «Consultar precio». Mantener las traducciones y los enlaces a WhatsApp específicos del tratamiento.
 
 ## Contenido pendiente de confirmar
 
