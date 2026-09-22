@@ -300,3 +300,5 @@ Object.assign(EN, {
 });
 
 Object.assign(EN, { "media.illustrative": "Illustrative image" });
+
+Object.assign(EN, { "srv.detoxName": "Detox Facial + Hyaluronic Acid Hydration", "srv.f2": "A detox facial cleanse followed by hyaluronic acid hydration for skin that feels fresh and soft." });

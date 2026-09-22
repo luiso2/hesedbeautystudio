@@ -5,7 +5,7 @@ GitHub: https://github.com/luiso2/hesedbeautystudio
 Producción: https://mariahesed.com
 Dominio adicional: https://www.mariahesed.com
 URL técnica: https://hesedbeautystudio.odd-forest-9504.workers.dev
-Instagram: https://www.instagram.com/hesedbeautystudio
+Instagram: https://www.instagram.com/mariahesed
 WhatsApp: +1 (786) 709-5791.
 
 ## Stack y estructura
@@ -55,3 +55,5 @@ Los dominios mariahesed.com y www.mariahesed.com están vinculados al mismo Work
 Maderoterapia tiene una sola tarjeta (data-service=maderoterapia), US$80, con video de sesión y fotos originales antes/después enviadas el 22 de septiembre. No crear servicios adicionales para añadir medios. La clienta pidió eliminar Maderoterapia + Metaloterapia y Masaje moldeador + Maderoterapia; conservar únicamente Maderoterapia de US$80.
 
 La clienta solicitó eliminar la tarjeta individual de Metaloterapia (srv.n7) del catálogo. No volver a añadirla sin indicación.
+
+Instagram vigente: @mariahesed. Facial Detox incluye hidratación con ácido hialurónico y el video facial-detox-hialuronico.mp4, sin tarjeta adicional.
