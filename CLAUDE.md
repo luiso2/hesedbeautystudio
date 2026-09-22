@@ -2,7 +2,9 @@
 
 Website de una página para María Hesed · Estética Avanzada, Miami, de María Hesed.
 GitHub: https://github.com/luiso2/hesedbeautystudio
-Producción: https://hesedbeautystudio.odd-forest-9504.workers.dev
+Producción: https://mariahesed.com
+Dominio adicional: https://www.mariahesed.com
+URL técnica: https://hesedbeautystudio.odd-forest-9504.workers.dev
 Instagram: https://www.instagram.com/hesedbeautystudio
 WhatsApp: +1 (786) 709-5791.
 
@@ -47,3 +49,5 @@ El catálogo corporal incluye los 12 servicios con precios legibles de la lista 
 Actualización de medios: las tarjetas sin material propio usan fotos generadas identificadas como Imagen ilustrativa. Los archivos `public/img/illustrative-*.jpg` son provisionales; sustituirlos por material real cuando la clienta lo envíe. No presentar fotos generadas como testimonios o resultados reales.
 
 La clienta exige una imagen específica y diferente por servicio, sin collages de fotos repetidas ni videos duplicados entre tarjetas. Lipotrópicos se ofrece como inyectable (confirmado); no inferir fórmulas, dosis ni vía específica. Los archivos illustrative-*-v2 representan cada servicio por separado.
+
+Los dominios mariahesed.com y www.mariahesed.com están vinculados al mismo Worker mediante routes con custom_domain en wrangler.jsonc. Canonical, Open Graph y JSON-LD usan https://mariahesed.com.
