@@ -310,3 +310,5 @@ Object.assign(EN, {"wax.group.face": "Face", "wax.group.body": "Body", "wax.area
 Object.assign(EN, {"fibro.prices": "Prices by treatment area", "fibro.from300": "From US$300", "fibro.area.full": "Full face", "fibro.area.neck": "Neck and décolletage", "fibro.area.forehead": "Forehead", "fibro.area.abdomen": "Abdominal area", "fibro.area.warts": "Wart removal"});
 
 Object.assign(EN, {"srv.pigmentName": "Body Hyperpigmentation Care", "srv.pigmentDesc": "Aesthetic care focused on the appearance of uneven skin tone, with an individual assessment of the treatment area.", "srv.pigmentAreas": "Underarms, bikini area and buttocks"});
+
+Object.assign(EN, {"srv.deluxDesc": "A personalized facial care session. Ask about the treatment steps and how they can be adapted to your skin\u2019s needs."});
