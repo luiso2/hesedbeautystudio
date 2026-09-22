@@ -306,3 +306,5 @@ Object.assign(EN, { "srv.detoxName": "Detox Facial + Hyaluronic Acid Hydration",
 Object.assign(EN, { "srv.tab4": "Brows & Waxing", "srv.waxName": "Waxing", "srv.waxDesc": "Wax hair removal and skin care. Ask about available treatment areas and the right option for you.", "srv.waxPrice": "Ask for pricing" });
 
 Object.assign(EN, {"wax.group.face": "Face", "wax.group.body": "Body", "wax.area.brows": "Eyebrows", "wax.area.lip": "Upper lip", "wax.area.chin": "Chin", "wax.area.sideburns": "Sideburns", "wax.area.face": "Full face", "wax.area.underarms": "Underarms", "wax.area.halfarm": "Half arms", "wax.area.arm": "Full arms", "wax.area.halfleg": "Half legs", "wax.area.leg": "Full legs", "wax.area.bikini": "Bikini", "wax.area.fullbikini": "Full bikini", "wax.area.buttocks": "Buttocks", "wax.area.abdomen": "Abdomen", "wax.area.back": "Full back"});
+
+Object.assign(EN, {"fibro.prices": "Prices by treatment area", "fibro.from300": "From US$300", "fibro.area.full": "Full face", "fibro.area.neck": "Neck and décolletage", "fibro.area.forehead": "Forehead", "fibro.area.abdomen": "Abdominal area", "fibro.area.warts": "Wart removal"});
