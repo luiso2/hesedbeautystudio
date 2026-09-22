@@ -2135,3 +2135,9 @@ video[controls] {
 .wood-results figure { margin: 0; min-width: 0; }
 .wood-results img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; }
 .wood-results figcaption { padding: 8px 0 2px; text-align: center; font-size: 11px; letter-spacing: .08em; }
+
+.wax-prices { margin: 20px 0; }
+.wax-prices h4 { margin: 20px 0 8px; font-size: 15px; }
+.wax-prices dl { margin: 0; }
+.wax-prices dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid #e6ddce; font-size: 13px; }
+.wax-prices dd { margin: 0; text-align: right; font-weight: 600; }

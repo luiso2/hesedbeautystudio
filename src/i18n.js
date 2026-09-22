@@ -304,3 +304,5 @@ Object.assign(EN, { "media.illustrative": "Illustrative image" });
 Object.assign(EN, { "srv.detoxName": "Detox Facial + Hyaluronic Acid Hydration", "srv.f2": "A detox facial cleanse followed by hyaluronic acid hydration for skin that feels fresh and soft." });
 
 Object.assign(EN, { "srv.tab4": "Brows & Waxing", "srv.waxName": "Waxing", "srv.waxDesc": "Wax hair removal and skin care. Ask about available treatment areas and the right option for you.", "srv.waxPrice": "Ask for pricing" });
+
+Object.assign(EN, {"wax.group.face": "Face", "wax.group.body": "Body", "wax.area.brows": "Eyebrows", "wax.area.lip": "Upper lip", "wax.area.chin": "Chin", "wax.area.sideburns": "Sideburns", "wax.area.face": "Full face", "wax.area.underarms": "Underarms", "wax.area.halfarm": "Half arms", "wax.area.arm": "Full arms", "wax.area.halfleg": "Half legs", "wax.area.leg": "Full legs", "wax.area.bikini": "Bikini", "wax.area.fullbikini": "Full bikini", "wax.area.buttocks": "Buttocks", "wax.area.abdomen": "Abdomen", "wax.area.back": "Full back"});
