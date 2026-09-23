@@ -1,15 +1,16 @@
-/* Hesed — an editorial identity in warm ivory, ink and antique gold. */
+/* María Hesed — ivory, black and warm gold, drawn from the studio's artwork. */
 :root {
-  --ink: #272923;
-  --ivory: #f6f3ed;
-  --paper: #fffdf9;
-  --sand: #e9e3d8;
-  --gold: #75613a;
-  --muted: #606158;
-  --line: #d9d4c9;
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-body: "Jost", Arial, sans-serif;
-  --font-script: "Pinyon Script", cursive;
+  --ink: #17130f;
+  --ivory: #f7efe4;
+  --paper: #fffbf5;
+  --sand: #efe2cf;
+  --gold: #85601f;
+  --gold-bright: #ac7c2e;
+  --muted: #60574d;
+  --line: #d6bd93;
+  --font-display: "Bodoni Moda", "Times New Roman", serif;
+  --font-body: "Montserrat", Arial, sans-serif;
+  --font-script: "Allura", cursive;
   --gutter: clamp(24px, 5vw, 80px);
   --container: 1320px;
 }
@@ -78,7 +79,7 @@ summary:focus-visible,
   outline-offset: 6px;
 }
 ::selection {
-  background: #ded3b9;
+  background: #e6cfaa;
   color: var(--ink);
 }
 [hidden] {
@@ -102,8 +103,8 @@ summary:focus-visible,
   transform: none;
 }
 .title-xl {
-  font: 400 clamp(40px, 4.5vw, 66px)/1.06 var(--font-display);
-  letter-spacing: -0.035em;
+  font: 400 clamp(38px, 4.15vw, 64px)/1.16 var(--font-display);
+  letter-spacing: -0.055em;
 }
 .title-xl em,
 .title-xxl em {
@@ -111,8 +112,8 @@ summary:focus-visible,
   color: var(--gold);
 }
 .title-xxl {
-  font: 400 clamp(50px, 7vw, 96px)/1.04 var(--font-display);
-  letter-spacing: -0.035em;
+  font: 400 clamp(48px, 6.4vw, 90px)/1.14 var(--font-display);
+  letter-spacing: -0.055em;
 }
 .lead {
   font-size: 18px;
@@ -164,7 +165,7 @@ summary:focus-visible,
   color: var(--ivory);
 }
 .btn--gold:hover {
-  background: #514a38;
+  background: #4b3824;
 }
 .btn--ghost {
   border-color: var(--line);
@@ -192,7 +193,7 @@ summary:focus-visible,
   align-items: center;
   justify-content: space-between;
   gap: 28px;
-  background: rgba(246, 243, 237, 0.97);
+  background: rgba(247, 239, 228, 0.97);
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
@@ -340,16 +341,18 @@ summary:focus-visible,
   margin-bottom: 30px;
 }
 .hero__title {
-  font: 400 clamp(74px, 8.3vw, 126px)/0.91 var(--font-display);
-  letter-spacing: -0.055em;
+  font: 400 clamp(64px, 7.4vw, 112px)/1.04 var(--font-display);
+  letter-spacing: -0.07em;
 }
 .hero__title > span,
 .hero__title > em {
   display: block;
 }
 .hero__title em {
-  color: var(--gold);
-  font-weight: 400;
+  color: var(--gold-bright);
+  font: 400 1.3em/.8 var(--font-script);
+  letter-spacing: 0;
+  padding: .1em .14em .16em 0;
 }
 .hero__lead {
   font-size: 15px;
@@ -382,7 +385,7 @@ summary:focus-visible,
   place-items: center;
   width: 42px;
   height: 42px;
-  border: 1px solid #bbae8f;
+  border: 1px solid #c8a773;
   border-radius: 50%;
   font: 25px var(--font-display);
   color: var(--gold);
@@ -392,7 +395,7 @@ summary:focus-visible,
   min-width: 0;
   height: 590px;
   overflow: hidden;
-  background: #70624c;
+  background: #6b5137;
 }
 .hero__video {
   width: 100%;
@@ -573,7 +576,7 @@ summary:focus-visible,
   transition: border-color 0.2s;
 }
 .card:hover {
-  border-color: #a89878;
+  border-color: #b3884a;
 }
 .card__media {
   position: relative;
@@ -604,7 +607,7 @@ summary:focus-visible,
   color: var(--gold);
 }
 .card h3 {
-  font: 400 28px/1.1 var(--font-display);
+  font: 400 28px/1.2 var(--font-display);
   letter-spacing: -0.02em;
 }
 .card p {
@@ -713,7 +716,7 @@ summary:focus-visible,
 }
 /* Brand story */
 .manifesto {
-  background: #ebe6dc;
+  background: #f1e4d1;
 }
 .manifesto__grid {
   display: grid;
@@ -737,7 +740,7 @@ summary:focus-visible,
   gap: 18px;
   margin-top: 38px;
   padding-top: 24px;
-  border-top: 1px solid #cfc7b9;
+  border-top: 1px solid #d6bd93;
 }
 .stat__num {
   display: block;
@@ -769,7 +772,7 @@ summary:focus-visible,
   bottom: 0;
   width: 44%;
   height: 45%;
-  border: 8px solid #ebe6dc;
+  border: 8px solid #f1e4d1;
 }
 .frame__video {
   width: 100%;
@@ -785,7 +788,7 @@ summary:focus-visible,
   color: white;
   font-size: 9px;
   letter-spacing: 0.1em;
-  background: #292923a8;
+  background: #17130fa8;
   padding: 12px;
 }
 .manifesto__orb {
@@ -793,18 +796,18 @@ summary:focus-visible,
 }
 /* The ritual — all four steps stay in the natural scroll flow. */
 .ritual {
-  background: #292c25;
+  background: #17130f;
   color: var(--ivory);
   padding: 90px 0;
 }
 .ritual .eyebrow {
-  color: #c4b086;
+  color: #d8ad64;
 }
 .ritual .title-xl {
   max-width: 760px;
 }
 .ritual .title-xl em {
-  color: #c4b086;
+  color: #d8ad64;
 }
 .ritual__track {
   width: min(100% - 2 * var(--gutter), var(--container));
@@ -826,7 +829,7 @@ summary:focus-visible,
 }
 .step__num {
   font-size: 11px;
-  color: #c4b086;
+  color: #d8ad64;
 }
 .step h3 {
   font: 32px var(--font-display);
@@ -834,7 +837,7 @@ summary:focus-visible,
 }
 .step p {
   font-size: 12px;
-  color: #c4c6bb;
+  color: #e9ddcc;
   line-height: 1.8;
 }
 .step--cta {
@@ -853,7 +856,7 @@ summary:focus-visible,
 }
 .step--cta .btn {
   margin-left: auto;
-  background: #d8c8a3;
+  background: #e0b46b;
   color: var(--ink);
 }
 /* Proof, founder and journal */
@@ -867,7 +870,7 @@ summary:focus-visible,
   position: relative;
   overflow: hidden;
   margin: 0;
-  background: #ddd5c9;
+  background: #e8d9c2;
 }
 .result--big {
   grid-column: span 2;
@@ -907,7 +910,7 @@ summary:focus-visible,
   display: grid;
   place-items: center;
   padding: 24px;
-  background: #e9e3d8;
+  background: #efe2cf;
 }
 .result--quote blockquote {
   text-align: center;
@@ -955,7 +958,7 @@ summary:focus-visible,
   font: 23px/1.2 var(--font-display);
 }
 .about {
-  background: #eae5db;
+  background: #f2e3cf;
 }
 .about__grid {
   display: grid;
@@ -973,7 +976,7 @@ summary:focus-visible,
   width: 180px;
   aspect-ratio: 1;
   padding: 8px;
-  border: 1px solid #a69777;
+  border: 1px solid #c09656;
   border-radius: 50%;
 }
 .about__portrait img {
@@ -1009,7 +1012,7 @@ summary:focus-visible,
 }
 .about__text .btn {
   margin-top: 12px;
-  border-color: #ada390;
+  border-color: #c09656;
 }
 .reels__grid {
   display: grid;
@@ -1020,7 +1023,7 @@ summary:focus-visible,
   position: relative;
   aspect-ratio: 9/16;
   overflow: hidden;
-  background: #292c25;
+  background: #17130f;
 }
 .reel video {
   width: 100%;
@@ -1048,7 +1051,7 @@ summary:focus-visible,
   margin-top: 35px;
 }
 .faq {
-  background: #eeeae2;
+  background: #f4e9d9;
   border-block: 1px solid var(--line);
 }
 .faq__grid {
@@ -1065,10 +1068,10 @@ summary:focus-visible,
   max-width: 320px;
 }
 .acc {
-  border-bottom: 1px solid #ccc6ba;
+  border-bottom: 1px solid #d6bd93;
 }
 .acc:first-child {
-  border-top: 1px solid #ccc6ba;
+  border-top: 1px solid #d6bd93;
 }
 .acc summary {
   display: flex;
@@ -1118,7 +1121,7 @@ summary:focus-visible,
   padding: 110px 0;
   text-align: center;
   color: var(--ivory);
-  background: #292c25;
+  background: #17130f;
 }
 .book__bg {
   position: absolute;
@@ -1135,19 +1138,19 @@ summary:focus-visible,
   content: "";
   position: absolute;
   inset: 0;
-  background: #10170f70;
+  background: #17130f70;
 }
 .book__inner {
   position: relative;
 }
 .book .eyebrow,
 .book .title-xxl em {
-  color: #d8c8a3;
+  color: #e0b46b;
 }
 .book .lead {
   max-width: 510px;
   margin: 26px auto 32px;
-  color: #e0dfd6;
+  color: #f4e9d9;
   font-size: 15px;
 }
 .book__actions {
@@ -1157,7 +1160,7 @@ summary:focus-visible,
   flex-wrap: wrap;
 }
 .book .btn--gold {
-  background: #dfd0ae;
+  background: #e0b46b;
   color: var(--ink);
 }
 .book .btn--ghost {
@@ -1227,7 +1230,7 @@ summary:focus-visible,
   text-align: center;
   font: 400 clamp(100px, 24vw, 360px)/0.9 var(--font-display);
   letter-spacing: 0.09em;
-  color: #8b806c;
+  color: #a77a37;
   margin-top: 36px;
   padding-left: 0.09em;
 }
@@ -1860,17 +1863,12 @@ video[controls] {
 }
 
 /* Sculpted surfaces and restrained depth for María Hesed. */
-:root {
-  --ivory: #f7f3ec;
-  --paper: #fffdf8;
-  --line: #dcd3c3;
-}
 .nav {
-  box-shadow: 0 5px 28px #3e352508;
-  background: #f7f3ecf5;
+  box-shadow: 0 5px 28px #17130f0d;
+  background: #f7efe4f5;
 }
 .btn {
-  border-radius: 8px;
+  border-radius: 999px;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -1878,39 +1876,39 @@ video[controls] {
   text-shadow: 0 1px 1px #0002;
 }
 .btn--gold {
-  background: linear-gradient(165deg, #484a3f 0%, #2c3028 48%, #20251e 100%);
-  border: 1px solid #4d5145;
+  background: linear-gradient(165deg, #363029 0%, #17130f 58%, #0b0b0b 100%);
+  border: 1px solid #473827;
   box-shadow:
     inset 0 1px 0 #ffffff35,
     inset 0 -1px 0 #0005,
-    0 4px 0 #151a13,
-    0 9px 18px #24291c25;
+    0 4px 0 #090806,
+    0 9px 18px #17130f25;
 }
 .btn--gold:hover {
-  background: linear-gradient(165deg, #555648, #373c30 60%, #282e24);
+  background: linear-gradient(165deg, #57412c, #2a2118 60%, #17130f);
   transform: translateY(-2px);
   box-shadow:
     inset 0 1px 0 #ffffff40,
-    0 6px 0 #151a13,
-    0 14px 24px #24291c30;
+    0 6px 0 #090806,
+    0 14px 24px #17130f30;
 }
 .btn--ghost {
-  background: linear-gradient(180deg, #fffefa, #eae4d9);
+  background: linear-gradient(180deg, #fffbf5, #efdfc6);
   color: var(--ink);
-  border: 1px solid #cfc5b4;
+  border: 1px solid var(--line);
   box-shadow:
     inset 0 1px 0 #fff,
-    0 3px 0 #c9bfad,
-    0 7px 14px #3e352512;
+    0 3px 0 #c8a773,
+    0 7px 14px #17130f12;
   text-shadow: none;
 }
 .btn--ghost:hover {
-  background: linear-gradient(180deg, #fff, #f0eadf);
+  background: linear-gradient(180deg, #fff, #f6e9d5);
   transform: translateY(-2px);
   box-shadow:
     inset 0 1px 0 #fff,
-    0 5px 0 #c9bfad,
-    0 12px 20px #3e35251a;
+    0 5px 0 #c8a773,
+    0 12px 20px #17130f1a;
 }
 .btn:active,
 .btn--gold:active,
@@ -1918,15 +1916,15 @@ video[controls] {
   transform: translateY(3px);
   box-shadow:
     inset 0 2px 5px #0002,
-    0 1px 0 #504632;
+    0 1px 0 #6d4d1b;
 }
 .book .btn--gold,
 .step--cta .btn {
-  background: linear-gradient(160deg, #f0e2bd, #d3bc89 55%, #c1a670);
-  border-color: #e3d0a3;
+  background: linear-gradient(160deg, #f4dfae, #ba8835 55%, #9f6c22);
+  border-color: #d5aa63;
   box-shadow:
     inset 0 1px 0 #fff9,
-    0 4px 0 #8b7041,
+    0 4px 0 #6d4d1b,
     0 10px 24px #0003;
   text-shadow: 0 1px 0 #ffffff60;
 }
@@ -1935,7 +1933,7 @@ video[controls] {
   color: var(--ivory);
   box-shadow:
     inset 0 1px 0 #ffffff30,
-    0 3px 0 #151a13;
+    0 3px 0 #090806;
 }
 .book .btn--ghost:hover {
   background: #ffffff22;
@@ -1947,7 +1945,7 @@ video[controls] {
 .hero__media {
   border-radius: 160px 160px 12px 12px;
   box-shadow: 0 18px 45px #3b2d251c;
-  border: 1px solid #d5c4a9;
+  border: 1px solid var(--line);
 }
 .hero__image-top {
   top: 36px;
@@ -1965,7 +1963,7 @@ video[controls] {
   padding-bottom: 34px;
 }
 .category-strip {
-  background: #eee8de;
+  background: #f3e5d0;
 }
 .category-strip a {
   transition: background 0.2s;
@@ -1998,10 +1996,10 @@ video[controls] {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #eee6d7;
+  background: #f2e4cc;
   box-shadow:
     inset 0 1px 0 #fff,
-    0 2px 0 #d0c4ac;
+    0 2px 0 #c8a773;
   font-size: 18px;
 }
 .card__price span {
@@ -2013,7 +2011,7 @@ video[controls] {
 }
 .tab {
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: 999px;
 }
 .tab.is-active {
   background: var(--ink);
@@ -2021,23 +2019,23 @@ video[controls] {
   border-color: var(--ink);
   box-shadow:
     inset 0 1px 0 #ffffff25,
-    0 3px 0 #151a13;
+    0 3px 0 #090806;
 }
 .tab:hover:not(.is-active) {
-  background: #eae2d4;
+  background: #efe2cf;
 }
 .manifesto {
-  background: #ece5d8;
+  background: #f1e4d1;
 }
 .frame {
   border-radius: 10px;
   box-shadow: 0 16px 40px #382d2420;
 }
 .frame--small {
-  border-color: #ece5d8;
+  border-color: #f1e4d1;
 }
 .ritual {
-  background: #252b23;
+  background: #17130f;
 }
 .step__media,
 .result,
@@ -2050,17 +2048,17 @@ video[controls] {
 }
 .about__media--photo {
   padding: 10px;
-  border: 1px solid #b4a17b;
+  border: 1px solid #b68b48;
   border-radius: 120px 120px 18px 18px;
 }
 .acc summary {
   padding-block: 28px;
 }
 .acc[open] {
-  border-color: #ad9870;
+  border-color: #ad7c32;
 }
 .footer__giant {
-  color: #82745d;
+  color: #a77a37;
   margin-bottom: 0;
 }
 .footer__powered {
@@ -2152,8 +2150,8 @@ video[controls] {
   bottom: 12px;
   left: 12px;
   z-index: 2;
-  background: #f7f3eceb;
-  color: #45463d;
+  background: #f7efe4eb;
+  color: #17130f;
   padding: 5px 9px;
   border-radius: 3px;
   font-size: 9px;
@@ -2161,14 +2159,14 @@ video[controls] {
 }
 
 /* Real before-and-after photos belong to the existing wood therapy service. */
-.wood-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px; background: #f6f2ea; }
+.wood-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px; background: #f7efe4; }
 .wood-results figure { margin: 0; min-width: 0; }
 .wood-results img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; }
 .wood-results figcaption { padding: 8px 0 2px; text-align: center; font-size: 11px; letter-spacing: .08em; }
 .card__proof {
   display: block;
   padding: 12px;
-  background: #f6f2ea;
+  background: #f7efe4;
 }
 .card__proof img {
   display: block;
@@ -2186,5 +2184,21 @@ video[controls] {
 .wax-prices h4 { margin: 12px 0 8px; font-size: 16px; }
 .wax-prices h4:first-child { margin-top: 0; }
 .wax-prices dl { margin: 0; }
-.wax-prices dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid #d9d4c9; font-size: 14px; }
+.wax-prices dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid #d6bd93; font-size: 14px; }
 .wax-prices dd { margin: 0; text-align: right; font-size: 15px; font-weight: 600; color: var(--ink); }
+
+@media (max-width: 360px) {
+  .nav .nav__mark { width: 45px; font-size: 27px; }
+  .nav__mark i { height: 34px; }
+  .nav__wordmark { font-size: 14px; }
+  .nav__wordmark em { font-size: 5px; }
+  .hero__title { font-size: 68px; }
+  .title-xl { font-size: 38px; }
+  .title-xxl { font-size: 40px; }
+  .card h3 { font-size: 25px; overflow-wrap: anywhere; }
+  .category-strip a { min-width: 0; gap: 7px; padding-inline: 8px; }
+  .category-strip a > span:nth-child(2) { font-size: 19px; overflow-wrap: anywhere; }
+  .benefits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .benefit { min-width: 0; gap: 6px; }
+  .benefit p { font-size: 17px; overflow-wrap: anywhere; }
+}
