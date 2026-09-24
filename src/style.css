@@ -8,7 +8,8 @@
   --gold-bright: #ac7c2e;
   --muted: #60574d;
   --line: #d6bd93;
-  --font-display: "Bodoni Moda", "Times New Roman", serif;
+  --font-display: "Italiana", "Bodoni Moda", "Times New Roman", serif;
+  --font-display-italic: "Bodoni Moda", "Times New Roman", serif;
   --font-body: "Montserrat", Arial, sans-serif;
   --font-script: "Allura", cursive;
   --gutter: clamp(24px, 5vw, 80px);
@@ -104,16 +105,18 @@ summary:focus-visible,
 }
 .title-xl {
   font: 400 clamp(38px, 4.15vw, 64px)/1.16 var(--font-display);
-  letter-spacing: -0.055em;
+  letter-spacing: -0.02em;
 }
 .title-xl em,
 .title-xxl em {
+  font-family: var(--font-display-italic);
+  font-style: italic;
   font-weight: 400;
   color: var(--gold);
 }
 .title-xxl {
   font: 400 clamp(48px, 6.4vw, 90px)/1.14 var(--font-display);
-  letter-spacing: -0.055em;
+  letter-spacing: -0.02em;
 }
 .lead {
   font-size: 18px;
@@ -212,7 +215,7 @@ summary:focus-visible,
 .nav__wordmark {
   display: flex;
   flex-direction: column;
-  font: 500 30px/1 var(--font-display);
+  font: 400 30px/1 var(--font-display);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -342,7 +345,7 @@ summary:focus-visible,
 }
 .hero__title {
   font: 400 clamp(64px, 7.4vw, 112px)/1.04 var(--font-display);
-  letter-spacing: -0.07em;
+  letter-spacing: -0.02em;
 }
 .hero__title > span,
 .hero__title > em {
@@ -438,7 +441,7 @@ summary:focus-visible,
   color: white;
 }
 .hero__image-bottom p {
-  font: italic 40px/1.03 var(--font-display);
+  font: italic 40px/1.03 var(--font-display-italic);
   letter-spacing: -0.02em;
 }
 .motion-toggle {
@@ -548,7 +551,7 @@ summary:focus-visible,
 .category-choice h3 {
   margin-top: 28px;
   font: 400 clamp(42px, 4vw, 60px)/1.12 var(--font-display);
-  letter-spacing: -.055em;
+  letter-spacing: -.02em;
 }
 .category-choice p {
   max-width: 390px;
@@ -954,7 +957,7 @@ summary:focus-visible,
   margin: 0;
 }
 .result--quote p {
-  font: italic 30px/1.2 var(--font-display);
+  font: italic 30px/1.2 var(--font-display-italic);
 }
 .result--quote cite {
   display: block;
@@ -1749,12 +1752,12 @@ video[controls] {
 }
 .nav__wordmark {
   font-size: 23px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
   white-space: nowrap;
 }
 .nav__wordmark em {
   font-size: 8px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.28em;
 }
 .footer__mark {
   width: 110px;
@@ -1768,7 +1771,7 @@ video[controls] {
 .footer__name {
   text-transform: uppercase;
   font-size: 24px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
 }
 .footer__name em {
   display: block;
@@ -1796,7 +1799,7 @@ video[controls] {
 }
 .footer__giant {
   font-size: clamp(44px, 12vw, 185px);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
 }
 @media (max-width: 1150px) {
   .nav__links {
@@ -1821,11 +1824,11 @@ video[controls] {
   }
   .nav__wordmark {
     font-size: 17px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.13em;
   }
   .nav__wordmark em {
     font-size: 6px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.2em;
   }
   .nav {
     gap: 8px;
@@ -2192,6 +2195,7 @@ video[controls] {
   .card h3 { font-size: 25px; overflow-wrap: anywhere; }
   .category-choice h3 { font-size: 39px; }
   .category-choice__button { padding-inline: 14px; gap: 8px; font-size: 9px; white-space: nowrap; }
+  .step h3 { font-size: 26px; }
   .benefits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .benefit { min-width: 0; gap: 6px; }
   .benefit p { font-size: 17px; overflow-wrap: anywhere; }

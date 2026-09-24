@@ -42,6 +42,8 @@ Compilar sin errores y revisar escritorio y móvil, ES/EN, los cuatro botones de
 
 Marca vigente: María Hesed · Estética Avanzada. Monograma M | H; lema Ciencia · Belleza · Bienestar. Conservar la URL técnica. El Instagram oficial indicado por la clienta es @mariahesed.esthetics. Precios confirmados: drenaje linfático US$85, maderoterapia US$80 y metaloterapia US$80. Brazilian Body Sculpt es diferente de Brazilian Slim Body y no se añade sin material propio.
 
+La tipografía de titulares, monograma y nombre de marca usa Italiana, con mayúsculas espaciadas para aproximarse al rótulo M | H enviado por la clienta el 23 de septiembre. Los énfasis en cursiva conservan Bodoni Moda. Los botones de las cuatro categorías muestran solo el texto, sin flechas.
+
 La sección de la fundadora usa `public/img/maria-hesed-portrait.jpg`, foto vertical completa suministrada por la clienta. Reemplaza el bloque anterior de retrato circular, firma y credenciales.
 
 El catálogo corporal incluye los 12 servicios con precios legibles de la lista de la clienta: tres ya tenían video y nueve se añadieron con descripción, precio y espacio de media en blanco. La clienta autorizó añadir servicios sin foto/video para completar el material después. Usar `.card__media--empty` hasta recibir su material. No inferir el precio tapado de Brazilian Body Sculpt.
