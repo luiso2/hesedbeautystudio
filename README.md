@@ -1,33 +1,31 @@
-# Hesed Beauty Studio — Website
+# María Hesed · Estética Avanzada
 
-Sitio web premium para **Hesed Beauty Studio** (Miami) · [@hesedbeautystudio](https://www.instagram.com/hesedbeautystudio)
-
-- Vite + vanilla JS
-- GSAP + ScrollTrigger (motion graphics, reveals, sección horizontal pinned)
-- Lenis (smooth scroll)
-- Bilingüe ES / EN (`src/i18n.js`)
-- Vídeos del Instagram del studio transcodificados a H.264 (`public/videos`)
+Sitio bilingüe de estética facial y corporal en Miami, con diseño editorial en marfil, tinta y dorado. HTML, CSS y JavaScript sobre Vite, desplegado como assets estáticos en Cloudflare Workers.
 
 ## Desarrollo
 
-```bash
-npm install
+```sh
+npm ci
 npm run dev
+npm run build
 ```
 
-## Build
+La configuración de despliegue se genera en `dist/wrangler.json`. `npm run deploy` compila y publica con las credenciales de Cloudflare configuradas en el entorno.
 
-```bash
-npm run build   # genera /dist
-```
+## Experiencia
 
-## Deploy (Cloudflare Workers · static assets)
+- Portada con material real del estudio y reserva de valoración por WhatsApp.
+- Cuatro categorías de tratamientos con pestañas accesibles (flechas, Home y End).
+- Tres tratamientos iniciales por categoría; botón para explorar el catálogo completo.
+- Navegación móvil con Escape, control de foco y contenido de fondo inerte.
+- Español por defecto; inglés seleccionable y preferencia persistida.
+- Videos visibles con reproducción automática en móvil y escritorio, pausa global persistente y animaciones que respetan movimiento reducido.
+- Acordeones nativos y contenido visible sin depender de animaciones.
 
-```bash
-npm run deploy   # = vite build + wrangler deploy
-```
+## Contenido
 
-Requiere `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` en el entorno.
-La configuración del Worker se genera en `dist/wrangler.json` a partir de `wrangler.jsonc`.
+`index.html` contiene el español; `src/i18n.js`, las traducciones inglesas. Las imágenes y videos del estudio están en `public/`. Se conservan los enlaces a WhatsApp e Instagram. No se añaden precios, testimonios ni una dirección postal no confirmados.
 
-Live: https://hesedbeautystudio.odd-forest-9504.workers.dev
+Producción: https://hesedbeautystudio.odd-forest-9504.workers.dev
+
+Marca vigente: María Hesed · Estética Avanzada. Monograma M | H; lema Ciencia · Belleza · Bienestar. Conservar los URLs técnicos y el Instagram existente hasta que la clienta indique nuevos. Precios confirmados: drenaje linfático US$85, maderoterapia US$80 y metaloterapia US$80. Brazilian Body Sculpt es diferente de Brazilian Slim Body y no se añade sin material propio.

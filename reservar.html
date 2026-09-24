@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="theme-color" content="#fffbf5" />
+    <title>Reservar mi cita · María Hesed</title>
+    <meta name="description" content="Selecciona tu tratamiento, consulta su precio y solicita una cita con María Hesed en Miami." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Italiana&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/reservar.css" />
+  </head>
+  <body class="booking-page">
+    <a class="skip-link" href="#booking-main" data-t="skip">Saltar a la reserva</a>
+    <header class="booking-nav">
+      <a href="/" class="booking-brand" aria-label="María Hesed · Inicio">
+        <span class="booking-brand__mark" aria-hidden="true">M<span></span>H</span>
+        <span>MARÍA HESED<small>ESTÉTICA AVANZADA</small></span>
+      </a>
+      <div class="booking-nav__right">
+        <div class="booking-lang" role="group" aria-label="Idioma">
+          <button type="button" data-lang="es" aria-pressed="true">ES</button><span>/</span><button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a href="/" class="booking-close" data-t="close">Cerrar</a>
+      </div>
+    </header>
+
+    <main id="booking-main" class="booking-main">
+      <div class="booking-heading">
+        <p class="booking-kicker" data-t="eyebrow">MARÍA HESED · RESERVAS</p>
+        <h1 data-t="title">Reserva tu <em>momento.</em></h1>
+        <p data-t="intro">Elige tu tratamiento, consulta el precio y dinos cuándo prefieres venir. María confirmará tu cita personalmente.</p>
+      </div>
+      <div class="booking-layout" id="booking-flow">
+        <form class="booking-wizard" id="booking-wizard" novalidate>
+          <ol class="booking-progress" aria-label="Pasos de la reserva">
+            <li class="is-current" data-progress="1"><span>01</span><small data-t="progressService">Servicio</small></li>
+            <li data-progress="2"><span>02</span><small data-t="progressDate">Fecha</small></li>
+            <li data-progress="3"><span>03</span><small data-t="progressDetails">Tus datos</small></li>
+            <li data-progress="4"><span>04</span><small data-t="progressReview">Revisión</small></li>
+          </ol>
+
+          <section class="booking-step" data-step="1" aria-labelledby="booking-step-title-1">
+            <p class="booking-step__count" data-t="step1count">PASO 01 / 04</p>
+            <h2 id="booking-step-title-1" data-t="step1title">Elige tu tratamiento</h2>
+            <p class="booking-step__lead" data-t="step1lead">Selecciona un servicio para ver su precio. Si tiene zonas, elige la tuya después.</p>
+            <div class="booking-selection-inline" id="booking-selection-inline" hidden aria-live="polite"></div>
+            <div class="booking-categories" id="booking-categories" role="group" aria-label="Categorías de servicios"></div>
+            <div class="booking-services" id="booking-services" role="group" aria-label="Tratamientos"></div>
+            <div class="booking-option" id="booking-option-wrap" hidden>
+              <label for="booking-option" data-t="chooseArea">Selecciona la zona</label>
+              <select id="booking-option" name="optionId"><option value="">Seleccionar zona</option></select>
+            </div>
+          </section>
+
+          <section class="booking-step" data-step="2" aria-labelledby="booking-step-title-2" hidden>
+            <p class="booking-step__count" data-t="step2count">PASO 02 / 04</p>
+            <h2 id="booking-step-title-2" data-t="step2title">¿Cuándo te gustaría venir?</h2>
+            <p class="booking-step__lead" data-t="step2lead">Indica una fecha y hora preferidas en Miami. Te confirmaremos la disponibilidad antes de fijar la cita.</p>
+            <div class="booking-date-grid">
+              <label class="booking-input"><span data-t="date">Fecha preferida</span><input type="date" id="booking-date" name="date" required /></label>
+              <label class="booking-input"><span data-t="time">Hora preferida · Miami</span><input type="time" id="booking-time" name="time" required /></label>
+            </div>
+            <p class="booking-note" data-t="noLiveAvailability">Todavía no mostramos horarios disponibles en tiempo real. Esta fecha y hora son una solicitud, no una cita confirmada.</p>
+          </section>
+
+          <section class="booking-step" data-step="3" aria-labelledby="booking-step-title-3" hidden>
+            <p class="booking-step__count" data-t="step3count">PASO 03 / 04</p>
+            <h2 id="booking-step-title-3" data-t="step3title">Tus datos de contacto</h2>
+            <p class="booking-step__lead" data-t="step3lead">María usará estos datos para confirmar la disponibilidad y los detalles de tu tratamiento.</p>
+            <div class="booking-date-grid">
+              <label class="booking-input"><span data-t="name">Nombre completo</span><input type="text" id="booking-name" name="name" autocomplete="name" maxlength="100" required /></label>
+              <label class="booking-input"><span data-t="phone">WhatsApp o teléfono</span><input type="tel" id="booking-phone" name="phone" autocomplete="tel" maxlength="30" required /></label>
+            </div>
+            <label class="booking-input"><span data-t="email">Correo electrónico · opcional</span><input type="email" id="booking-email" name="email" autocomplete="email" maxlength="150" /></label>
+            <label class="booking-input"><span data-t="note">Algo que debamos saber · opcional</span><textarea id="booking-note" name="note" rows="3" maxlength="600"></textarea></label>
+            <label class="booking-consent"><input type="checkbox" id="booking-consent" name="consent" required /><span data-t="consent">Acepto que María Hesed use estos datos para contactarme sobre esta solicitud.</span></label>
+            <label class="booking-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+          </section>
+
+          <section class="booking-step" data-step="4" aria-labelledby="booking-step-title-4" hidden>
+            <p class="booking-step__count" data-t="step4count">PASO 04 / 04</p>
+            <h2 id="booking-step-title-4" data-t="step4title">Revisa tu solicitud</h2>
+            <p class="booking-step__lead" data-t="step4lead">Comprueba los detalles antes de enviarlos. No se realizará ningún cobro ahora.</p>
+            <dl class="booking-review" id="booking-review"></dl>
+            <p class="booking-note" data-t="pending">Tu cita quedará pendiente hasta que María confirme la disponibilidad. Los tratamientos sin precio publicado se cotizarán personalmente.</p>
+          </section>
+
+          <p class="booking-error" id="booking-error" role="alert" hidden></p>
+          <div class="booking-actions">
+            <button type="button" class="booking-back" id="booking-back" data-t="back" hidden>Volver</button>
+            <button type="button" class="booking-next" id="booking-next" data-t="continue">Continuar <span aria-hidden="true">→</span></button>
+            <button type="submit" class="booking-next" id="booking-submit" data-t="submit" hidden>Enviar solicitud <span aria-hidden="true">→</span></button>
+          </div>
+        </form>
+
+        <aside class="booking-summary" aria-label="Resumen de la reserva">
+          <p class="booking-summary__eyebrow" data-t="summaryEyebrow">TU SELECCIÓN</p>
+          <h2 data-t="summaryTitle">Tu cita, a tu medida.</h2>
+          <div id="booking-summary-detail" aria-live="polite"></div>
+          <div class="booking-summary__foot">
+            <span data-t="summaryFoot">Cuidado personal en Miami</span>
+            <span>MARÍA HESED · ESTÉTICA AVANZADA</span>
+          </div>
+        </aside>
+      </div>
+
+      <section class="booking-success-page" id="booking-success" hidden tabindex="-1">
+        <span class="booking-success-page__icon" aria-hidden="true">✓</span>
+        <p class="booking-kicker" data-t="successKicker">SOLICITUD ENVIADA</p>
+        <h2 data-t="successTitle">Tu solicitud está en manos de María.</h2>
+        <p data-t="successText">La cita todavía no está confirmada. María revisará tu horario preferido y te contactará para confirmar los detalles.</p>
+        <p id="booking-reference"></p>
+        <div class="booking-success-page__actions">
+          <a id="booking-whatsapp" href="https://wa.me/17867095791" target="_blank" rel="noopener" data-t="whatsapp">Enviar también por WhatsApp</a>
+          <a href="/" data-t="home">Volver al inicio</a>
+        </div>
+      </section>
+      <p class="booking-help"><span data-t="help">¿Tienes preguntas?</span> <a href="https://wa.me/17867095791" target="_blank" rel="noopener">WhatsApp · +1 (786) 709-5791</a></p>
+    </main>
+    <footer class="booking-footer">
+      <span>© <span id="year"></span> María Hesed · Estética Avanzada</span>
+      <a href="https://www.merktop.com">Powered by <strong>Merktop</strong></a>
+    </footer>
+    <script type="module" src="/src/reservar.js"></script>
+  </body>
+</html>
