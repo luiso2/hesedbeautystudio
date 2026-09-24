@@ -24,11 +24,11 @@ WhatsApp: +1 (786) 709-5791.
 
 ## Diseño y comportamiento
 
-Portada dividida, cuatro tarjetas de categoría con acceso a servicios y precios bajo demanda, catálogo, manifiesto, ritual de cuatro pasos, resultados, fundadora, Instagram, FAQ y reserva.
+Portada dividida, cuatro categorías con acceso a servicios y precios bajo demanda, guía de reserva en tres pasos, resultados, fundadora, FAQ y reserva. Instagram se enlaza desde la página sin un mosaico de reels.
 
 La renovación de septiembre de 2026 elimina GSAP, Lenis, el preloader y el desplazamiento horizontal fijado. No introducir esperas artificiales, partículas, grano animado, cursores personalizados ni anillos giratorios.
 
-Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. Los videos visibles se reproducen automáticamente en móvil y escritorio. Un control fijo pausa todos los videos y guarda la preferencia explícita; la reproducción es independiente del movimiento reducido de las animaciones. Si el navegador bloquea autoplay, se muestran controles nativos.
+Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. Los videos muestran su póster y se cargan y reproducen solamente al pulsar «Ver video»; después se muestran controles nativos. No reintroducir reproducción automática ni videos decorativos repetidos.
 
 El catálogo comienza cerrado. Cada tarjeta de categoría tiene un botón «Ver servicios y precios» que abre todas las tarjetas de esa categoría; pulsarlo otra vez cierra el catálogo. Conservar la imagen o video y el precio confirmado junto al nombre. Para tratamientos sin importe confirmado, mostrar «Consultar el precio» en el mismo renglón y tamaño pequeño que los importes publicados. Mantener las traducciones y los enlaces a WhatsApp específicos del tratamiento como alternativa sin JavaScript.
 

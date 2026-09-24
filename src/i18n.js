@@ -340,3 +340,18 @@ Object.assign(EN, {
   "booking.whatsapp": "Also send via WhatsApp",
   "booking.again": "Request another appointment",
 });
+
+Object.assign(EN, {
+  "res.minimal": "See María's real work and find the treatment that fits what you are looking for.",
+  "res.explore": "Explore treatments",
+  "res.more": "See more results",
+  "res.lead": "Explore some results shared by María. Every experience is personal and begins with an assessment of your goals.",
+  "rit.eyebrow": "Your experience",
+  "rit.t1": "Simple from the start.",
+  "rit.s1": "Explore",
+  "rit.p1": "Find the treatment you are interested in and review its details and price.",
+  "rit.s2": "Request an appointment",
+  "rit.p2": "Choose your preferred date and time. María will review your request and confirm availability.",
+  "rit.s3": "Care tailored to you",
+  "rit.p3": "Your visit begins with a personal assessment to adapt the treatment to you.",
+});

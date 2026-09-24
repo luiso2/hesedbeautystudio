@@ -2277,3 +2277,153 @@ body.booking-in-view .wa-float { opacity: 0; pointer-events: none; }
   .benefit { min-width: 0; gap: 6px; }
   .benefit p { font-size: 17px; overflow-wrap: anywhere; }
 }
+
+/* September 2026: a quieter route from treatment discovery to booking. */
+body { background: var(--paper); }
+.nav { box-shadow: none; background: var(--paper); }
+.hero { padding-top: clamp(24px, 4vw, 54px); }
+.hero__media {
+  height: clamp(440px, 47vw, 640px);
+  border-radius: 2px;
+  box-shadow: none;
+  border: 0;
+}
+.hero__video { filter: none; }
+.hero__veil { background: linear-gradient(180deg, #0005, transparent 30%, transparent 70%, #0006); pointer-events: none; }
+.hero__edition, .hero__image-bottom { display: none; }
+.hero__image-top { top: 26px; left: 26px; right: 26px; }
+.hero__foot { border-bottom: 1px solid var(--line); }
+.services, .results, .about, .faq { padding-block: clamp(70px, 8vw, 118px); }
+.section-head { margin-bottom: 36px; }
+
+.category-choices { gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.category-choice,
+.category-choice:first-child,
+.category-choice:last-child {
+  min-height: 230px;
+  padding: 28px 34px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.category-choice:hover,
+.category-choice.is-active { transform: none; box-shadow: none; background: #f6eee3; }
+.category-choice::after { display: none; }
+.category-choice h3 { margin-top: 12px; font-size: clamp(32px, 3.3vw, 46px); }
+.category-choice p { margin: 9px 0 15px; font-size: 12px; line-height: 1.65; }
+.category-choice__button {
+  min-height: 36px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--gold);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 10px;
+  text-shadow: none;
+}
+.category-choice__button:hover,
+.category-choice.is-active .category-choice__button {
+  transform: none;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink);
+}
+.services__detail-head { margin-top: 52px; padding-top: 30px; }
+.panel { gap: 18px; }
+.card, .card:hover {
+  grid-column: auto;
+  transform: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+.card--split { flex-direction: column; }
+.card--split .card__media { flex: auto; min-height: 0; aspect-ratio: 1.35; }
+.card__media video { filter: none; transition: none; }
+.card:hover .card__media video { transform: none; }
+.card[data-service="facial-detox"] .card__media video,
+.card[data-service="facial-detox"]:hover .card__media video { transform: rotate(180deg); }
+.card__body { padding: 22px; gap: 10px; }
+.card h3 { font-size: 25px; }
+.card__link i { box-shadow: none; background: transparent; width: auto; height: auto; }
+.card__media--duo .media-play { left: 75%; }
+.media-play {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 2px;
+  color: white;
+  background: #17130fcc;
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.media-play[hidden] { display: none; }
+.media-play:hover { background: #17130f; }
+.media-play__icon { font-size: 16px; }
+.hero__media .media-play { top: auto; bottom: 24px; left: 26px; transform: none; flex-direction: row; gap: 10px; }
+.card__media .media-caption { pointer-events: none; }
+
+.ritual { padding: clamp(64px, 7vw, 100px) 0; background: #efe5d7; color: var(--ink); }
+.ritual .eyebrow { color: var(--gold); }
+.ritual .title-xl em { color: var(--gold); }
+.ritual__track { margin-top: 36px; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
+.step { padding: 24px 18px 24px 0; border-bottom: 1px solid var(--line); }
+.step__num { color: var(--gold); }
+.step h3 { margin: 10px 0; font-size: 28px; }
+.step p { max-width: 245px; color: var(--muted); }
+.step--cta { margin-top: 0; padding: 22px 0 0; border: 0; }
+.step--cta p { max-width: none; }
+.step--cta .btn { background: var(--ink); color: white; border-color: var(--ink); box-shadow: 0 3px 0 #5c4930; }
+
+.results__minimal { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(240px, .8fr); gap: clamp(32px, 6vw, 100px); align-items: center; }
+.results__comparison { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.results__comparison > div { position: relative; min-width: 0; aspect-ratio: 4 / 5; overflow: hidden; background: var(--sand); }
+.results__comparison img { width: 100%; height: 100%; object-fit: cover; }
+.results__comparison > div span { position: absolute; left: 12px; bottom: 12px; padding: 6px 12px; background: var(--paper); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+.results__comparison figcaption { grid-column: 1 / -1; padding-top: 6px; color: var(--muted); font-size: 11px; }
+.results__aside > p:not(.eyebrow) { max-width: 320px; color: var(--muted); font-size: 15px; line-height: 1.7; margin: 18px 0 24px; }
+.results__more { margin-top: 38px; border-top: 1px solid var(--line); padding-top: 16px; max-width: 320px; }
+.results__more summary { cursor: pointer; color: var(--gold); font-size: 12px; }
+.results__more img { width: 100%; height: auto; margin-top: 18px; }
+.benefits { margin-top: 55px; }
+.about { background: #f4eadc; }
+.about__media--photo { padding: 0; border: 0; border-radius: 0; }
+.about__photo { border-radius: 0; box-shadow: none; }
+.faq { background: var(--paper); }
+.book { padding-block: clamp(70px, 8vw, 110px); background: #eee2d1; color: var(--ink); }
+.book .eyebrow, .book .title-xxl em { color: var(--gold); }
+.book .lead { color: var(--muted); }
+.book .btn--gold { background: var(--ink); color: white; border-color: var(--ink); }
+.book .btn--ghost { color: var(--ink); border-color: var(--line); background: transparent; box-shadow: none; }
+.booking-panel { margin-top: 55px; border-radius: 2px; box-shadow: none; }
+.footer__giant { font-size: clamp(80px, 16vw, 230px); }
+
+@media (max-width: 650px) {
+  .hero__media { height: 390px; }
+  .hero__foot { padding-block: 18px; }
+  .category-choices { grid-template-columns: 1fr; }
+  .category-choice, .category-choice:first-child, .category-choice:last-child { min-height: 185px; padding: 22px 24px; }
+  .category-choice h3 { font-size: 36px; margin-top: 8px; }
+  .category-choice p { margin: 7px 0 10px; }
+  .ritual__track { grid-template-columns: 1fr; gap: 0; }
+  .step { padding-block: 18px; }
+  .step h3 { font-size: 23px; }
+  .step--cta .step__body { align-items: flex-start; }
+  .results__minimal { grid-template-columns: 1fr; gap: 24px; }
+  .results__aside > p:not(.eyebrow) { margin: 12px 0 16px; }
+  .results__more { margin-top: 24px; }
+  .benefits { margin-top: 35px; }
+}

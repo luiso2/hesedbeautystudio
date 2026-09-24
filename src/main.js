@@ -9,11 +9,6 @@ $$("[data-i18n]").forEach((el) => {
 });
 let lang = "es";
 let booking;
-// Video playback is an explicit site preference, separate from decorative motion.
-let videosPaused = false;
-try {
-  videosPaused = localStorage.getItem("hesed-videos-paused") === "true";
-} catch {}
 const copy = (es, en) => (lang === "en" ? en : es);
 
 function setLang(next) {
@@ -45,7 +40,7 @@ function setLang(next) {
     ),
   );
   updateMenuLabel();
-  updateMotionButton();
+  updateVideoButtons();
   updateCategoryButtons();
   booking?.refresh();
   try {
@@ -201,65 +196,46 @@ panels.forEach((panel) => {
   panel.hidden = true;
 });
 
-// Play every visible video on desktop and touch; pause offscreen media.
-const visibleVideos = new Set();
-const videos = $$("video");
-function play(video) {
-  if (videosPaused || document.hidden || !video.getClientRects().length) return;
-  video.muted = true;
-  video.playsInline = true;
-  video
-    .play()
-    .then(() => {
-      // An observer or a tab change may have paused playback while play() resolved.
-      if (
-        videosPaused ||
-        document.hidden ||
-        !visibleVideos.has(video) ||
-        !video.getClientRects().length
-      )
-        video.pause();
-      else video.controls = false;
-    })
-    .catch((error) => {
-      // Browser autoplay restrictions need a real, accessible playback control.
-      if (error.name === "NotAllowedError") video.controls = true;
-    });
-}
-const videoObserver = new IntersectionObserver(
-  (entries) =>
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
-        visibleVideos.add(entry.target);
-        play(entry.target);
-      } else {
-        visibleVideos.delete(entry.target);
-        entry.target.pause();
-      }
-    }),
-  { threshold: [0, 0.15] },
-);
-videos.forEach((video) => videoObserver.observe(video));
-function updateMotionButton() {
-  const button = $(".motion-toggle");
-  button.setAttribute("aria-pressed", String(videosPaused));
-  button.innerHTML = `<span aria-hidden="true">${videosPaused ? "▷" : "Ⅱ"}</span><span>${videosPaused ? copy("Reproducir videos", "Play videos") : copy("Pausar videos", "Pause videos")}</span>`;
-}
-function syncVideos() {
-  videos.forEach((video) => {
-    if (videosPaused || document.hidden) video.pause();
-    else if (visibleVideos.has(video)) play(video);
+// Treatment footage is optional: posters carry the page until a visitor asks to play.
+const mediaButtons = [];
+$$(".hero__media > video, .card__media video").forEach((video) => {
+  const media = video.closest(".hero__media, .card__media");
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "media-play";
+  button.innerHTML = '<span class="media-play__icon" aria-hidden="true">▶</span><span class="media-play__label"></span>';
+  media.append(button);
+  mediaButtons.push({ button, video });
+  button.addEventListener("click", async () => {
+    // Lazy source loading prevents dozens of hidden treatment clips from downloading.
+    const source = video.querySelector("source[data-src]");
+    if (source) {
+      source.src = source.dataset.src;
+      source.removeAttribute("data-src");
+      video.load();
+    }
+    video.controls = true;
+    button.hidden = true;
+    try {
+      await video.play();
+    } catch {
+      button.hidden = false;
+    }
   });
-  updateMotionButton();
-}
-$(".motion-toggle").addEventListener("click", () => {
-  videosPaused = !videosPaused;
-  try {
-    localStorage.setItem("hesed-videos-paused", String(videosPaused));
-  } catch {}
-  syncVideos();
 });
-document.addEventListener("visibilitychange", syncVideos);
+function updateVideoButtons() {
+  mediaButtons.forEach(({ button, video }) => {
+    const name = video.closest(".card")?.querySelector("h3")?.textContent.trim();
+    const label = name
+      ? copy(`Ver video de ${name}`, `Play ${name} video`)
+      : copy("Ver video de María Hesed", "Play María Hesed video");
+    button.setAttribute("aria-label", label);
+    button.querySelector(".media-play__label").textContent = copy("Ver video", "Play video");
+  });
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) $$("video").forEach((video) => video.pause());
+});
 $("#year").textContent = new Date().getFullYear();
 let savedLang = "es";
 try {
