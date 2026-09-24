@@ -98,6 +98,7 @@
         </div>
         <a
           class="btn btn--gold magnetic"
+          data-booking-open
           href="https://wa.me/17867095791?text=Hola%20Mar%C3%ADa%20Hesed%2C%20quiero%20agendar%20una%20cita"
           target="_blank"
           rel="noopener"
@@ -136,9 +137,8 @@
         <a href="#maria" data-i18n="nav.about">María Hesed</a>
         <a href="#faq" data-i18n="nav.faq">FAQ</a>
         <a
-          href="https://wa.me/17867095791"
-          target="_blank"
-          rel="noopener"
+          href="#booking"
+          data-booking-open
           class="menu__cta"
           data-i18n="nav.cta"
           >Reservar cita</a
@@ -175,6 +175,7 @@
           <div class="hero__actions">
             <a
               class="btn btn--gold btn--lg"
+              data-booking-open
               href="https://wa.me/17867095791?text=Hola%20Mar%C3%ADa%20Hesed%2C%20quiero%20reservar%20una%20valoraci%C3%B3n"
               target="_blank"
               rel="noopener"
@@ -281,7 +282,7 @@
           <div class="panels" hidden>
             <!-- CORPORAL -->
             <div class="panel" data-panel="corporal" hidden>
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="brazilian-slim-body">
                 <div class="card__media">
                   <video
                     playsinline
@@ -296,7 +297,7 @@
                 <div class="card__body">
                   <span class="card__num">01</span>
                   <h3>Brazilian Slim Body</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.c1">
                     Menos inflamación, más definición. Tonifica, moldea y
                     resalta tu figura en pocas sesiones con técnica manual y
@@ -311,12 +312,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Brazilian%20Slim%20Body"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="abdomen-lipo-4d">
                 <div class="card__media">
                   <video
                     playsinline
@@ -331,7 +332,7 @@
                 <div class="card__body">
                   <span class="card__num">02</span>
                   <h3>Abdomen Lipo 4D Manual</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.c2">
                     Drenaje hipopresivo + técnica manual de moldeado para
                     trabajar el contorno y la apariencia del abdomen sin
@@ -346,12 +347,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Abdomen%20Lipo%204D"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="drenaje-linfatico">
                 <div class="card__media">
                   <video
                     playsinline
@@ -384,12 +385,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Drenaje%20Linf%C3%A1tico"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="hesed-firm-up">
                 <div class="card__media">
                   <video
                     playsinline
@@ -404,7 +405,7 @@
                 <div class="card__body">
                   <span class="card__num">04</span>
                   <h3>Hesed Firm Up</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.c4">
                     Nuestro protocolo exclusivo contra la flacidez: activación
                     térmica, radiofrecuencia lifting corporal, cavitación,
@@ -419,12 +420,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Hesed%20Firm%20Up"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="abdomen-reafirmante">
                 <div class="card__media">
                   <video
                     playsinline
@@ -439,7 +440,7 @@
                 <div class="card__body">
                   <span class="card__num">05</span>
                   <h3 data-i18n="srv.n5">Abdomen Reafirmante Intensivo</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.c5">
                     Radiofrecuencia, metalterapia, drenaje linfático, luz LED
                     detox y gel reafirmante con péptidos. Abdomen más firme,
@@ -454,12 +455,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Abdomen%20Reafirmante"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="piedras-calientes">
                 <div class="card__media">
                   <video
                     playsinline
@@ -476,7 +477,7 @@
                   <h3 data-i18n="srv.n6">
                     Masaje Relajante · Piedras Calientes
                   </h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.c6">
                     Piedras calientes, aromaterapia y kinesiología. Libera
                     tensión, equilibra tu energía y regálate una pausa real.
@@ -490,13 +491,13 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20del%20Masaje%20Relajante"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
 
-              <article class="card card--video" data-cursor="Ver" data-service="maderoterapia">
+              <article class="card card--video" data-cursor="Ver" data-service="maderoterapia" data-booking-id="maderoterapia">
                 <div class="card__media">
                   <video
                     playsinline
@@ -536,12 +537,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Wood%20Therapy%20Body%20Sculpting"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="gimnasia-pasiva-led">
                 <div class="card__media">
                   <video
                     playsinline
@@ -558,7 +559,7 @@
                   <h3 data-i18n="srv.n9">
                     Gimnasia Pasiva + Terapia de Luz LED
                   </h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.c9">
                     Electroestimulación que contrae y tonifica el músculo sin
                     esfuerzo, combinada con terapia de luz LED roja para
@@ -573,19 +574,19 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Gimnasia%20Pasiva%20con%20Luz%20LED"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card">
+              <article class="card" data-booking-id="kinesiologia-linfatica">
                 <div class="card__media card__media--photo">
                   <img src="/img/kinesiologia-linfatica-foto.jpg" alt="Kinesio tape negro aplicado en el abdomen con manos enguantadas" width="1312" height="1199" loading="lazy" decoding="async" />
                 </div>
                 <div class="card__body">
                   <span class="card__num">09</span>
                   <h3 data-i18n="srv.n10">Kinesiología Linfática</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.c10">
                     Drenaje linfático kinesiológico: kinesio tape colocado sobre
                     las vías linfáticas para prolongar el efecto del drenaje,
@@ -600,12 +601,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Kinesiolog%C3%ADa%20Linf%C3%A1tica"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="quemadores-localizados">
                 <div class="card__media">
                   <video
                     playsinline
@@ -620,7 +621,7 @@
                 <div class="card__body">
                   <span class="card__num">10</span>
                   <h3 data-i18n="srv.n11">Quemadores Localizados</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.c11">
                     Aplicación localizada de activos en el área abdominal para
                     trabajar la grasa resistente. Un complemento a tu plan
@@ -635,14 +636,14 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Quemadores%20Localizados"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
 
 
-              <article class="card" data-service="menu-14">
+              <article class="card" data-service="menu-14" data-booking-id="masaje-hipopresivos">
                 <div class="card__media card__media--illustrative"><img src="/img/illustrative-hypopressives-v2.jpg" alt="Imagen ilustrativa: Ejercicio guiado de postura y respiración en una sesión de masaje e hipopresivos" width="1448" height="1086" loading="lazy" decoding="async" /><span class="media-caption" data-i18n="media.illustrative">Imagen ilustrativa</span></div>
 <div class="card__body">
                   <span class="card__num">11</span>
@@ -664,12 +665,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informaci%C3%B3n%20y%20reservar%20Masaje%20%2B%20Hipopresivos%20%28US%2490%29."
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar &amp; reservar</span
+                    ><span data-i18n="srv.book">Reservar este servicio</span
                     ><i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card" data-service="menu-15">
+              <article class="card" data-service="menu-15" data-booking-id="radiofrecuencia-corporal">
                 <div class="card__media"><video playsinline muted loop preload="none" poster="/img/radiofrecuencia-corporal-poster.jpg"><source src="/videos/radiofrecuencia-corporal.mp4" type="video/mp4" /></video></div>
                 <div class="card__body">
                   <span class="card__num">12</span>
@@ -691,12 +692,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informaci%C3%B3n%20y%20reservar%20Radiofrecuencia%20corporal%20%28US%2475%29."
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar &amp; reservar</span
+                    ><span data-i18n="srv.book">Reservar este servicio</span
                     ><i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card" data-service="menu-16">
+              <article class="card" data-service="menu-16" data-booking-id="cavitacion">
                 <div class="card__media card__media--illustrative"><img src="/img/illustrative-cavitation-v2.jpg" alt="Imagen ilustrativa: Aplicación de cavitación con cabezal de ultrasonido" width="1448" height="1086" loading="lazy" decoding="async" /><span class="media-caption" data-i18n="media.illustrative">Imagen ilustrativa</span></div>
 <div class="card__body">
                   <span class="card__num">13</span>
@@ -718,12 +719,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informaci%C3%B3n%20y%20reservar%20Cavitaci%C3%B3n%20%28US%2475%29."
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar &amp; reservar</span
+                    ><span data-i18n="srv.book">Reservar este servicio</span
                     ><i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card" data-service="menu-17">
+              <article class="card" data-service="menu-17" data-booking-id="vacuum-therapy">
                 <div class="card__media card__media--illustrative"><img src="/img/illustrative-vacuum-v2.jpg" alt="Imagen ilustrativa: Vacuum Therapy con copa transparente de succión" width="1448" height="1086" loading="lazy" decoding="async" /><span class="media-caption" data-i18n="media.illustrative">Imagen ilustrativa</span></div>
 <div class="card__body">
                   <span class="card__num">14</span>
@@ -745,12 +746,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informaci%C3%B3n%20y%20reservar%20Vacuum%20Therapy%20%28US%2475%29."
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar &amp; reservar</span
+                    ><span data-i18n="srv.book">Reservar este servicio</span
                     ><i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card" data-service="menu-18">
+              <article class="card" data-service="menu-18" data-booking-id="cavitacion-rf">
                 <div class="card__media card__media--illustrative"><img src="/img/illustrative-cav-rf-v2.jpg" alt="Imagen ilustrativa: Cavitación y radiofrecuencia con sus dos cabezales diferenciados" width="1448" height="1086" loading="lazy" decoding="async" /><span class="media-caption" data-i18n="media.illustrative">Imagen ilustrativa</span></div>
 <div class="card__body">
                   <span class="card__num">15</span>
@@ -772,12 +773,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informaci%C3%B3n%20y%20reservar%20Cavitaci%C3%B3n%20%2B%20RF%20%28US%2490%29."
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar &amp; reservar</span
+                    ><span data-i18n="srv.book">Reservar este servicio</span
                     ><i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card" data-service="menu-19">
+              <article class="card" data-service="menu-19" data-booking-id="cavitacion-vacuum">
                 <div class="card__media card__media--illustrative"><img src="/img/illustrative-cav-vacuum-v2.jpg" alt="Imagen ilustrativa: Vacuum y cavitación con copa de succión y cabezal de ultrasonido" width="1448" height="1086" loading="lazy" decoding="async" /><span class="media-caption" data-i18n="media.illustrative">Imagen ilustrativa</span></div>
 <div class="card__body">
                   <span class="card__num">16</span>
@@ -799,12 +800,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informaci%C3%B3n%20y%20reservar%20Cavitaci%C3%B3n%20%2B%20Vacuum%20%28US%2490%29."
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar &amp; reservar</span
+                    ><span data-i18n="srv.book">Reservar este servicio</span
                     ><i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card" data-service="menu-20">
+              <article class="card" data-service="menu-20" data-booking-id="rf-vacuum">
                 <div class="card__media card__media--illustrative"><img src="/img/illustrative-rf-vacuum-v2.jpg" alt="Imagen ilustrativa: Radiofrecuencia y vacuum con cabezal multipolar y copa de succión" width="1448" height="1086" loading="lazy" decoding="async" /><span class="media-caption" data-i18n="media.illustrative">Imagen ilustrativa</span></div>
 <div class="card__body">
                   <span class="card__num">17</span>
@@ -826,17 +827,17 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informaci%C3%B3n%20y%20reservar%20RF%20%2B%20Vacuum%20%28US%2490%29."
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar &amp; reservar</span
+                    ><span data-i18n="srv.book">Reservar este servicio</span
                     ><i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-service="despigmentacion">
+              <article class="card card--video" data-service="despigmentacion" data-booking-id="despigmentacion-corporal">
                 <div class="card__media"><video playsinline muted loop preload="none" poster="/img/despigmentacion-corporal-poster.jpg"><source src="/videos/despigmentacion-corporal.mp4" type="video/mp4" /></video></div>
                 <div class="card__body">
                   <span class="card__num">18</span>
                   <h3 data-i18n="srv.pigmentName">Despigmentación corporal</h3>
-                  <p class="card__price card__price--consult"><span data-i18n="srv.waxPrice">Consultar precio</span></p>
+                  <p class="card__price card__price--consult"><span data-i18n="srv.waxPrice">Consultar el precio</span></p>
                   <p data-i18n="srv.pigmentDesc">Cuidado estético enfocado en la apariencia del tono desigual de la piel, con valoración personalizada de la zona a tratar.</p>
                   <ul class="card__list"><li data-i18n="srv.pigmentAreas">Axilas, área del bikini y glúteos</li></ul>
 
@@ -847,7 +848,7 @@
 
             <!-- FACIAL -->
             <div class="panel" data-panel="facial">
-              <article class="card" data-service="facial-deep-clean">
+              <article class="card" data-service="facial-deep-clean" data-booking-id="facial-deep-clean">
                 <div class="card__media card__media--photo">
                   <img
                     src="/img/facial-deep-clean-mascarilla.jpg"
@@ -863,7 +864,7 @@
                   <h3 data-i18n="srv.f1n">
                     Facial Deep Clean + Cóctel de Vitaminas
                   </h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.f1">
                     Limpieza profunda con extracción, exfoliación y alta
                     frecuencia, seguida de una hidratación con cóctel de
@@ -878,7 +879,7 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20del%20Facial%20Deep%20Clean"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
@@ -886,7 +887,7 @@
               <article
                 class="card card--video card--contain"
                 data-service="salmon-dna"
-              >
+               data-booking-id="salmon-dna">
                 <div class="card__media">
                   <video
                     playsinline
@@ -902,7 +903,7 @@
                   <span class="card__num">02</span>
                   <h3>Salmon DNA</h3>
                   <p class="card__price card__price--consult" data-i18n="srv.askPrice">
-                    Consultar precio
+                    Consultar el precio
                   </p>
                   <p data-i18n="srv.salmonDescription">
                     Protocolo facial Salmon DNA. En la valoración revisamos tu
@@ -924,7 +925,7 @@
                 </div>
               </article>
 
-              <article class="card">
+              <article class="card" data-booking-id="skin-rejuvenation">
                 <div class="card__media card__media--illustrative">
                   <img
                     src="/img/illustrative-facial-rf.jpg"
@@ -940,7 +941,7 @@
                 <div class="card__body">
                   <span class="card__num">03</span>
                   <h3>Skin Rejuvenation</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.f3">
                     Radiofrecuencia facial, cromoterapia y péptidos activos para
                     estimular colágeno, tensar y mejorar la textura de la piel.
@@ -954,12 +955,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Skin%20Rejuvenation"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-service="facial-detox">
+              <article class="card card--video" data-service="facial-detox" data-booking-id="facial-detox">
                 <div class="card__media"><video playsinline muted loop preload="none" poster="/img/facial-detox-hialuronico-poster.jpg"><source src="/videos/facial-detox-hialuronico.mp4" type="video/mp4" /></video></div>
                 <a class="card__proof" href="/img/facial-detox-antes-despues-cliente.jpg" target="_blank" rel="noopener" aria-label="Ampliar imagen de antes y después del Facial Detox">
                   <img src="/img/facial-detox-antes-despues-cliente.jpg" alt="Piel antes y después del Facial Detox, en una imagen comparativa de la misma persona" width="900" height="1600" loading="lazy" decoding="async" />
@@ -967,7 +968,7 @@
                 <div class="card__body">
                   <span class="card__num">04</span>
                   <h3 data-i18n="srv.detoxName">Facial Detox + Hidratación con Ácido Hialurónico</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.f2">Limpieza facial detox seguida de hidratación con ácido hialurónico para una piel con sensación de frescura y suavidad.</p>
                   <div class="card__meta">
                     <span data-i18n="srv.fm2">60 min</span
@@ -978,17 +979,17 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20Facial%20Detox%20con%20hidrataci%C3%B3n%20de%20%C3%A1cido%20hialur%C3%B3nico."
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-service="drenaje-yoga-facial">
+              <article class="card card--video" data-service="drenaje-yoga-facial" data-booking-id="yoga-facial">
                 <div class="card__media"><video playsinline muted loop preload="none" poster="/img/drenaje-yoga-facial-poster.jpg"><source src="/videos/drenaje-yoga-facial.mp4" type="video/mp4" /></video></div>
                 <div class="card__body">
                   <span class="card__num">05</span>
                   <h3 data-i18n="srv.f4n">Yoga facial y drenaje linfático facial</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.f4">
                     Maniobras manuales que desinflaman, definen el óvalo facial
                     y devuelven luminosidad. Efecto lifting natural sin agujas.
@@ -1002,12 +1003,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Drenaje%20Facial"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-service="delux-facial">
+              <article class="card card--video" data-service="delux-facial" data-booking-id="delux-facial">
                 <div class="card__media"><video playsinline muted loop preload="none" poster="/img/delux-facial-flacidez-poster.jpg"><source src="/videos/delux-facial-flacidez.mp4" type="video/mp4" /></video></div>
                 <div class="card__body">
                   <span class="card__num">06</span>
@@ -1015,7 +1016,7 @@
                   <p class="card__price"><span>US$185</span><small>USD</small></p>
                   <p data-i18n="srv.deluxDesc">Tratamiento facial Delux para pieles con flacidez y signos de envejecimiento, adaptado a las necesidades de cada persona.</p>
 
-                  <a class="card__link" href="https://wa.me/17867095791?text=Hola%2C%20quiero%20reservar%20Delux%20Facial%20%28US%24185%29" target="_blank" rel="noopener"><span data-i18n="srv.book">Consultar &amp; reservar</span><i>→</i></a>
+                  <a class="card__link" href="https://wa.me/17867095791?text=Hola%2C%20quiero%20reservar%20Delux%20Facial%20%28US%24185%29" target="_blank" rel="noopener"><span data-i18n="srv.book">Reservar este servicio</span><i>→</i></a>
                 </div>
               </article>
             </div>
@@ -1025,7 +1026,7 @@
               <article
                 class="card card--video card--split card--contain"
                 data-cursor="Ver"
-              >
+               data-booking-id="fibroblast-plasma">
                 <div class="card__media">
                   <video
                     playsinline
@@ -1071,7 +1072,7 @@
                   >
                 </div>
               </article>
-              <article class="card card--video card--contain">
+              <article class="card card--video card--contain" data-booking-id="fibroblast-parpado">
                 <div class="card__media">
                   <video
                     playsinline
@@ -1089,7 +1090,7 @@
                 <div class="card__body">
                   <span class="card__num">02</span>
                   <h3 data-i18n="srv.eyelidTitle">Fibroblast en párpado</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.eyelidDescription">
                     Tratamiento localizado de fibroblast en la zona del párpado.
                     Solicita una valoración personalizada para conocer el
@@ -1110,7 +1111,7 @@
                 </div>
               </article>
 
-              <article class="card card--video" data-cursor="Ver">
+              <article class="card card--video" data-cursor="Ver" data-booking-id="plasma-pen">
                 <div class="card__media">
                   <video
                     playsinline
@@ -1125,7 +1126,7 @@
                 <div class="card__body">
                   <span class="card__num">03</span>
                   <h3 data-i18n="srv.b3n">Plasma Pen · Estrías y Flacidez</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.b3">
                     Plasma pen aplicado sobre estrías y piel flácida del
                     abdomen: estimula la retracción y la renovación de la piel
@@ -1145,12 +1146,12 @@
                   >
                 </div>
               </article>
-              <article class="card">
+              <article class="card" data-booking-id="lipotropicos">
                 <div class="card__media card__media--illustrative"><img src="/img/illustrative-lipotropics-v2.jpg" alt="Imagen ilustrativa: Preparación de material estéril para una aplicación inyectable de lipotrópicos" width="1448" height="1086" loading="lazy" decoding="async" /><span class="media-caption" data-i18n="media.illustrative">Imagen ilustrativa</span></div>
 <div class="card__body">
                   <span class="card__num">04</span>
                   <h3 data-i18n="srv.b2n">Lipotrópicos</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.b2">
                     Un impulso para tu metabolismo. Complemento ideal para
                     reducir grasa localizada y mejorar tu silueta junto a
@@ -1165,7 +1166,7 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Lipotr%C3%B3picos"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
@@ -1174,7 +1175,7 @@
 
             <!-- CEJAS -->
             <div class="panel" data-panel="cejas">
-              <article class="card">
+              <article class="card" data-booking-id="diseno-cejas">
                 <div class="card__media card__media--illustrative">
                   <img
                     src="/img/illustrative-brow-design.jpg"
@@ -1190,7 +1191,7 @@
                 <div class="card__body">
                   <span class="card__num">01</span>
                   <h3 data-i18n="srv.e1n">Diseño de Cejas</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.e1">
                     Visagismo, depilación de precisión y tinte para unas cejas
                     que enmarcan tu mirada según la geometría de tu rostro.
@@ -1204,12 +1205,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Dise%C3%B1o%20de%20Cejas"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card">
+              <article class="card" data-booking-id="laminado-cejas">
                 <div class="card__media card__media--illustrative">
                   <img
                     src="/img/illustrative-brow-lamination.jpg"
@@ -1225,7 +1226,7 @@
                 <div class="card__body">
                   <span class="card__num">02</span>
                   <h3 data-i18n="srv.e2n">Laminado de Cejas</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.e2">
                     Cejas peinadas, con volumen y dirección durante semanas.
                     Incluye nutrición con keratina.
@@ -1239,12 +1240,12 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Laminado%20de%20Cejas"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card">
+              <article class="card" data-booking-id="lash-lifting">
                 <div class="card__media card__media--illustrative">
                   <img
                     src="/img/illustrative-lash-lift.jpg"
@@ -1260,7 +1261,7 @@
                 <div class="card__body">
                   <span class="card__num">03</span>
                   <h3>Lash Lifting</h3>
-                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar precio</p>
+                  <p class="card__price card__price--consult" data-i18n="srv.askPrice">Consultar el precio</p>
                   <p data-i18n="srv.e3">
                     Curvatura y tinte de tus propias pestañas para una mirada
                     abierta y natural, sin extensiones.
@@ -1274,19 +1275,19 @@
                     href="https://wa.me/17867095791?text=Hola%2C%20quiero%20info%20de%20Lash%20Lifting"
                     target="_blank"
                     rel="noopener"
-                    ><span data-i18n="srv.book">Consultar & reservar</span>
+                    ><span data-i18n="srv.book">Reservar este servicio</span>
                     <i>→</i></a
                   >
                 </div>
               </article>
-              <article class="card card--video" data-service="depilacion-cera">
+              <article class="card card--video" data-service="depilacion-cera" data-booking-id="depilacion-cera">
                 <div class="card__media"><video playsinline muted loop preload="none" poster="/img/depilacion-cera-poster.jpg"><source src="/videos/depilacion-cera.mp4" type="video/mp4" /></video></div>
                 <div class="card__body">
                   <span class="card__num">04</span>
                   <h3 data-i18n="srv.waxName">Depilación con cera</h3>
                   <p data-i18n="srv.waxDesc">Retiro del vello con cera y cuidado de la piel. Consulta las zonas disponibles y el tratamiento adecuado para ti.</p>
-                  <div class="wax-prices"><h4 data-i18n="wax.group.face">Rostro</h4><dl><div><dt data-i18n="wax.area.brows">Cejas</dt><dd>US$15</dd></div><div><dt data-i18n="wax.area.lip">Labio superior</dt><dd>US$10</dd></div><div><dt data-i18n="wax.area.chin">Mentón</dt><dd>US$12</dd></div><div><dt data-i18n="wax.area.sideburns">Patillas</dt><dd>US$12</dd></div><div><dt data-i18n="wax.area.face">Rostro completo</dt><dd>US$30</dd></div></dl><h4 data-i18n="wax.group.body">Cuerpo</h4><dl><div><dt data-i18n="wax.area.underarms">Axilas</dt><dd>US$25</dd></div><div><dt data-i18n="wax.area.halfarm">Medio brazo</dt><dd>US$30</dd></div><div><dt data-i18n="wax.area.arm">Brazo completo</dt><dd>US$35</dd></div><div><dt data-i18n="wax.area.halfleg">Media pierna</dt><dd>US$30</dd></div><div><dt data-i18n="wax.area.leg">Pierna completa</dt><dd>US$50</dd></div><div><dt data-i18n="wax.area.bikini">Bikini</dt><dd>US$30</dd></div><div><dt data-i18n="wax.area.fullbikini">Bikini completo</dt><dd>US$55</dd></div><div><dt data-i18n="wax.area.buttocks">Glúteos</dt><dd>US$30</dd></div><div><dt data-i18n="wax.area.abdomen">Abdomen</dt><dd>US$25</dd></div><div><dt data-i18n="wax.area.back">Espalda completa</dt><dd><span data-i18n="srv.waxPrice">Consultar precio</span></dd></div></dl></div>
-                  <a class="card__link" href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informacion%20y%20precio%20de%20Depilacion%20con%20cera" target="_blank" rel="noopener"><span data-i18n="srv.book">Consultar &amp; reservar</span><i>→</i></a>
+                  <div class="wax-prices"><h4 data-i18n="wax.group.face">Rostro</h4><dl><div><dt data-i18n="wax.area.brows">Cejas</dt><dd>US$15</dd></div><div><dt data-i18n="wax.area.lip">Labio superior</dt><dd>US$10</dd></div><div><dt data-i18n="wax.area.chin">Mentón</dt><dd>US$12</dd></div><div><dt data-i18n="wax.area.sideburns">Patillas</dt><dd>US$12</dd></div><div><dt data-i18n="wax.area.face">Rostro completo</dt><dd>US$30</dd></div></dl><h4 data-i18n="wax.group.body">Cuerpo</h4><dl><div><dt data-i18n="wax.area.underarms">Axilas</dt><dd>US$25</dd></div><div><dt data-i18n="wax.area.halfarm">Medio brazo</dt><dd>US$30</dd></div><div><dt data-i18n="wax.area.arm">Brazo completo</dt><dd>US$35</dd></div><div><dt data-i18n="wax.area.halfleg">Media pierna</dt><dd>US$30</dd></div><div><dt data-i18n="wax.area.leg">Pierna completa</dt><dd>US$50</dd></div><div><dt data-i18n="wax.area.bikini">Bikini</dt><dd>US$30</dd></div><div><dt data-i18n="wax.area.fullbikini">Bikini completo</dt><dd>US$55</dd></div><div><dt data-i18n="wax.area.buttocks">Glúteos</dt><dd>US$30</dd></div><div><dt data-i18n="wax.area.abdomen">Abdomen</dt><dd>US$25</dd></div><div><dt data-i18n="wax.area.back">Espalda completa</dt><dd><span data-i18n="srv.waxPrice">Consultar el precio</span></dd></div></dl></div>
+                  <a class="card__link" href="https://wa.me/17867095791?text=Hola%2C%20quiero%20informacion%20y%20precio%20de%20Depilacion%20con%20cera" target="_blank" rel="noopener"><span data-i18n="srv.book">Reservar este servicio</span><i>→</i></a>
                 </div>
               </article>
             </div>
@@ -1482,9 +1483,10 @@
             <article class="step step--cta">
               <div class="step__body">
                 <h3 data-i18n="rit.ctaT">¿Lista para empezar?</h3>
-                <p data-i18n="rit.ctaP">Escríbenos y diseñamos tu plan.</p>
+                <p data-i18n="rit.ctaP">Elige tu tratamiento y solicita tu cita.</p>
                 <a
                   class="btn btn--gold magnetic"
+                  data-booking-open
                   href="https://wa.me/17867095791"
                   target="_blank"
                   rel="noopener"
@@ -1926,9 +1928,9 @@
               </summary>
               <div class="acc__body">
                 <p data-i18n="faq.a4">
-                  Escríbenos por WhatsApp al +1 (786) 709-5791. Te confirmamos
-                  disponibilidad, resolvemos dudas y reservamos tu espacio.
-                  Cupos limitados.
+                  Elige el tratamiento, la fecha y la hora que prefieres en el
+                  formulario de reservas. María revisará la solicitud y te
+                  confirmará la disponibilidad por teléfono o WhatsApp.
                 </p>
               </div>
             </details>
@@ -1974,21 +1976,78 @@
             <em data-i18n="bk.t2">comienza hoy.</em>
           </h2>
           <p class="lead" data-reveal data-i18n="bk.p">
-            Agenda tu cita por WhatsApp. Te respondemos personalmente, valoramos
-            tu caso y diseñamos tu plan.
+            Elige tu tratamiento y dinos cuándo te gustaría venir. María
+            confirmará la disponibilidad y los detalles de tu cita.
           </p>
           <div class="book__actions" data-reveal>
             <a
               class="btn btn--gold btn--lg magnetic"
+              data-booking-open
               href="https://wa.me/17867095791?text=Hola%20Mar%C3%ADa%20Hesed%2C%20quiero%20agendar%20una%20cita"
               target="_blank"
               rel="noopener"
             >
-              <span data-i18n="bk.cta">Agendar por WhatsApp</span>
+              <span data-i18n="bk.cta">Solicitar cita</span>
             </a>
             <a class="btn btn--ghost btn--lg magnetic" href="tel:+17867095791"
               >+1 (786) 709-5791</a
             >
+          </div>
+          <div class="booking-panel" id="booking" tabindex="-1">
+            <div class="booking-panel__intro">
+              <p class="eyebrow" data-i18n="booking.eyebrow">TU CITA, A TU MEDIDA</p>
+              <h3 data-i18n="booking.title">Solicita tu cita</h3>
+              <p data-i18n="booking.intro">Selecciona un tratamiento y tu fecha y hora preferidas. Esta solicitud queda pendiente hasta que María confirme la disponibilidad.</p>
+            </div>
+            <form id="booking-form" novalidate>
+              <div class="booking-fields">
+                <label class="booking-field">
+                  <span data-i18n="booking.service">Tratamiento</span>
+                  <select name="serviceId" id="booking-service" required><option value="" data-i18n="booking.choose">Seleccionar tratamiento</option></select>
+                </label>
+                <label class="booking-field" id="booking-option-wrap" hidden>
+                  <span data-i18n="booking.option">Zona</span>
+                  <select name="optionId" id="booking-option"><option value="" data-i18n="booking.chooseOption">Seleccionar zona</option></select>
+                </label>
+                <p class="booking-price" id="booking-price" aria-live="polite"></p>
+                <label class="booking-field">
+                  <span data-i18n="booking.date">Fecha preferida</span>
+                  <input type="date" name="date" id="booking-date" required />
+                </label>
+                <label class="booking-field">
+                  <span data-i18n="booking.time">Hora preferida · Miami</span>
+                  <input type="time" name="time" id="booking-time" required />
+                </label>
+                <label class="booking-field">
+                  <span data-i18n="booking.name">Nombre completo</span>
+                  <input type="text" name="name" autocomplete="name" maxlength="100" required />
+                </label>
+                <label class="booking-field">
+                  <span data-i18n="booking.phone">WhatsApp o teléfono</span>
+                  <input type="tel" name="phone" autocomplete="tel" maxlength="30" required />
+                </label>
+                <label class="booking-field">
+                  <span data-i18n="booking.email">Correo electrónico · opcional</span>
+                  <input type="email" name="email" autocomplete="email" maxlength="150" />
+                </label>
+                <label class="booking-field booking-field--full">
+                  <span data-i18n="booking.note">Algo que debamos saber · opcional</span>
+                  <textarea name="note" rows="3" maxlength="600"></textarea>
+                </label>
+              </div>
+              <label class="booking-consent"><input type="checkbox" name="consent" required /><span data-i18n="booking.consent">Acepto que María Hesed use estos datos para contactarme sobre esta solicitud.</span></label>
+              <label class="booking-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+              <p class="booking-disclaimer" data-i18n="booking.pending">La cita y el precio de los tratamientos sin importe publicado se confirmarán personalmente. No se realiza ningún cobro ahora.</p>
+              <p class="booking-message" id="booking-message" role="alert" tabindex="-1" hidden></p>
+              <button type="submit" class="btn btn--gold btn--lg booking-submit" data-i18n="booking.submit">Enviar solicitud</button>
+            </form>
+            <div class="booking-success" id="booking-success" hidden tabindex="-1">
+              <h4 data-i18n="booking.successTitle">Solicitud recibida</h4>
+              <p data-i18n="booking.successText">Tu cita todavía no está confirmada. María revisará tu solicitud y te contactará para confirmar la disponibilidad.</p>
+              <p id="booking-reference"></p>
+              <a id="booking-whatsapp" class="btn btn--ghost" href="https://wa.me/17867095791" target="_blank" rel="noopener" data-i18n="booking.whatsapp">Enviar también por WhatsApp</a>
+              <button type="button" class="booking-again" id="booking-again" data-i18n="booking.again">Solicitar otra cita</button>
+            </div>
           </div>
         </div>
       </section>
@@ -2036,6 +2095,7 @@
           <h3 data-i18n="ft.ready">¿Lista?</h3>
           <a
             class="btn btn--gold magnetic"
+            data-booking-open
             href="https://wa.me/17867095791"
             target="_blank"
             rel="noopener"

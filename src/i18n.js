@@ -45,7 +45,7 @@ export const EN = {
   "srv.category3": "Precise treatments by area, always preceded by an assessment.",
   "srv.category4": "Brow design, eye-area care and waxing.",
   "srv.detail": "Services & prices",
-  "srv.book": "Ask & book",
+  "srv.book": "Book this treatment",
   "srv.eval": "Request assessment",
   "srv.pack": "Session or package",
   "srv.signature": "Signature protocol",
@@ -153,7 +153,7 @@ export const EN = {
   "rit.p4":
     "Peptide firming actives, tightening gel and a calm close. You leave lighter, firmer and more you.",
   "rit.ctaT": "Ready to begin?",
-  "rit.ctaP": "Message us and we'll design your plan.",
+  "rit.ctaP": "Choose your treatment and request an appointment.",
 
   "res.eyebrow": "Results",
   "res.t1": "Results that",
@@ -208,7 +208,7 @@ export const EN = {
     "Yes, post-operative drainage is one of our most requested treatments. We need your surgeon's authorization and the indicated recovery time.",
   "faq.q4": "How do I book an appointment?",
   "faq.a4":
-    "Message us on WhatsApp at +1 (786) 709-5791. We'll confirm availability, answer your questions and reserve your spot. Limited availability.",
+    "Choose a treatment and your preferred date and time in the booking form. María will review your request and confirm availability by phone or WhatsApp.",
   "faq.q5": "Do you offer packages or promotions?",
   "faq.a5":
     "Yes. We design packages around your goal and launch seasonal promotions on Instagram. Ask about current promotions when booking.",
@@ -217,8 +217,8 @@ export const EN = {
   "bk.t1": "Your transformation",
   "bk.t2": "starts today.",
   "bk.p":
-    "Book your appointment via WhatsApp. We reply personally, assess your case and design your plan.",
-  "bk.cta": "Book via WhatsApp",
+    "Choose a treatment and tell us when you would like to visit. María will confirm availability and the details of your appointment.",
+  "bk.cta": "Request appointment",
 
   "ft.tag":
     "High-level facial & body aesthetics in Miami. Where technique becomes art.",
@@ -317,3 +317,26 @@ Object.assign(EN, {"fibro.prices": "Prices by treatment area", "fibro.from300": 
 Object.assign(EN, {"srv.pigmentName": "Body Hyperpigmentation Care", "srv.pigmentDesc": "Aesthetic care focused on the appearance of uneven skin tone, with an individual assessment of the treatment area.", "srv.pigmentAreas": "Underarms, bikini area and buttocks"});
 
 Object.assign(EN, {"srv.deluxDesc": "Delux facial treatment for skin with laxity and signs of aging, adapted to each person's needs."});
+
+Object.assign(EN, {
+  "booking.eyebrow": "YOUR APPOINTMENT, YOUR WAY",
+  "booking.title": "Request an appointment",
+  "booking.intro": "Choose a treatment and your preferred date and time. Your request remains pending until María confirms availability.",
+  "booking.service": "Treatment",
+  "booking.choose": "Select a treatment",
+  "booking.option": "Area",
+  "booking.chooseOption": "Select an area",
+  "booking.date": "Preferred date",
+  "booking.time": "Preferred time · Miami",
+  "booking.name": "Full name",
+  "booking.phone": "WhatsApp or phone",
+  "booking.email": "Email · optional",
+  "booking.note": "Anything we should know · optional",
+  "booking.consent": "I agree that María Hesed may use these details to contact me about this request.",
+  "booking.pending": "The appointment and the price of treatments without a published amount will be confirmed personally. No payment is taken now.",
+  "booking.submit": "Send request",
+  "booking.successTitle": "Request received",
+  "booking.successText": "Your appointment is not confirmed yet. María will review your request and contact you to confirm availability.",
+  "booking.whatsapp": "Also send via WhatsApp",
+  "booking.again": "Request another appointment",
+});

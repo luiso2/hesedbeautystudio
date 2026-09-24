@@ -7,3 +7,5 @@ dist
 .dev.vars*
 !.dev.vars.example
 !.env.example
+.secrets/
+worker-configuration.d.ts

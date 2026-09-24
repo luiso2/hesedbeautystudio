@@ -14,6 +14,8 @@ WhatsApp: +1 (786) 709-5791.
 - `index.html`: contenido español, semántica y metadatos.
 - `src/style.css`: diseño editorial responsive, marfil / tinta / dorado.
 - `src/main.js`: idioma, menú accesible, categorías desplegables y reproducción de videos.
+- `src/booking.js` y `src/booking-catalog.json`: formulario bilingüe y catálogo de reservas.
+- `src/worker.js`, `migrations/` y `BOOKING.md`: API de solicitudes, D1 y panel de administración.
 - `src/i18n.js`: diccionario inglés. Cada nuevo texto requiere traducción.
 - `public/img` y `public/videos`: material real del estudio.
 - `wrangler.jsonc`: Worker con assets estáticos. El plugin genera `dist/wrangler.json`.
@@ -28,7 +30,9 @@ La renovación de septiembre de 2026 elimina GSAP, Lenis, el preloader y el desp
 
 Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. Los videos visibles se reproducen automáticamente en móvil y escritorio. Un control fijo pausa todos los videos y guarda la preferencia explícita; la reproducción es independiente del movimiento reducido de las animaciones. Si el navegador bloquea autoplay, se muestran controles nativos.
 
-El catálogo comienza cerrado. Cada tarjeta de categoría tiene un botón «Ver servicios y precios» que abre todas las tarjetas de esa categoría; pulsarlo otra vez cierra el catálogo. Conservar la imagen o video y el precio confirmado junto al nombre. Para tratamientos sin importe confirmado, mostrar «Consultar precio». Mantener las traducciones y los enlaces a WhatsApp específicos del tratamiento.
+El catálogo comienza cerrado. Cada tarjeta de categoría tiene un botón «Ver servicios y precios» que abre todas las tarjetas de esa categoría; pulsarlo otra vez cierra el catálogo. Conservar la imagen o video y el precio confirmado junto al nombre. Para tratamientos sin importe confirmado, mostrar «Consultar el precio» en el mismo renglón y tamaño pequeño que los importes publicados. Mantener las traducciones y los enlaces a WhatsApp específicos del tratamiento como alternativa sin JavaScript.
+
+Desde septiembre de 2026, el enlace principal de cada tratamiento abre el formulario de reserva con ese tratamiento preseleccionado. El formulario guarda solicitudes pendientes en D1; no afirmar que una fecha/hora está confirmada. El panel privado y sus límites están documentados en `BOOKING.md`. El secreto de administración nunca se guarda en Git.
 
 ## Contenido pendiente de confirmar
 

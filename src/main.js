@@ -1,4 +1,5 @@
 import { EN } from "./i18n.js";
+import { initBooking } from "./booking.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -7,6 +8,7 @@ $$("[data-i18n]").forEach((el) => {
   ES[el.dataset.i18n] ??= el.innerHTML;
 });
 let lang = "es";
+let booking;
 // Video playback is an explicit site preference, separate from decorative motion.
 let videosPaused = false;
 try {
@@ -45,6 +47,7 @@ function setLang(next) {
   updateMenuLabel();
   updateMotionButton();
   updateCategoryButtons();
+  booking?.refresh();
   try {
     localStorage.setItem("hesed-lang", lang);
   } catch {
@@ -264,4 +267,5 @@ try {
 } catch {
   /* Keep Spanish default. */
 }
+booking = initBooking(() => lang);
 setLang(savedLang);
