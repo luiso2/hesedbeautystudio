@@ -352,10 +352,10 @@ summary:focus-visible,
   display: block;
 }
 .hero__title em {
-  color: var(--gold-bright);
-  font: 400 1.3em/.8 var(--font-script);
-  letter-spacing: 0;
-  padding: .1em .14em .16em 0;
+  color: #b99872;
+  font: italic 400 1.1em/.96 var(--font-display-italic);
+  letter-spacing: -.055em;
+  padding: .02em 0 .04em;
 }
 .hero__lead {
   font-size: 15px;
