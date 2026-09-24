@@ -623,6 +623,14 @@ summary:focus-visible,
   filter: none;
   transform: rotate(180deg);
 }
+/* Keep the eyes and full face in frame in the vertical yoga facial clip. */
+.card[data-service="drenaje-yoga-facial"] .card__media video {
+  object-position: center 12%;
+  filter: none;
+}
+.card[data-service="drenaje-yoga-facial"]:hover .card__media video {
+  transform: none;
+}
 .card__body {
   display: flex;
   flex-direction: column;

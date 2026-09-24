@@ -60,6 +60,7 @@ La clienta solicitó eliminar la tarjeta individual de Metaloterapia (srv.n7) de
 
 Instagram vigente: @mariahesed.esthetics. Facial Detox incluye hidratación con ácido hialurónico y el video facial-detox-hialuronico.mp4, sin tarjeta adicional.
 El video de Facial Detox es vertical (480×848) y fue grabado desde la cabecera: su tarjeta lo muestra completo, sin recorte y girado 180° mediante CSS. Mantener esta presentación en móvil y escritorio.
+El video de Yoga facial y drenaje linfático facial también es vertical (480×768); se encuadra cerca de la parte superior para mantener visibles los ojos y la cara en la tarjeta horizontal.
 
 Facial Deep Clean ocupa la primera tarjeta de Facial y usa `public/img/facial-deep-clean-mascarilla.jpg`, foto de mascarilla en tres etapas enviada el 23 de septiembre. Salmon DNA conserva su video propio en la segunda tarjeta.
 
