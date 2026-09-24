@@ -14,7 +14,7 @@ WhatsApp: +1 (786) 709-5791.
 - `index.html`: contenido español, semántica y metadatos.
 - `src/style.css`: diseño editorial responsive, marfil / tinta / dorado.
 - `src/main.js`: idioma, menú accesible, categorías desplegables y reproducción de videos.
-- `src/booking.js` y `src/booking-catalog.json`: formulario bilingüe y catálogo de reservas.
+- `reservar.html`, `src/reservar.js`, `src/reservar.css` y `src/booking-catalog.json`: reserva bilingüe en cuatro pasos y catálogo de precios.
 - `src/worker.js`, `migrations/` y `BOOKING.md`: API de solicitudes, D1 y panel de administración.
 - `src/i18n.js`: diccionario inglés. Cada nuevo texto requiere traducción.
 - `public/img` y `public/videos`: material real del estudio.
@@ -24,15 +24,15 @@ WhatsApp: +1 (786) 709-5791.
 
 ## Diseño y comportamiento
 
-Portada dividida, cuatro categorías con acceso a servicios y precios bajo demanda, guía de reserva en tres pasos, resultados, fundadora, FAQ y reserva. Instagram se enlaza desde la página sin un mosaico de reels.
+Portada dividida, cuatro categorías con acceso a servicios y precios bajo demanda, guía de reserva en tres pasos, resultados, fundadora y FAQ. El botón «Reservar mi cita» abre una página de booking separada; Instagram se enlaza desde la página sin un mosaico de reels.
 
 La renovación de septiembre de 2026 elimina GSAP, Lenis, el preloader y el desplazamiento horizontal fijado. No introducir esperas artificiales, partículas, grano animado, cursores personalizados ni anillos giratorios.
 
-Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. Los videos muestran su póster y se cargan y reproducen solamente al pulsar «Ver video»; después se muestran controles nativos. No reintroducir reproducción automática ni videos decorativos repetidos.
+Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. El video principal y los videos de servicios de la categoría abierta se cargan y reproducen al entrar en pantalla, y se pausan al salir. Cada video tiene un control visible para pausarlo o reproducirlo; no reintroducir los mosaicos de reels ni videos decorativos repetidos.
 
 El catálogo comienza cerrado. Cada tarjeta de categoría tiene un botón «Ver servicios y precios» que abre todas las tarjetas de esa categoría; pulsarlo otra vez cierra el catálogo. Conservar la imagen o video y el precio confirmado junto al nombre. Para tratamientos sin importe confirmado, mostrar «Consultar el precio» en el mismo renglón y tamaño pequeño que los importes publicados. Mantener las traducciones y los enlaces a WhatsApp específicos del tratamiento como alternativa sin JavaScript.
 
-Desde septiembre de 2026, el enlace principal de cada tratamiento abre el formulario de reserva con ese tratamiento preseleccionado. El formulario guarda solicitudes pendientes en D1; no afirmar que una fecha/hora está confirmada. El panel privado y sus límites están documentados en `BOOKING.md`. El secreto de administración nunca se guarda en Git.
+El enlace principal de cada tratamiento abre `/reservar?service=ID` con ese tratamiento y su precio a la vista. La página de booking guía por servicio, fecha/hora preferidas, datos y revisión final. Guarda solicitudes pendientes en D1; no afirmar que una fecha/hora está confirmada. El panel privado y sus límites están documentados en `BOOKING.md`. El secreto de administración nunca se guarda en Git.
 
 ## Contenido pendiente de confirmar
 

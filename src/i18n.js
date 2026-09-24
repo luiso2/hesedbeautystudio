@@ -342,6 +342,12 @@ Object.assign(EN, {
 });
 
 Object.assign(EN, {
+  "hero.cta2": "Book my appointment",
+  "bk.cta": "Book my appointment",
+  "faq.a4": "Choose a treatment, see its price and enter your preferred date and time on the booking page. María will review your request and confirm availability by phone or WhatsApp.",
+});
+
+Object.assign(EN, {
   "res.minimal": "See María's real work and find the treatment that fits what you are looking for.",
   "res.explore": "Explore treatments",
   "res.more": "See more results",

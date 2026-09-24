@@ -1,5 +1,4 @@
 import { EN } from "./i18n.js";
-import { initBooking } from "./booking.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -8,7 +7,6 @@ $$("[data-i18n]").forEach((el) => {
   ES[el.dataset.i18n] ??= el.innerHTML;
 });
 let lang = "es";
-let booking;
 const copy = (es, en) => (lang === "en" ? en : es);
 
 function setLang(next) {
@@ -42,7 +40,6 @@ function setLang(next) {
   updateMenuLabel();
   updateVideoButtons();
   updateCategoryButtons();
-  booking?.refresh();
   try {
     localStorage.setItem("hesed-lang", lang);
   } catch {
@@ -196,8 +193,42 @@ panels.forEach((panel) => {
   panel.hidden = true;
 });
 
-// Treatment footage is optional: posters carry the page until a visitor asks to play.
+// Only the hero and treatment cards play, and only while they are visible.
+// Hidden categories do not load their videos.
 const mediaButtons = [];
+const visibleVideos = new Set();
+function loadVideo(video) {
+  const source = video.querySelector("source[data-src]");
+  if (!source) return;
+  source.src = source.dataset.src;
+  source.removeAttribute("data-src");
+  video.load();
+}
+function syncVideoButton(video, button) {
+  const playing = !video.paused;
+  button.classList.toggle("is-playing", playing);
+  button.setAttribute("aria-label", playing
+    ? copy("Pausar video", "Pause video")
+    : copy("Reproducir video", "Play video"));
+  button.querySelector(".media-play__icon").textContent = playing ? "Ⅱ" : "▶";
+  button.querySelector(".media-play__label").textContent = playing
+    ? copy("Pausar", "Pause")
+    : copy("Ver video", "Play video");
+}
+async function playVideo(video, button) {
+  loadVideo(video);
+  video.muted = true;
+  video.playsInline = true;
+  video.loop = true;
+  try {
+    await video.play();
+    if (!visibleVideos.has(video) || document.hidden || !video.getClientRects().length)
+      video.pause();
+  } catch {
+    // The same visible button provides a user-gesture retry if autoplay is blocked.
+  }
+  syncVideoButton(video, button);
+}
 $$(".hero__media > video, .card__media video").forEach((video) => {
   const media = video.closest(".hero__media, .card__media");
   const button = document.createElement("button");
@@ -206,35 +237,34 @@ $$(".hero__media > video, .card__media video").forEach((video) => {
   button.innerHTML = '<span class="media-play__icon" aria-hidden="true">▶</span><span class="media-play__label"></span>';
   media.append(button);
   mediaButtons.push({ button, video });
-  button.addEventListener("click", async () => {
-    // Lazy source loading prevents dozens of hidden treatment clips from downloading.
-    const source = video.querySelector("source[data-src]");
-    if (source) {
-      source.src = source.dataset.src;
-      source.removeAttribute("data-src");
-      video.load();
-    }
-    video.controls = true;
-    button.hidden = true;
-    try {
-      await video.play();
-    } catch {
-      button.hidden = false;
-    }
+  button.addEventListener("click", () => {
+    if (video.paused) playVideo(video, button);
+    else video.pause();
   });
+  video.addEventListener("play", () => syncVideoButton(video, button));
+  video.addEventListener("pause", () => syncVideoButton(video, button));
 });
 function updateVideoButtons() {
   mediaButtons.forEach(({ button, video }) => {
-    const name = video.closest(".card")?.querySelector("h3")?.textContent.trim();
-    const label = name
-      ? copy(`Ver video de ${name}`, `Play ${name} video`)
-      : copy("Ver video de María Hesed", "Play María Hesed video");
-    button.setAttribute("aria-label", label);
-    button.querySelector(".media-play__label").textContent = copy("Ver video", "Play video");
+    syncVideoButton(video, button);
   });
 }
+const videoObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    const video = entry.target;
+    if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+      visibleVideos.add(video);
+      const button = mediaButtons.find((item) => item.video === video).button;
+      playVideo(video, button);
+    } else {
+      visibleVideos.delete(video);
+      video.pause();
+    }
+  });
+}, { threshold: [0, 0.3] });
+mediaButtons.forEach(({ video }) => videoObserver.observe(video));
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) $$("video").forEach((video) => video.pause());
+  if (document.hidden) mediaButtons.forEach(({ video }) => video.pause());
 });
 $("#year").textContent = new Date().getFullYear();
 let savedLang = "es";
@@ -243,5 +273,4 @@ try {
 } catch {
   /* Keep Spanish default. */
 }
-booking = initBooking(() => lang);
 setLang(savedLang);
