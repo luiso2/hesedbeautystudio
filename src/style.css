@@ -612,6 +612,17 @@ summary:focus-visible,
 .card:hover .card__media video {
   transform: scale(1.03);
 }
+/* The supplied Facial Detox clip is portrait and was filmed from above the head. */
+.card[data-service="facial-detox"] .card__media {
+  aspect-ratio: 4 / 5;
+  background: var(--sand);
+}
+.card[data-service="facial-detox"] .card__media video,
+.card[data-service="facial-detox"]:hover .card__media video {
+  object-fit: contain;
+  filter: none;
+  transform: rotate(180deg);
+}
 .card__body {
   display: flex;
   flex-direction: column;

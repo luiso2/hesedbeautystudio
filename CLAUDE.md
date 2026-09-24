@@ -59,6 +59,7 @@ Maderoterapia tiene una sola tarjeta (data-service=maderoterapia), US$80, con vi
 La clienta solicitó eliminar la tarjeta individual de Metaloterapia (srv.n7) del catálogo. No volver a añadirla sin indicación.
 
 Instagram vigente: @mariahesed.esthetics. Facial Detox incluye hidratación con ácido hialurónico y el video facial-detox-hialuronico.mp4, sin tarjeta adicional.
+El video de Facial Detox es vertical (480×848) y fue grabado desde la cabecera: su tarjeta lo muestra completo, sin recorte y girado 180° mediante CSS. Mantener esta presentación en móvil y escritorio.
 
 Facial Deep Clean ocupa la primera tarjeta de Facial y usa `public/img/facial-deep-clean-mascarilla.jpg`, foto de mascarilla en tres etapas enviada el 23 de septiembre. Salmon DNA conserva su video propio en la segunda tarjeta.
 
