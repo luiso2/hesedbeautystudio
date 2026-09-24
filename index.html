@@ -225,22 +225,6 @@
           >
         </div>
       </section>
-      <nav class="category-strip" aria-label="Categorías de tratamientos">
-        <a href="#servicios" data-category="corporal"
-          ><span>01</span><span data-i18n="srv.tab1">Corporal</span><i>↗</i></a
-        >
-        <a href="#servicios" data-category="facial"
-          ><span>02</span><span data-i18n="srv.tab2">Facial</span><i>↗</i></a
-        >
-        <a href="#servicios" data-category="fibroblast"
-          ><span>03</span><span data-i18n="srv.tab3">Fibroblast</span
-          ><i>↗</i></a
-        >
-        <a href="#servicios" data-category="cejas"
-          ><span>04</span><span data-i18n="srv.tab4">Cejas y depilación</span><i>↗</i></a
-        >
-      </nav>
-
       <!-- ═══════════ SERVICES ═══════════ -->
       <section class="services" id="servicios">
         <div class="container">
@@ -255,49 +239,48 @@
             </h2>
           </div>
 
-          <div
-            class="tabs"
-            role="tablist"
-            aria-label="Tratamientos"
-            data-reveal
-          >
-            <button
-              class="tab is-active"
-              role="tab"
-              data-tab="corporal"
-              data-i18n="srv.tab1"
-            >
-              Corporal
-            </button>
-            <button
-              class="tab"
-              role="tab"
-              data-tab="facial"
-              data-i18n="srv.tab2"
-            >
-              Facial
-            </button>
-            <button
-              class="tab"
-              role="tab"
-              data-tab="fibroblast"
-              data-i18n="srv.tab3"
-            >
-              Fibroblast
-            </button>
-            <button
-              class="tab"
-              role="tab"
-              data-tab="cejas"
-              data-i18n="srv.tab4"
-            >Cejas y depilación
-            </button>
-            <span class="tabs__ink" aria-hidden="true"></span>
+          <div class="category-choices" role="group" aria-label="Categorías de tratamientos">
+            <article class="category-choice">
+              <span class="category-choice__num" aria-hidden="true">01 / 04</span>
+              <h3 data-i18n="srv.tab1">Corporal</h3>
+              <p data-i18n="srv.category1">Drenaje, moldeo y tecnología corporal en protocolos adaptados a ti.</p>
+              <button type="button" class="btn btn--ghost category-choice__button" data-category-open="corporal" aria-controls="panel-corporal" aria-expanded="false">
+                <span class="category-choice__cta-label">Ver servicios y precios</span><span aria-hidden="true">↗</span>
+              </button>
+            </article>
+            <article class="category-choice">
+              <span class="category-choice__num" aria-hidden="true">02 / 04</span>
+              <h3 data-i18n="srv.tab2">Facial</h3>
+              <p data-i18n="srv.category2">Limpieza, hidratación y cuidado personalizado para las necesidades de tu piel.</p>
+              <button type="button" class="btn btn--ghost category-choice__button" data-category-open="facial" aria-controls="panel-facial" aria-expanded="false">
+                <span class="category-choice__cta-label">Ver servicios y precios</span><span aria-hidden="true">↗</span>
+              </button>
+            </article>
+            <article class="category-choice">
+              <span class="category-choice__num" aria-hidden="true">03 / 04</span>
+              <h3 data-i18n="srv.tab3">Fibroblast</h3>
+              <p data-i18n="srv.category3">Tratamientos de precisión por zonas, siempre con valoración previa.</p>
+              <button type="button" class="btn btn--ghost category-choice__button" data-category-open="fibroblast" aria-controls="panel-fibroblast" aria-expanded="false">
+                <span class="category-choice__cta-label">Ver servicios y precios</span><span aria-hidden="true">↗</span>
+              </button>
+            </article>
+            <article class="category-choice">
+              <span class="category-choice__num" aria-hidden="true">04 / 04</span>
+              <h3 data-i18n="srv.tab4">Cejas y depilación</h3>
+              <p data-i18n="srv.category4">Diseño de cejas, cuidado de la mirada y depilación con cera.</p>
+              <button type="button" class="btn btn--ghost category-choice__button" data-category-open="cejas" aria-controls="panel-cejas" aria-expanded="false">
+                <span class="category-choice__cta-label">Ver servicios y precios</span><span aria-hidden="true">↗</span>
+              </button>
+            </article>
           </div>
 
-          <div class="panels">
+          <div class="services__detail-head" hidden>
+            <p class="eyebrow"><span class="line"></span><span data-i18n="srv.detail">Servicios y precios</span></p>
+            <h3 class="title-xl" id="services-selected-title"></h3>
+          </div>
+          <div class="panels" hidden>
             <!-- CORPORAL -->
-            <div class="panel is-active" data-panel="corporal">
+            <div class="panel" data-panel="corporal" hidden>
               <article class="card card--video" data-cursor="Ver">
                 <div class="card__media">
                   <video
@@ -595,17 +578,9 @@
                   >
                 </div>
               </article>
-              <article class="card card--video" data-cursor="Ver">
-                <div class="card__media">
-                  <video
-                    playsinline
-                    muted
-                    loop
-                    preload="none"
-                    poster="/img/kinesio-poster.jpg"
-                  >
-                    <source src="/videos/kinesio.mp4" type="video/mp4" />
-                  </video>
+              <article class="card">
+                <div class="card__media card__media--photo">
+                  <img src="/img/kinesiologia-linfatica-foto.jpg" alt="Kinesio tape negro aplicado en el abdomen con manos enguantadas" width="1312" height="1199" loading="lazy" decoding="async" />
                 </div>
                 <div class="card__body">
                   <span class="card__num">09</span>

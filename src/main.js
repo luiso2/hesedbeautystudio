@@ -30,11 +30,10 @@ function setLang(next) {
     "aria-label",
     copy("Principal", "Main navigation"),
   );
-  $(".category-strip").setAttribute(
+  $(".category-choices").setAttribute(
     "aria-label",
     copy("Categorías de tratamientos", "Treatment categories"),
   );
-  $(".tabs").setAttribute("aria-label", copy("Tratamientos", "Treatments"));
   $(".lang").setAttribute("aria-label", copy("Idioma", "Language"));
   $(".hero__video").setAttribute(
     "aria-label",
@@ -45,6 +44,7 @@ function setLang(next) {
   );
   updateMenuLabel();
   updateMotionButton();
+  updateCategoryButtons();
   try {
     localStorage.setItem("hesed-lang", lang);
   } catch {
@@ -132,51 +132,71 @@ $$('a[href^="#"]').forEach((link) =>
   }),
 );
 
-// Accessible tabs with every treatment visible in its selected category.
-const tabs = $$(".tab");
+// The category overview stays concise until a visitor requests the full list.
+const categoryButtons = $$('[data-category-open]');
+const panelGroup = $(".panels");
+const detailHead = $(".services__detail-head");
+const selectedTitle = $("#services-selected-title");
 const panels = $$(".panel");
-function selectTab(key, focus = false) {
-  tabs.forEach((tab) => {
-    const active = tab.dataset.tab === key;
-    tab.classList.toggle("is-active", active);
-    tab.setAttribute("aria-selected", String(active));
-    tab.tabIndex = active ? 0 : -1;
-    if (active && focus) tab.focus();
+let selectedCategory = null;
+
+function updateCategoryButtons() {
+  categoryButtons.forEach((button) => {
+    const active = button.dataset.categoryOpen === selectedCategory;
+    const categoryName = button.closest(".category-choice").querySelector("h3").textContent.trim();
+    button.setAttribute("aria-expanded", String(active));
+    button.closest(".category-choice").classList.toggle("is-active", active);
+    $(".category-choice__cta-label", button).textContent = active
+      ? copy("Ocultar servicios y precios", "Hide services & prices")
+      : copy("Ver servicios y precios", "View services & prices");
+    button.setAttribute(
+      "aria-label",
+      `${active ? copy("Ocultar servicios y precios de", "Hide services & prices for") : copy("Ver servicios y precios de", "View services & prices for")} ${categoryName}`,
+    );
   });
+  if (selectedCategory) {
+    selectedTitle.textContent = $(`[data-category-open="${selectedCategory}"]`)
+      .closest(".category-choice")
+      .querySelector("h3").textContent;
+  }
+}
+
+function selectCategory(key) {
+  selectedCategory = selectedCategory === key ? null : key;
+  const isOpen = selectedCategory !== null;
+  detailHead.hidden = !isOpen;
+  panelGroup.hidden = !isOpen;
   panels.forEach((panel) => {
-    const active = panel.dataset.panel === key;
+    const active = panel.dataset.panel === selectedCategory;
     panel.classList.toggle("is-active", active);
     panel.hidden = !active;
     if (!active) $$("video", panel).forEach((video) => video.pause());
   });
+  updateCategoryButtons();
+  if (isOpen) {
+    requestAnimationFrame(() =>
+      detailHead.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+        block: "start",
+      }),
+    );
+  }
 }
-tabs.forEach((tab, index) => {
-  tab.id = `tab-${tab.dataset.tab}`;
-  tab.setAttribute("aria-controls", `panel-${tab.dataset.tab}`);
-  tab.addEventListener("click", () => selectTab(tab.dataset.tab));
-  tab.addEventListener("keydown", (event) => {
-    let next;
-    if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
-    if (event.key === "ArrowLeft")
-      next = (index - 1 + tabs.length) % tabs.length;
-    if (event.key === "Home") next = 0;
-    if (event.key === "End") next = tabs.length - 1;
-    if (next !== undefined) {
-      event.preventDefault();
-      selectTab(tabs[next].dataset.tab, true);
-    }
-  });
+
+categoryButtons.forEach((button) => {
+  button.id = `category-${button.dataset.categoryOpen}`;
+  button.closest(".category-choice").querySelector("h3").id =
+    `category-title-${button.dataset.categoryOpen}`;
+  button.addEventListener("click", () => selectCategory(button.dataset.categoryOpen));
 });
 panels.forEach((panel) => {
   panel.id = `panel-${panel.dataset.panel}`;
-  panel.setAttribute("role", "tabpanel");
-  panel.setAttribute("aria-labelledby", `tab-${panel.dataset.panel}`);
-  panel.tabIndex = 0;
+  panel.setAttribute("role", "region");
+  panel.setAttribute("aria-labelledby", `category-title-${panel.dataset.panel}`);
+  panel.hidden = true;
 });
-$$("[data-category]").forEach((link) =>
-  link.addEventListener("click", () => selectTab(link.dataset.category)),
-);
-selectTab("corporal");
 
 // Play every visible video on desktop and touch; pause offscreen media.
 const visibleVideos = new Set();
