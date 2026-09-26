@@ -181,9 +181,6 @@ summary:focus-visible,
   display: block;
   flex: none;
 }
-.nav__right .btn {
-  gap: 10px;
-}
 .text-link {
   display: inline-flex;
   align-items: center;
