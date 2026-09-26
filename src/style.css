@@ -2095,6 +2095,15 @@ video[controls] {
   height: 100%;
   object-fit: cover;
 }
+.card__media--proof {
+  background: var(--sand);
+}
+.card__media--proof > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .card__media--duo {
   display: grid;
   grid-template-columns: 1fr 1fr;
