@@ -33,8 +33,8 @@ function setLang(next) {
   $(".hero__video").setAttribute(
     "aria-label",
     copy(
-      "Masaje en María Hesed · Estética Avanzada",
-      "Massage at María Hesed · Estética Avanzada",
+      "Masaje en María Hesed · Aesthetic Studio",
+      "Massage at María Hesed · Aesthetic Studio",
     ),
   );
   updateMenuLabel();
@@ -211,9 +211,6 @@ function syncVideoButton(video, button) {
     ? copy("Pausar video", "Pause video")
     : copy("Reproducir video", "Play video"));
   button.querySelector(".media-play__icon").textContent = playing ? "Ⅱ" : "▶";
-  button.querySelector(".media-play__label").textContent = playing
-    ? copy("Pausar", "Pause")
-    : copy("Ver video", "Play video");
 }
 async function playVideo(video, button) {
   loadVideo(video);
@@ -234,7 +231,7 @@ $$(".hero__media > video, .card__media video").forEach((video) => {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "media-play";
-  button.innerHTML = '<span class="media-play__icon" aria-hidden="true">▶</span><span class="media-play__label"></span>';
+  button.innerHTML = '<span class="media-play__icon" aria-hidden="true">▶</span>';
   media.append(button);
   mediaButtons.push({ button, video });
   button.addEventListener("click", () => {

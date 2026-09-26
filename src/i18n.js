@@ -27,7 +27,7 @@ export const EN = {
   "man.p1":
     "We don't transform bodies. We help them feel better. And when that happens, beauty shows up on its own.",
   "man.p2":
-    "Every protocol at María Hesed · Estética Avanzada combines latest-generation technology with precise manual technique: drainage, sculpting, radiofrequency and firming actives applied with rigor, in a space designed so you feel cared for from start to finish.",
+    "Every protocol at María Hesed · Aesthetic Studio combines latest-generation technology with precise manual technique: drainage, sculpting, radiofrequency and firming actives applied with rigor, in a space designed so you feel cared for from start to finish.",
   "man.s1": "Instagram community",
   "man.s2": "Exclusive protocols",
   "man.s3": "Personalized care",
@@ -178,7 +178,7 @@ export const EN = {
   "abt.t1": "Hands that listen,",
   "abt.t2": "technique that transforms.",
   "abt.p1":
-    "María Hesed is a licensed esthetician, specialist in facial and body treatments, Master in Fibroblast and Brow Artist. She founded María Hesed · Estética Avanzada with one clear idea: aesthetic care should be as rigorous as it is human.",
+    "María Hesed is a licensed esthetician, specialist in facial and body treatments, Master in Fibroblast and Brow Artist. She founded María Hesed · Aesthetic Studio with one clear idea: aesthetic care should be as rigorous as it is human.",
   "abt.p2":
     "Her approach unites the best of two worlds: the precision of aesthetic technology (radiofrequency, cavitation, plasma, LED light) and the sensitivity of manual technique (drainage, sculpting, wood therapy, kinesiology). The result is protocols that are not only seen, but felt.",
   "abt.p3":
@@ -360,4 +360,50 @@ Object.assign(EN, {
   "rit.p2": "Choose your preferred date and time. María will review your request and confirm availability.",
   "rit.s3": "Care tailored to you",
   "rit.p3": "Your visit begins with a personal assessment to adapt the treatment to you.",
+});
+
+// Brand rename + humanized copy pass (2026-09-26).
+Object.assign(EN, {
+  "hero.eyebrow": "AESTHETIC STUDIO · MIAMI",
+  "man.p2":
+    "Every protocol at María Hesed · Aesthetic Studio combines latest-generation technology with precise manual technique: drainage, sculpting, radiofrequency and firming actives applied with rigor, in a space designed so you feel cared for from start to finish.",
+  "abt.eyebrow": "The person behind it",
+  "abt.p1":
+    "María Hesed is a licensed esthetician, specialist in facial & body, Master in Fibroblast and Brow Artist. She created María Hesed · Aesthetic Studio with one clear idea: aesthetic care can be rigorous and human at the same time.",
+  "abt.p2":
+    "Her approach brings together two worlds: the precision of technology (radiofrequency, cavitation, plasma, LED light) and the sensitivity of hands-on work (drainage, sculpting, wood therapy, kinesiology). The result isn't just seen: it's felt.",
+  "abt.p3":
+    "\u201cTechnique is part of the process. Your habits make the difference.\u201d That's why every plan comes with real guidance: nutrition, hydration and consistency.",
+  "rit.p1": "Take your time browsing the treatments, details and prices. No rush, no pressure.",
+  "rit.p2": "Pick the day and time that suit you best. María reviews your request and confirms personally.",
+  "rit.p3": "It all starts with listening: a personal assessment to tailor the treatment to you.",
+  "res.lead": "Real results, shared by María. Every body is different: everything starts with an assessment of your goals.",
+  "res.minimal": "See María's real work and find what your body is asking for.",
+  "faq.p": "Another question? Message us on WhatsApp and we'll reply directly.",
+  "faq.a1":
+    "Many clients notice a change from the very first session, especially with drainage. For sculpting and firming we usually recommend 5 to 10 sessions, based on what we see in your assessment.",
+  "faq.a2":
+    "No. Body treatments are firm but comfortable; radiofrequency feels like pleasant warmth. Fibroblast is done with topical anesthesia and minimal discomfort.",
+  "faq.a3":
+    "Yes, it's one of our most requested treatments. We just need your surgeon's authorization and the recovery time they indicate.",
+  "faq.a4":
+    "Choose your treatment and your preferred date and time on the booking page. María reviews your request and confirms personally by phone or WhatsApp.",
+  "faq.a5":
+    "Yes. We build packages around your goal and post seasonal promotions on Instagram. Ask us about current ones when booking.",
+  "bk.t1": "Your moment",
+  "bk.t2": "starts today.",
+  "bk.p": "Tell us which treatment you'd like and when you'd like to come. María will personally confirm availability and the details.",
+  "ft.tag": "Personalized facial & body care in Miami. The art of self-care.",
+  "srv.note":
+    "Everything starts with a personal assessment. Plans and packages are built around your goal, your skin and your pace of life.",
+  "srv.c3":
+    "It activates your lymphatic circulation and helps reduce swelling and fluid retention. You feel it and notice it from the very first session.",
+  "srv.c9":
+    "Electrostimulation that works and tones your muscle without any effort from you, with red LED light to support firmness and skin recovery.",
+  "srv.c10":
+    "Lymphatic drainage with kinesio tape along the lymphatic pathways: it extends the drainage effect, reduces swelling and soothes the area between sessions.",
+  "srv.c11":
+    "Targeted actives applied to the abdomen to work on stubborn fat. A complement to your body plan, always with a prior assessment.",
+  "srv.e1":
+    "We design your brows around the shape of your face, with precise hair removal and tint to frame your gaze.",
 });

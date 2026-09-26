@@ -177,6 +177,13 @@ summary:focus-visible,
   background: var(--sand);
   border-color: var(--gold);
 }
+.btn svg {
+  display: block;
+  flex: none;
+}
+.nav__right .btn {
+  gap: 10px;
+}
 .text-link {
   display: inline-flex;
   align-items: center;
