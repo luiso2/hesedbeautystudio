@@ -2462,18 +2462,18 @@ body { background: var(--paper); }
 .hero__photo {
   grid-column: 1 / -1;
   justify-self: center;
-  width: min(380px, 80vw);
+  width: 100%;
+  max-width: 390px;
   margin-top: 8px;
 }
 .hero__photo-img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: center 18%;
-  border-radius: 160px 160px 14px 14px;
+  height: auto;
   border: 1px solid var(--line);
-  box-shadow: 0 18px 45px #3b2d251c;
+}
+@media (max-width: 650px) {
+  .hero__photo { max-width: 340px; }
 }
 .hero__content {
   text-align: center;
