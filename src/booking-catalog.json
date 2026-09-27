@@ -1,0 +1,474 @@
+[
+  {
+    "id": "brazilian-slim-body",
+    "category": "corporal",
+    "name": {
+      "es": "Brazilian Slim Body",
+      "en": "Brazilian Slim Body"
+    },
+    "price": null
+  },
+  {
+    "id": "abdomen-lipo-4d",
+    "category": "corporal",
+    "name": {
+      "es": "Abdomen Lipo 4D Manual",
+      "en": "Abdomen Lipo 4D Manual"
+    },
+    "price": null
+  },
+  {
+    "id": "drenaje-linfatico",
+    "category": "corporal",
+    "name": {
+      "es": "Drenaje Linfático",
+      "en": "Lymphatic Drainage"
+    },
+    "price": 85
+  },
+  {
+    "id": "hesed-firm-up",
+    "category": "corporal",
+    "name": {
+      "es": "Hesed Firm Up",
+      "en": "Hesed Firm Up"
+    },
+    "price": null
+  },
+  {
+    "id": "abdomen-reafirmante",
+    "category": "corporal",
+    "name": {
+      "es": "Abdomen Reafirmante Intensivo",
+      "en": "Intensive Firming Abdomen"
+    },
+    "price": null
+  },
+  {
+    "id": "piedras-calientes",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje Relajante · Piedras Calientes",
+      "en": "Relaxing Massage · Hot Stones"
+    },
+    "price": null
+  },
+  {
+    "id": "maderoterapia",
+    "category": "corporal",
+    "name": {
+      "es": "Maderoterapia · Wood Therapy",
+      "en": "Wood Therapy Body Sculpting"
+    },
+    "price": 80
+  },
+  {
+    "id": "gimnasia-pasiva-led",
+    "category": "corporal",
+    "name": {
+      "es": "Gimnasia Pasiva + Terapia de Luz LED",
+      "en": "Passive Gymnastics + LED Light Therapy"
+    },
+    "price": null
+  },
+  {
+    "id": "kinesiologia-linfatica",
+    "category": "corporal",
+    "name": {
+      "es": "Kinesiología Linfática",
+      "en": "Lymphatic Kinesiology"
+    },
+    "price": null
+  },
+  {
+    "id": "quemadores-localizados",
+    "category": "corporal",
+    "name": {
+      "es": "Quemadores Localizados",
+      "en": "Localized Fat Burners"
+    },
+    "price": null
+  },
+  {
+    "id": "masaje-hipopresivos",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje + Hipopresivos",
+      "en": "Massage + Hypopressives"
+    },
+    "price": 90
+  },
+  {
+    "id": "radiofrecuencia-corporal",
+    "category": "corporal",
+    "name": {
+      "es": "Radiofrecuencia corporal",
+      "en": "Body Radiofrequency"
+    },
+    "price": 75
+  },
+  {
+    "id": "cavitacion",
+    "category": "corporal",
+    "name": {
+      "es": "Cavitación",
+      "en": "Cavitation"
+    },
+    "price": 75
+  },
+  {
+    "id": "vacuum-therapy",
+    "category": "corporal",
+    "name": {
+      "es": "Vacuum Therapy",
+      "en": "Vacuum Therapy"
+    },
+    "price": 75
+  },
+  {
+    "id": "cavitacion-rf",
+    "category": "corporal",
+    "name": {
+      "es": "Cavitación + RF",
+      "en": "Cavitation + Radiofrequency"
+    },
+    "price": 90
+  },
+  {
+    "id": "cavitacion-vacuum",
+    "category": "corporal",
+    "name": {
+      "es": "Cavitación + Vacuum",
+      "en": "Cavitation + Vacuum"
+    },
+    "price": 90
+  },
+  {
+    "id": "rf-vacuum",
+    "category": "corporal",
+    "name": {
+      "es": "RF + Vacuum",
+      "en": "Radiofrequency + Vacuum"
+    },
+    "price": 90
+  },
+  {
+    "id": "despigmentacion-corporal",
+    "category": "corporal",
+    "name": {
+      "es": "Despigmentación corporal",
+      "en": "Body Hyperpigmentation Care"
+    },
+    "price": null
+  },
+  {
+    "id": "facial-deep-clean",
+    "category": "facial",
+    "name": {
+      "es": "Facial Deep Clean + Cóctel de Vitaminas",
+      "en": "Facial Deep Clean + Vitamin Cocktail"
+    },
+    "price": null
+  },
+  {
+    "id": "salmon-dna",
+    "category": "facial",
+    "name": {
+      "es": "Salmon DNA",
+      "en": "Salmon DNA"
+    },
+    "price": null
+  },
+  {
+    "id": "skin-rejuvenation",
+    "category": "facial",
+    "name": {
+      "es": "Skin Rejuvenation",
+      "en": "Skin Rejuvenation"
+    },
+    "price": null
+  },
+  {
+    "id": "facial-detox",
+    "category": "facial",
+    "name": {
+      "es": "Facial Detox + Hidratación con Ácido Hialurónico",
+      "en": "Detox Facial + Hyaluronic Acid Hydration"
+    },
+    "price": null
+  },
+  {
+    "id": "yoga-facial",
+    "category": "facial",
+    "name": {
+      "es": "Yoga facial y drenaje linfático facial",
+      "en": "Facial Yoga & Facial Lymphatic Drainage"
+    },
+    "price": null
+  },
+  {
+    "id": "delux-facial",
+    "category": "facial",
+    "name": {
+      "es": "Delux Facial",
+      "en": "Delux Facial"
+    },
+    "price": 185
+  },
+  {
+    "id": "fibroblast-plasma",
+    "category": "fibroblast",
+    "name": {
+      "es": "Fibroblast Plasma · Master Level",
+      "en": "Fibroblast Plasma · Master Level"
+    },
+    "price": null,
+    "options": [
+      {
+        "id": "area-1",
+        "name": {
+          "es": "Rostro completo (Full face)",
+          "en": "Full face"
+        },
+        "price": 700,
+        "from": false
+      },
+      {
+        "id": "area-2",
+        "name": {
+          "es": "Cuello y escote",
+          "en": "Neck and décolletage"
+        },
+        "price": 350,
+        "from": false
+      },
+      {
+        "id": "area-3",
+        "name": {
+          "es": "Frente",
+          "en": "Forehead"
+        },
+        "price": 200,
+        "from": false
+      },
+      {
+        "id": "area-4",
+        "name": {
+          "es": "Área abdominal",
+          "en": "Abdominal area"
+        },
+        "price": 300,
+        "from": true
+      },
+      {
+        "id": "area-5",
+        "name": {
+          "es": "Eliminación de verrugas",
+          "en": "Wart removal"
+        },
+        "price": 50,
+        "from": false
+      }
+    ]
+  },
+  {
+    "id": "fibroblast-parpado",
+    "category": "fibroblast",
+    "name": {
+      "es": "Fibroblast en párpado",
+      "en": "Eyelid Fibroblast"
+    },
+    "price": null
+  },
+  {
+    "id": "plasma-pen",
+    "category": "fibroblast",
+    "name": {
+      "es": "Plasma Pen · Estrías y Flacidez",
+      "en": "Plasma Pen · Stretch Marks & Laxity"
+    },
+    "price": null
+  },
+  {
+    "id": "lipotropicos",
+    "category": "fibroblast",
+    "name": {
+      "es": "Lipotrópicos",
+      "en": "Lipotropics"
+    },
+    "price": null
+  },
+  {
+    "id": "diseno-cejas",
+    "category": "cejas",
+    "name": {
+      "es": "Diseño de Cejas",
+      "en": "Brow Design"
+    },
+    "price": null
+  },
+  {
+    "id": "laminado-cejas",
+    "category": "cejas",
+    "name": {
+      "es": "Laminado de Cejas",
+      "en": "Brow Lamination"
+    },
+    "price": null
+  },
+  {
+    "id": "lash-lifting",
+    "category": "cejas",
+    "name": {
+      "es": "Lash Lifting",
+      "en": "Lash Lifting"
+    },
+    "price": null
+  },
+  {
+    "id": "depilacion-cera",
+    "category": "cejas",
+    "name": {
+      "es": "Depilación con cera",
+      "en": "Waxing"
+    },
+    "price": null,
+    "options": [
+      {
+        "id": "area-1",
+        "name": {
+          "es": "Cejas",
+          "en": "Eyebrows"
+        },
+        "price": 15,
+        "from": false
+      },
+      {
+        "id": "area-2",
+        "name": {
+          "es": "Labio superior",
+          "en": "Upper lip"
+        },
+        "price": 10,
+        "from": false
+      },
+      {
+        "id": "area-3",
+        "name": {
+          "es": "Mentón",
+          "en": "Chin"
+        },
+        "price": 12,
+        "from": false
+      },
+      {
+        "id": "area-4",
+        "name": {
+          "es": "Patillas",
+          "en": "Sideburns"
+        },
+        "price": 12,
+        "from": false
+      },
+      {
+        "id": "area-5",
+        "name": {
+          "es": "Rostro completo",
+          "en": "Full face"
+        },
+        "price": 30,
+        "from": false
+      },
+      {
+        "id": "area-6",
+        "name": {
+          "es": "Axilas",
+          "en": "Underarms"
+        },
+        "price": 25,
+        "from": false
+      },
+      {
+        "id": "area-7",
+        "name": {
+          "es": "Medio brazo",
+          "en": "Half arms"
+        },
+        "price": 30,
+        "from": false
+      },
+      {
+        "id": "area-8",
+        "name": {
+          "es": "Brazo completo",
+          "en": "Full arms"
+        },
+        "price": 35,
+        "from": false
+      },
+      {
+        "id": "area-9",
+        "name": {
+          "es": "Media pierna",
+          "en": "Half legs"
+        },
+        "price": 30,
+        "from": false
+      },
+      {
+        "id": "area-10",
+        "name": {
+          "es": "Pierna completa",
+          "en": "Full legs"
+        },
+        "price": 50,
+        "from": false
+      },
+      {
+        "id": "area-11",
+        "name": {
+          "es": "Bikini",
+          "en": "Bikini"
+        },
+        "price": 30,
+        "from": false
+      },
+      {
+        "id": "area-12",
+        "name": {
+          "es": "Bikini completo",
+          "en": "Full bikini"
+        },
+        "price": 55,
+        "from": false
+      },
+      {
+        "id": "area-13",
+        "name": {
+          "es": "Glúteos",
+          "en": "Buttocks"
+        },
+        "price": 30,
+        "from": false
+      },
+      {
+        "id": "area-14",
+        "name": {
+          "es": "Abdomen",
+          "en": "Abdomen"
+        },
+        "price": 25,
+        "from": false
+      },
+      {
+        "id": "area-15",
+        "name": {
+          "es": "Espalda completa",
+          "en": "Full back"
+        },
+        "price": null,
+        "from": false
+      }
+    ]
+  }
+]

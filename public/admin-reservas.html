@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Reservas · María Hesed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{font-family:Montserrat,Arial,sans-serif;color:#17130f;background:#f7efe4;font-size:14px}
+    *{box-sizing:border-box}body{margin:0;padding:clamp(20px,4vw,60px)}main{max-width:1100px;margin:auto}
+    h1{font:400 clamp(38px,6vw,70px)/1.1 Italiana,serif;margin:0 0 8px}p{line-height:1.6;color:#60574d}
+    .eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#85601f;font-weight:600}
+    .panel{background:#fffbf5;border:1px solid #d6bd93;border-radius:12px;padding:clamp(20px,3vw,34px);margin-top:28px}
+    label{display:block;font-size:12px;font-weight:600;margin-bottom:8px}input,select{font:inherit;padding:11px 13px;border:1px solid #d6bd93;background:#fff;border-radius:6px;min-height:44px}
+    button{font:600 12px Montserrat,Arial,sans-serif;padding:12px 18px;border:1px solid #17130f;border-radius:50px;background:#17130f;color:#fffbf5;cursor:pointer}
+    button:hover{background:#463923}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #85601f;outline-offset:3px}
+    .login-row,.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.login-row input{width:min(100%,400px)}.toolbar{justify-content:space-between;margin-bottom:22px}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:18px}.booking{border:1px solid #d6bd93;border-radius:10px;padding:20px;background:#fff}
+    .booking h2{font:400 29px/1.15 Italiana,serif;margin:10px 0}.booking p{margin:8px 0;font-size:12px}.booking strong{color:#17130f}
+    .booking .ref{font-size:10px;overflow-wrap:anywhere}.booking select{width:100%;margin:10px 0}.booking a{display:inline-block;margin:8px 0;color:#85601f;text-underline-offset:4px}
+    .status{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#85601f}.error{color:#9e2d1e}.muted{color:#60574d}.hidden{display:none!important}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">MARÍA HESED · ESTÉTICA AVANZADA</p>
+    <h1>Solicitudes de reserva</h1>
+    <p>Revisa las preferencias de cada cliente, confirma disponibilidad y responde por WhatsApp. Confirmar aquí no envía un mensaje automáticamente.</p>
+    <section class="panel" id="login-panel">
+      <form id="login-form">
+        <label for="key">Clave de administración</label>
+        <div class="login-row"><input id="key" type="password" autocomplete="off" required /><button type="submit">Entrar</button></div>
+      </form>
+    </section>
+    <section class="panel hidden" id="dashboard">
+      <div class="toolbar"><div><label for="filter">Mostrar</label><select id="filter"><option value="pending">Pendientes</option><option value="confirmed">Confirmadas</option><option value="declined">Rechazadas</option><option value="cancelled">Canceladas</option><option value="">Todas</option></select></div><button type="button" id="logout">Cerrar sesión</button></div>
+      <p id="count" class="muted"></p>
+      <div class="cards" id="cards"></div>
+    </section>
+    <p id="message" role="alert"></p>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let token = sessionStorage.getItem('hesed-booking-admin') || '';
+    const statuses = { pending:'Pendiente', confirmed:'Confirmada', declined:'Rechazada', cancelled:'Cancelada' };
+    const message = (value, error=false) => { $('message').textContent=value; $('message').className=error?'error':''; };
+    async function api(path, options={}) {
+      const response=await fetch(path,{...options,headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json',...(options.headers||{})}});
+      const data=await response.json();
+      if(!response.ok) throw new Error(data.error||`HTTP ${response.status}`);
+      return data;
+    }
+    function line(label,value) { const p=document.createElement('p');const strong=document.createElement('strong');strong.textContent=label+': ';p.append(strong,document.createTextNode(value||'—'));return p; }
+    function phoneLink(row) {
+      const digits=row.customer_phone.replace(/\D/g,'');
+      const recipient=digits.length===10?'1'+digits:digits;
+      const text=`Hola ${row.customer_name}, soy María Hesed. Te escribo sobre tu solicitud de ${row.service_name}${row.option_name?' · '+row.option_name:''} para el ${row.requested_date} a las ${row.requested_time}.`;
+      const a=document.createElement('a');a.href=`https://wa.me/${recipient}?text=${encodeURIComponent(text)}`;a.target='_blank';a.rel='noopener';a.textContent='Responder por WhatsApp';return a;
+    }
+    function card(row) {
+      const article=document.createElement('article');article.className='booking';
+      const status=document.createElement('span');status.className='status';status.textContent=statuses[row.status]||row.status;article.append(status);
+      const heading=document.createElement('h2');heading.textContent=row.service_name+(row.option_name?' · '+row.option_name:'');article.append(heading);
+      article.append(line('Cliente',row.customer_name),line('Fecha preferida',`${row.requested_date} · ${row.requested_time} (Miami)`),line('Teléfono',row.customer_phone),line('Correo',row.customer_email),line('Precio',row.price_cents==null?'Consultar el precio':(row.price_from?'Desde ':'')+`US$${row.price_cents/100}`));
+      if(row.customer_note)article.append(line('Nota',row.customer_note));
+      const ref=document.createElement('p');ref.className='ref';ref.textContent=`Referencia: ${row.id} · Recibida: ${row.created_at} UTC`;article.append(ref);
+      article.append(phoneLink(row));
+      const select=document.createElement('select');select.setAttribute('aria-label','Estado de la reserva');
+      for(const [value,label] of Object.entries(statuses)){const option=document.createElement('option');option.value=value;option.textContent=label;select.append(option)}select.value=row.status;article.append(select);
+      const save=document.createElement('button');save.type='button';save.textContent='Guardar estado';save.onclick=async()=>{save.disabled=true;try{await api(`/api/admin/bookings/${row.id}`,{method:'PATCH',body:JSON.stringify({status:select.value})});message('Estado actualizado. Contacta al cliente para avisarle.');await load()}catch(error){message(error.message==='slot_taken'?'Ya hay otra cita confirmada en esa fecha y hora.':`No se pudo actualizar: ${error.message}`,true)}finally{save.disabled=false}};article.append(save);
+      return article;
+    }
+    async function load() {
+      const filter=$('filter').value;const data=await api(`/api/admin/bookings${filter?'?status='+filter:''}`);
+      $('cards').replaceChildren(...data.bookings.map(card));$('count').textContent=`${data.bookings.length} solicitud(es) mostrada(s)`;
+      $('login-panel').classList.add('hidden');$('dashboard').classList.remove('hidden');
+    }
+    $('login-form').onsubmit=async(event)=>{event.preventDefault();token=$('key').value.trim();try{await load();sessionStorage.setItem('hesed-booking-admin',token);$('key').value='';message('')}catch{message('Clave incorrecta o servicio no disponible.',true)}};
+    $('filter').onchange=()=>load().catch(error=>message(error.message,true));
+    $('logout').onclick=()=>{token='';sessionStorage.removeItem('hesed-booking-admin');$('dashboard').classList.add('hidden');$('login-panel').classList.remove('hidden');message('Sesión cerrada.')};
+    if(token)load().catch(()=>{token='';sessionStorage.removeItem('hesed-booking-admin')});
+  </script>
+</body>
+</html>
