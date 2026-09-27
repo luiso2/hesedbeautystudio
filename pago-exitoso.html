@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="theme-color" content="#fffbf5" />
+    <title>Pago recibido · María Hesed</title>
+    <meta name="description" content="Tu depósito de reserva fue recibido. María Hesed confirmará tu cita personalmente." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Italiana&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/reservar.css" />
+  </head>
+  <body class="booking-page">
+    <a class="skip-link" href="#paid-main" data-t="skip">Saltar al contenido</a>
+    <header class="booking-nav">
+      <a href="/" class="booking-brand" aria-label="María Hesed · Inicio">
+        <span class="booking-brand__mark" aria-hidden="true">M<span></span>H</span>
+        <span>MARÍA HESED<small>AESTHETIC STUDIO</small></span>
+      </a>
+      <div class="booking-nav__right">
+        <div class="booking-lang" role="group" aria-label="Idioma">
+          <button type="button" data-lang="es" aria-pressed="true">ES</button><span>/</span><button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a href="/" class="booking-close" data-t="close">Cerrar</a>
+      </div>
+    </header>
+
+    <main id="paid-main" class="booking-main">
+      <section class="booking-success-page" tabindex="-1">
+        <span class="booking-success-page__icon" aria-hidden="true">✓</span>
+        <p class="booking-kicker" data-t="kicker">DEPÓSITO RECIBIDO</p>
+        <h2 data-t="title">Tu lugar está apartado.</h2>
+        <p data-t="text">Recibimos tu depósito de $40. La cita todavía no está confirmada: María revisará tu horario preferido y te contactará por WhatsApp para confirmar los detalles. El resto lo pagas en el local.</p>
+        <p id="paid-reference"></p>
+        <p class="booking-note" data-t="cancel">Si necesitas cancelar, avísanos con al menos 24 horas de antelación y te devolvemos el depósito.</p>
+        <div class="booking-success-page__actions">
+          <a id="paid-whatsapp" href="https://wa.me/17867095791" target="_blank" rel="noopener" data-t="whatsapp">Enviar por WhatsApp</a>
+          <a href="/" data-t="home">Volver al inicio</a>
+        </div>
+      </section>
+      <p class="booking-help"><span data-t="help">¿Tienes preguntas?</span> <a href="https://wa.me/17867095791" target="_blank" rel="noopener">WhatsApp · +1 (786) 709-5791</a></p>
+    </main>
+    <footer class="booking-footer">
+      <span>© <span id="year"></span> María Hesed · Aesthetic Studio</span>
+      <a href="https://www.merktop.com">Powered by <strong>Merktop</strong></a>
+    </footer>
+    <script type="module">
+      const tr = {
+        es: {
+          skip: "Saltar al contenido", close: "Cerrar",
+          kicker: "DEPÓSITO RECIBIDO", title: "Tu lugar está apartado.",
+          text: "Recibimos tu depósito de $40. La cita todavía no está confirmada: María revisará tu horario preferido y te contactará por WhatsApp para confirmar los detalles. El resto lo pagas en el local.",
+          cancel: "Si necesitas cancelar, avísanos con al menos 24 horas de antelación y te devolvemos el depósito.",
+          whatsapp: "Enviar por WhatsApp", home: "Volver al inicio", help: "¿Tienes preguntas?",
+          reference: "Referencia de tu reserva", docTitle: "Pago recibido · María Hesed",
+          waHello: "Hola María, acabo de pagar el depósito de mi reserva.",
+        },
+        en: {
+          skip: "Skip to content", close: "Close",
+          kicker: "DEPOSIT RECEIVED", title: "Your spot is held.",
+          text: "We received your $40 deposit. Your appointment is not confirmed yet: María will review your preferred time and contact you on WhatsApp to confirm the details. The rest is paid at the studio.",
+          cancel: "If you need to cancel, let us know at least 24 hours in advance and we will refund your deposit.",
+          whatsapp: "Send via WhatsApp", home: "Back to home", help: "Questions?",
+          reference: "Your booking reference", docTitle: "Payment received · María Hesed",
+          waHello: "Hello María, I just paid my booking deposit.",
+        },
+      };
+      let lang = "es";
+      try { lang = localStorage.getItem("hesed-lang") === "en" ? "en" : "es"; } catch {}
+      let booking = null;
+      try { booking = JSON.parse(sessionStorage.getItem("hesed-deposit") || "null"); } catch {}
+      if (booking?.lang === "en" || booking?.lang === "es") lang = booking.lang;
+      const t = tr[lang];
+      document.documentElement.lang = lang;
+      document.title = t.docTitle;
+      document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t[el.dataset.t]; });
+      document.querySelectorAll("[data-lang]").forEach((btn) => {
+        const on = btn.dataset.lang === lang;
+        btn.classList.toggle("is-active", on);
+        btn.setAttribute("aria-pressed", String(on));
+        btn.addEventListener("click", () => {
+          try { localStorage.setItem("hesed-lang", btn.dataset.lang); } catch {}
+          location.reload();
+        });
+      });
+      document.getElementById("year").textContent = new Date().getFullYear();
+      if (booking?.id) {
+        document.getElementById("paid-reference").textContent = `${t.reference}: ${booking.id}`;
+        const msg = [
+          t.waHello,
+          booking.service ? `${booking.service}${booking.area ? ` · ${booking.area}` : ""}` : "",
+          booking.date ? `${booking.date} ${booking.time || ""} (Miami)`.trim() : "",
+          `${t.reference}: ${booking.id}`,
+        ].filter(Boolean).join("\n");
+        document.getElementById("paid-whatsapp").href =
+          `https://wa.me/17867095791?text=${encodeURIComponent(msg)}`;
+      }
+    </script>
+  </body>
+</html>

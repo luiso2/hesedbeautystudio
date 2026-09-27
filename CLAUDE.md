@@ -1,103 +1,75 @@
-# Hesed Beauty Studio — guía del proyecto
+# María Hesed · Estética Avanzada — guía del proyecto
 
-Web premium de una sola página para **Hesed Beauty Studio** (Miami, FL), estética facial y corporal de **Maria Hesed**.
-Instagram del negocio: https://www.instagram.com/hesedbeautystudio · WhatsApp: +1 (786) 709-5791.
-Referencia de calidad que pidió el cliente: https://clinicyolystudiofit.com/es.
+Website de una página para María Hesed · Estética Avanzada, Miami, de María Hesed.
+GitHub: https://github.com/luiso2/hesedbeautystudio
+Producción: https://mariahesed.com
+Dominio adicional: https://www.mariahesed.com
+URL técnica: https://hesedbeautystudio.odd-forest-9504.workers.dev
+Instagram: https://www.instagram.com/mariahesed.esthetics
+WhatsApp: +1 (786) 709-5791.
 
-## URLs y despliegue
+## Stack y estructura
 
-| Qué | Dónde |
-|---|---|
-| Código local | `D:\02_Proyectos\hesedbeautystudio` (equipo original) · `C:\Trabajo\hesedbeautystudio` (clon, sep 2026) |
-| GitHub | https://github.com/luiso2/hesedbeautystudio (rama `main`) |
-| Producción | https://hesedbeautystudio.odd-forest-9504.workers.dev |
-| Cloudflare | cuenta `e79469132f614c7f418a0e7a65466e88`, Worker `hesedbeautystudio` con static assets |
+- Vite + HTML/CSS/JavaScript nativo; Cloudflare Vite plugin.
+- `index.html`: contenido español, semántica y metadatos.
+- `src/style.css`: diseño editorial responsive, marfil / tinta / dorado.
+- `src/main.js`: idioma, menú accesible, categorías desplegables y reproducción de videos.
+- `reservar.html`, `src/reservar.js`, `src/reservar.css` y `src/booking-catalog.json`: reserva bilingüe en cuatro pasos y catálogo de precios.
+- `src/worker.js`, `migrations/` y `BOOKING.md`: API de solicitudes, D1 y panel de administración.
+- `src/i18n.js`: diccionario inglés. Cada nuevo texto requiere traducción.
+- `public/img` y `public/videos`: material real del estudio.
+- `wrangler.jsonc`: Worker con assets estáticos. El plugin genera `dist/wrangler.json`.
 
-**Importante:** wrangler convirtió el `pages deploy` inicial al flujo "Pages sobre Workers". No existe un proyecto Pages clásico ni dominio `pages.dev`; el sitio es un Worker que sirve `dist/` como assets estáticos. Para volver al Pages clásico habría que redeployar con `wrangler pages deploy dist --force` (solo si el cliente lo pide).
+`npm ci`, `npm run dev`, `npm run build`. `npm run deploy` publica en Cloudflare con credenciales de entorno. Nunca guardar secretos en el repositorio.
 
-```bash
-npm install
-npm run dev              # desarrollo en http://localhost:5173
-npm run build            # genera dist/ (Vite + @cloudflare/vite-plugin)
-npx wrangler deploy      # publica. Necesita CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID en el entorno
-```
+## Diseño y comportamiento
 
-La config real del Worker la genera el plugin de Vite en `dist/wrangler.json` a partir de `wrangler.jsonc`; `.wrangler/deploy/config.json` redirige a ella. No editar `dist/` a mano.
+Portada dividida, cuatro categorías con acceso a servicios y precios bajo demanda, guía de reserva en tres pasos, resultados, fundadora y FAQ. El botón «Reservar mi cita» abre una página de booking separada; Instagram se enlaza desde la página sin un mosaico de reels.
 
-Los tokens de Cloudflare **nunca** van en el repo. El token usado en la primera publicación se pegó en un chat: conviene rotarlo en el panel de Cloudflare.
+La renovación de septiembre de 2026 elimina GSAP, Lenis, el preloader y el desplazamiento horizontal fijado. No introducir esperas artificiales, partículas, grano animado, cursores personalizados ni anillos giratorios.
 
-## Stack
+Español por defecto. Guardar únicamente la selección explícita de idioma en `hesed-lang`. Mantener el scroll nativo, la navegación por teclado, el foco del menú móvil y `prefers-reduced-motion`. El video principal y los videos de servicios de la categoría abierta se cargan y reproducen al entrar en pantalla, y se pausan al salir. Cada video tiene un control visible para pausarlo o reproducirlo; no reintroducir los mosaicos de reels ni videos decorativos repetidos.
 
-- **Vite 6** + HTML/CSS/JS vanilla (sin framework).
-- **GSAP 3 + ScrollTrigger**: preloader, split-text del hero, reveals, contadores, sección horizontal pinned, parallax, acordeón.
-- **Lenis**: smooth scroll (se desactiva con `prefers-reduced-motion`).
-- **Google Fonts**: Cormorant Garamond (display), Jost (cuerpo), Pinyon Script (firma "by Maria Hesed").
-- Vídeos H.264 en `public/videos/`, transcodificados con `ffmpeg-static` desde los reels del Instagram.
+El catálogo comienza cerrado. Cada tarjeta de categoría tiene un botón «Ver servicios y precios» que abre todas las tarjetas de esa categoría; pulsarlo otra vez cierra el catálogo. Conservar la imagen o video y el precio confirmado junto al nombre. Para tratamientos sin importe confirmado, mostrar «Consultar el precio» en el mismo renglón y tamaño pequeño que los importes publicados. Mantener las traducciones y los enlaces a WhatsApp específicos del tratamiento como alternativa sin JavaScript.
 
-## Estructura
+El enlace principal de cada tratamiento abre `/reservar?service=ID` con ese tratamiento y su precio a la vista. La página de booking guía por servicio, fecha/hora preferidas, datos y revisión final. Guarda solicitudes pendientes en D1; no afirmar que una fecha/hora está confirmada. El panel privado y sus límites están documentados en `BOOKING.md`. El secreto de administración nunca se guarda en Git.
 
-```
-index.html          Toda la página. Copy en ESPAÑOL (fuente de verdad) con atributos data-i18n
-src/style.css       Sistema de diseño (variables en :root), secciones, responsive al final
-src/main.js         i18n, Lenis, preloader, nav, menú móvil, magnetic, reveals, tabs, vídeos, ritual, FAQ
-src/i18n.js         Diccionario EN (claves = data-i18n). El ES se captura del DOM en runtime
-public/videos/      16 clips (≤15 s, ≤1.3 MB c/u). Del IG (720p): slimbody, lipo4d, drenaje, drenaje2, moldeo, reafirmante, piedras, firmup.
-                    Enviados por la clienta (480p, sep 2026): metaloterapia, metaloterapia-res, woodtherapy, gimnasia, kinesio, quemadores, plasmapen, fibroblast
-public/img/         Pósters *-poster.jpg (frame de cada vídeo), maria.jpg (150 px, del IG), fotos antes/después
-                    (facial-deepclean-*, facial-detox-*, drenaje-antes/despues) y kinesiotape.jpg
-public/_headers     Cache inmutable para videos/img/assets, nosniff, referrer-policy
-public/robots.txt
-wrangler.jsonc      Config base del Worker (assets SPA)
-vite.config.js      Plugin de Cloudflare (lo añadió wrangler)
-```
+## Contenido pendiente de confirmar
 
-## Secciones de la página (orden)
+Dirección exacta, precios de los tratamientos aún no confirmados, duraciones reales, testimonios y dominio propio. No inventar estos datos ni estadísticas comerciales.
 
-1. Preloader (monograma H + "HESED")
-2. Nav fija con selector ES/EN, CTA WhatsApp, burger en móvil
-3. Hero con vídeo `drenaje.mp4`, título split-text, firma script
-4. Marquee de tratamientos
-5. Manifiesto "Hesed = bondad, gracia y cuidado" + contadores + 2 vídeos
-6. Tratamientos en pestañas: Corporal (11), Facial (4, dos con antes/después), Fibroblast (3), Cejas (3). Cada tarjeta enlaza a WhatsApp con mensaje prellenado
-7. El Ritual: 4 pasos con scroll horizontal pinned en escritorio, vertical en móvil
-8. Resultados: grid de vídeos + cita + antes/después de drenaje, resultados de metaloterapia y foto de kinesio tape
-9. La fundadora (Maria Hesed)
-10. Reels (6, enlazan a los reels originales en IG)
-11. FAQ (5 preguntas, acordeón animado)
-12. CTA de reserva con vídeo de fondo
-13. Footer + botón flotante WhatsApp
+Al cambiar el dominio, actualizar canonical, OG y JSON-LD. El material de video se mantiene H.264, yuv420p, faststart, con póster, muted y playsinline.
 
-## Decisiones de diseño y branding
+## Validación
 
-- Paleta del Instagram: negro/onyx, marfil y dorado champán. Variables `--ink`, `--onyx`, `--ivory`, `--sand`, `--gold`, `--gold-2`.
-- El cliente pidió quitar "brillos de IA" (partículas), el grano animado y el cursor personalizado porque parpadeaban. **No volver a añadirlos.**
-- Botones con superficie 3D (degradado + relieve + sombra). Efecto magnético suave (`strength = 0.18`).
-- El retrato de Maria lleva anillo sólido fino; el cliente rechazó el anillo punteado giratorio.
-- Idioma por defecto: español siempre. Solo cambia si el usuario pulsa EN (se guarda en `localStorage["hesed-lang"]`).
-- Ningún vídeo salvo el hero tiene `autoplay`; los de fondo usan `data-autoplay` + `preload="none"` y se reproducen al entrar en vista (ScrollTrigger). Las tarjetas reproducen al hover (escritorio) o al entrar en vista (táctil).
+Compilar sin errores y revisar escritorio y móvil, ES/EN, los cuatro botones de categoría, expansión y cierre del catálogo, menú (Escape y foco), FAQ, enlaces internos, WhatsApp, movimiento reducido y consola. Ejecutar comprobaciones de contraste y accesibilidad tras cambios visuales.
 
-## Cómo editar contenido
+Marca vigente: María Hesed · Estética Avanzada. Monograma M | H; lema Ciencia · Belleza · Bienestar. Conservar la URL técnica. El Instagram oficial indicado por la clienta es @mariahesed.esthetics. Precios confirmados: drenaje linfático US$85, maderoterapia US$80 y metaloterapia US$80. Brazilian Body Sculpt es diferente de Brazilian Slim Body y no se añade sin material propio.
 
-- **Texto**: cambia el español en `index.html` y la clave equivalente en `src/i18n.js`. Si añades un elemento nuevo con texto, dale `data-i18n="seccion.clave"` y añade la clave al diccionario EN.
-- **Tratamiento nuevo**: copia un `<article class="card">` dentro del `<div class="panel" data-panel="...">` correspondiente. Actualiza el `card__num`.
-- **Tarjeta con media lateral**: `card--split` (ocupa 2 columnas, media a la izquierda). Con fotos antes/después usa `card__media card__media--ba` + dos `.ba__cell` con `.ba__tag`. Con vídeo que no debe recortarse (collages con rótulos) añade `card--contain`.
-- **Antes/después en Resultados**: `<figure class="result result--ba">` con dos `.ba__cell`.
-- **Precios**: no se inventaron. Las tarjetas añadidas en sep 2026 muestran "Según valoración" en vez de duración porque la clienta no la indicó. Los `card__meta` muestran duración orientativa y "Sesión o paquete". Cambiar cuando el cliente confirme.
-- **Material de la clienta**: si llega como collage vertical (antes arriba, después abajo), se parte en dos mitades con ffmpeg `crop`. Si el vídeo trae bandas negras, `cropdetect` y recortar.
-- **Vídeo nuevo**: H.264 (yuv420p, faststart), ≤15 s, 720p, sin audio necesario (van en `muted`). Genera su póster con ffmpeg (`-ss 1 -frames:v 1`).
-- **Dominio propio**: al conectarlo, cambiar las URLs absolutas en `index.html` (canonical, og:image, og:url y el JSON-LD `url`/`image`).
+La tipografía de titulares, monograma y nombre de marca usa Italiana, con mayúsculas espaciadas para aproximarse al rótulo M | H enviado por la clienta el 23 de septiembre. Los énfasis en cursiva conservan Bodoni Moda. Los botones de las cuatro categorías muestran solo el texto, sin flechas.
+El énfasis «cuidarte.» del título principal usa Bodoni Moda en cursiva serif y dorado suave, como la segunda referencia visual enviada el 24 de septiembre; no usar Allura ni otra letra manuscrita en esa palabra.
 
-## Pendiente de confirmar con la clienta
+La sección de la fundadora usa `public/img/maria-hesed-portrait.jpg`, foto vertical completa suministrada por la clienta. Reemplaza el bloque anterior de retrato circular, firma y credenciales.
 
-- Dirección postal exacta (ahora solo "Miami, Florida").
-- Precios y duraciones reales de cada tratamiento.
-- Testimonios reales (no hay sección de reseñas para no inventar ninguna).
-- Foto de Maria en alta resolución (la actual es la miniatura de 150 px del IG).
-- Dominio definitivo.
+El catálogo corporal incluye los 12 servicios con precios legibles de la lista de la clienta: tres ya tenían video y nueve se añadieron con descripción, precio y espacio de media en blanco. La clienta autorizó añadir servicios sin foto/video para completar el material después. Usar `.card__media--empty` hasta recibir su material. No inferir el precio tapado de Brazilian Body Sculpt.
 
-## Verificación antes de publicar
+Actualización de medios: las tarjetas sin material propio usan fotos generadas identificadas como Imagen ilustrativa. Los archivos `public/img/illustrative-*.jpg` son provisionales; sustituirlos por material real cuando la clienta lo envíe. No presentar fotos generadas como testimonios o resultados reales.
 
-1. `npm run build` sin errores.
-2. Abrir `npx vite preview` y comprobar hero, pestañas, ritual (escritorio y móvil), FAQ y selector de idioma.
-3. Sin errores en consola. Última auditoría (17 sep 2026): 0 errores JS, 0 violaciones axe WCAG 2 AA, carga 0,75 s, vídeo total 5,7 MB.
-4. `git push` y `npx wrangler deploy`.
+La clienta exige una imagen específica y diferente por servicio, sin collages de fotos repetidas ni videos duplicados entre tarjetas. Lipotrópicos se ofrece como inyectable (confirmado); no inferir fórmulas, dosis ni vía específica. Los archivos illustrative-*-v2 representan cada servicio por separado.
+
+Kinesiología Linfática usa la foto `public/img/kinesiologia-linfatica-foto.jpg` proporcionada el 23 de septiembre; reemplaza el antiguo video y póster de kinesio.
+
+Los dominios mariahesed.com y www.mariahesed.com están vinculados al mismo Worker mediante routes con custom_domain en wrangler.jsonc. Canonical, Open Graph y JSON-LD usan https://mariahesed.com.
+
+Maderoterapia tiene una sola tarjeta (data-service=maderoterapia), US$80, con video de sesión y fotos originales antes/después enviadas el 22 de septiembre. No crear servicios adicionales para añadir medios. La clienta pidió eliminar Maderoterapia + Metaloterapia y Masaje moldeador + Maderoterapia; conservar únicamente Maderoterapia de US$80.
+El video principal de esa tarjeta es `public/videos/maderoterapia-rodillos-abdomen.mp4`, enviado después por la clienta porque prefiere esta toma; su póster corresponde al mismo clip. No restaurar el clip anterior.
+
+La clienta solicitó eliminar la tarjeta individual de Metaloterapia (srv.n7) del catálogo. No volver a añadirla sin indicación.
+
+Instagram vigente: @mariahesed.esthetics. Facial Detox incluye hidratación con ácido hialurónico y el video facial-detox-hialuronico.mp4, sin tarjeta adicional.
+El video de Facial Detox es vertical (480×848) y fue grabado desde la cabecera: su tarjeta lo muestra completo, sin recorte y girado 180° mediante CSS. Mantener esta presentación en móvil y escritorio.
+El video de Yoga facial y drenaje linfático facial también es vertical (480×768); se encuadra cerca de la parte superior para mantener visibles los ojos y la cara en la tarjeta horizontal.
+
+Facial Deep Clean ocupa la primera tarjeta de Facial y usa `public/img/facial-deep-clean-mascarilla.jpg`, foto de mascarilla en tres etapas enviada el 23 de septiembre. Salmon DNA conserva su video propio en la segunda tarjeta.
+
+Delux Facial sigue siendo un solo servicio de US$185. La clienta lo describió para pieles con flacidez y signos de envejecimiento y envió el video del tratamiento (`delux-facial-flacidez.mp4`).
