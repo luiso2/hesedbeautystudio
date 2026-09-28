@@ -23,6 +23,10 @@ const translations = {
     name: "Nombre completo", phone: "WhatsApp o teléfono", email: "Correo electrónico · opcional", note: "Algo que debamos saber · opcional",
     consent: "Acepto que María Hesed use estos datos para contactarme sobre esta solicitud.",
     step4count: "PASO 04 / 04", step4title: "Revisa tu solicitud", step4lead: "Comprueba los detalles antes de enviarlos. No se realizará ningún cobro ahora.",
+    depositLead: "Revisa tu solicitud. Al continuar irás a Merktop para pagar US$40 de depósito. María confirmará la disponibilidad y el saldo del tratamiento.",
+    depositLabel: "Depósito ahora", depositValue: "US$40", depositSubmit: "Continuar al pago",
+    depositPending: "Tu fecha y hora son una preferencia. María confirmará la disponibilidad después del pago.",
+    paymentUnavailable: "El pago no está disponible en este momento. Inténtalo más tarde o contacta a María por WhatsApp.",
     pending: "Tu cita quedará pendiente hasta que María confirme la disponibilidad. Los tratamientos sin precio publicado se cotizarán personalmente.",
     back: "Volver", continue: "Continuar", submit: "Enviar solicitud", sending: "Enviando…",
     summaryEyebrow: "TU SELECCIÓN", summaryTitle: "Tu cita, a tu medida.", summaryFoot: "Cuidado personal en Miami",
@@ -50,6 +54,10 @@ const translations = {
     name: "Full name", phone: "WhatsApp or phone", email: "Email · optional", note: "Anything we should know · optional",
     consent: "I agree that María Hesed may use these details to contact me about this request.",
     step4count: "STEP 04 / 04", step4title: "Review your request", step4lead: "Check the details before sending them. No payment is taken now.",
+    depositLead: "Review your request. Continue to Merktop to pay a US$40 deposit. María will confirm availability and the remaining treatment balance.",
+    depositLabel: "Deposit now", depositValue: "US$40", depositSubmit: "Continue to payment",
+    depositPending: "Your date and time are a preference. María will confirm availability after payment.",
+    paymentUnavailable: "Payment is unavailable right now. Please try again later or contact María on WhatsApp.",
     pending: "Your appointment remains pending until María confirms availability. Treatments without a published price will be quoted personally.",
     back: "Back", continue: "Continue", submit: "Send request", sending: "Sending…",
     summaryEyebrow: "YOUR SELECTION", summaryTitle: "Care made for you.", summaryFoot: "Personal care in Miami",
@@ -78,6 +86,8 @@ const tr = (key) => translations[lang][key];
 const service = () => byId.get(serviceId);
 const option = () => service()?.options?.find((entry) => entry.id === optionId);
 const chosenPrice = () => service()?.options?.length ? option() : service();
+const depositRequired = () => !!chosenPrice() &&
+  (chosenPrice().price == null || chosenPrice().from || chosenPrice().price >= 40);
 const priceText = (entry) => entry?.price == null ? tr("askPrice")
   : entry.from ? `${tr("from")} US$${entry.price}` : `US$${entry.price}`;
 
@@ -207,7 +217,7 @@ function updateSummary() {
   }
   const pending = document.createElement("p");
   pending.className = "booking-summary__pending";
-  pending.textContent = tr("pending");
+  pending.textContent = tr(depositRequired() ? "depositPending" : "pending");
   root.append(pending);
 }
 
@@ -268,10 +278,15 @@ function validStep() {
 }
 
 function renderReview() {
+  const deposit = depositRequired();
+  $("[data-t='step4lead']").textContent = tr(deposit ? "depositLead" : "step4lead");
+  $("[data-step='4'] [data-t='pending']").textContent = tr(deposit ? "depositPending" : "pending");
+  $("#booking-submit").innerHTML = `${tr(deposit ? "depositSubmit" : "submit")} <span aria-hidden="true">→</span>`;
   const rows = [
     [tr("service"), service().name[lang]],
     ...(option() ? [[tr("area"), option().name[lang]]] : []),
     [tr("price"), priceText(chosenPrice())],
+    ...(deposit ? [[tr("depositLabel"), tr("depositValue")]] : []),
     [tr("preferred"), `${$("#booking-date").value} · ${$("#booking-time").value} (Miami)`],
     [tr("contact"), `${$("#booking-name").value.trim()} · ${$("#booking-phone").value.trim()}`],
   ];
@@ -348,7 +363,12 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error === "rate_limited" ? "rateLimited" : "serverError");
+    if (!response.ok) throw new Error(result.error === "rate_limited" ? "rateLimited" :
+      result.error === "payment_unavailable" ? "paymentUnavailable" : "serverError");
+    if (result.payment_url) {
+      window.location.assign(result.payment_url);
+      return;
+    }
     $("#booking-flow").hidden = true;
     const success = $("#booking-success");
     success.hidden = false;
@@ -363,10 +383,10 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
     success.scrollIntoView({ behavior: "smooth", block: "start" });
     success.focus({ preventScroll: true });
   } catch (error) {
-    showError(error.message === "rateLimited" ? "rateLimited" : "serverError");
+    showError(["rateLimited", "paymentUnavailable"].includes(error.message) ? error.message : "serverError");
   } finally {
     button.disabled = false;
-    button.innerHTML = `${tr("submit")} <span aria-hidden="true">→</span>`;
+    button.innerHTML = `${tr(depositRequired() ? "depositSubmit" : "submit")} <span aria-hidden="true">→</span>`;
   }
 });
 

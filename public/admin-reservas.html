@@ -46,6 +46,7 @@
     const $ = (id) => document.getElementById(id);
     let token = sessionStorage.getItem('hesed-booking-admin') || '';
     const statuses = { pending:'Pendiente', confirmed:'Confirmada', declined:'Rechazada', cancelled:'Cancelada' };
+    const paymentStatuses = { not_started:'Sin depósito solicitado', awaiting_payment:'Depósito pendiente', paid:'Depósito de US$40 pagado', refunded:'Depósito reembolsado', expired:'Depósito vencido' };
     const message = (value, error=false) => { $('message').textContent=value; $('message').className=error?'error':''; };
     async function api(path, options={}) {
       const response=await fetch(path,{...options,headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json',...(options.headers||{})}});
@@ -64,7 +65,7 @@
       const article=document.createElement('article');article.className='booking';
       const status=document.createElement('span');status.className='status';status.textContent=statuses[row.status]||row.status;article.append(status);
       const heading=document.createElement('h2');heading.textContent=row.service_name+(row.option_name?' · '+row.option_name:'');article.append(heading);
-      article.append(line('Cliente',row.customer_name),line('Fecha preferida',`${row.requested_date} · ${row.requested_time} (Miami)`),line('Teléfono',row.customer_phone),line('Correo',row.customer_email),line('Precio',row.price_cents==null?'Consultar el precio':(row.price_from?'Desde ':'')+`US$${row.price_cents/100}`));
+      article.append(line('Cliente',row.customer_name),line('Fecha preferida',`${row.requested_date} · ${row.requested_time} (Miami)`),line('Teléfono',row.customer_phone),line('Correo',row.customer_email),line('Precio',row.price_cents==null?'Consultar el precio':(row.price_from?'Desde ':'')+`US$${row.price_cents/100}`),line('Pago',paymentStatuses[row.payment_status]||'Sin depósito'));
       if(row.customer_note)article.append(line('Nota',row.customer_note));
       const ref=document.createElement('p');ref.className='ref';ref.textContent=`Referencia: ${row.id} · Recibida: ${row.created_at} UTC`;article.append(ref);
       article.append(phoneLink(row));
