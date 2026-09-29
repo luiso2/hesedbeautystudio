@@ -290,15 +290,6 @@
     "price": null
   },
   {
-    "id": "lipotropicos",
-    "category": "fibroblast",
-    "name": {
-      "es": "Lipotrópicos",
-      "en": "Lipotropics"
-    },
-    "price": null
-  },
-  {
     "id": "diseno-cejas",
     "category": "cejas",
     "name": {

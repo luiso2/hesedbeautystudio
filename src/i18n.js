@@ -119,10 +119,6 @@ export const EN = {
   "srv.b3n": "Plasma Pen · Stretch Marks & Laxity",
   "srv.b3":
     "Plasma pen applied to stretch marks and loose abdominal skin: it stimulates skin retraction and renewal to progressively improve texture and firmness.",
-  "srv.b2n": "Lipotropics",
-  "srv.b2":
-    "A boost for your metabolism. The ideal complement to reduce localized fat and improve your silhouette alongside healthy habits. Visible results in 3 sessions.",
-  "srv.bm2": "3+ session plan",
   "srv.e1n": "Brow Design",
   "srv.e1":
     "Face mapping, precision hair removal and tint for brows that frame your gaze according to the geometry of your face.",
