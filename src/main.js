@@ -226,8 +226,18 @@ async function playVideo(video, button) {
   }
   syncVideoButton(video, button);
 }
-$$(".hero__media > video, .card__media video").forEach((video) => {
-  const media = video.closest(".hero__media, .card__media");
+// Feature videos (hero / Sobre María): ambient autoplay, no visible controls.
+const ambientVideos = $$(".hero__media > video");
+function playAmbient(video) {
+  loadVideo(video);
+  video.muted = true;
+  video.playsInline = true;
+  video.loop = true;
+  video.play().catch(() => {});
+}
+// Treatment card videos keep their play/pause button.
+$$(".card__media video").forEach((video) => {
+  const media = video.closest(".card__media");
   const button = document.createElement("button");
   button.type = "button";
   button.className = "media-play";
@@ -251,8 +261,12 @@ const videoObserver = new IntersectionObserver((entries) => {
     const video = entry.target;
     if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
       visibleVideos.add(video);
-      const button = mediaButtons.find((item) => item.video === video).button;
-      playVideo(video, button);
+      if (ambientVideos.includes(video)) {
+        playAmbient(video);
+      } else {
+        const button = mediaButtons.find((item) => item.video === video).button;
+        playVideo(video, button);
+      }
     } else {
       visibleVideos.delete(video);
       video.pause();
@@ -260,8 +274,12 @@ const videoObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: [0, 0.3] });
 mediaButtons.forEach(({ video }) => videoObserver.observe(video));
+ambientVideos.forEach((video) => videoObserver.observe(video));
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) mediaButtons.forEach(({ video }) => video.pause());
+  if (document.hidden) {
+    mediaButtons.forEach(({ video }) => video.pause());
+    ambientVideos.forEach((video) => video.pause());
+  }
 });
 $("#year").textContent = new Date().getFullYear();
 let savedLang = "es";
