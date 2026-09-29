@@ -2430,7 +2430,8 @@ body { background: var(--paper); }
   .hero__title { font-size: clamp(68px, 15vw, 90px); }
   .hero__lead { font-size: 16px; margin-block: 24px 27px; }
   .hero__actions { gap: 15px; }
-  .hero__actions .btn--gold { min-width: min(100%, 290px); }
+  .hero__actions .btn--gold { min-width: 0; justify-content: center; }
+  .hero__actions .btn { font-size: 15px; }
   .hero__media { height: 430px; border-width: 4px; border-radius: 18px 18px 75px 18px; }
   .hero__image-top { font-size: 8px; }
   .title-xl { font-size: clamp(46px, 11vw, 60px); }
@@ -2454,3 +2455,33 @@ body { background: var(--paper); }
   .category-choice.is-active,
   .category-choice__button:hover { transform: none; }
 }
+
+/* 2026-09-27: hero con la foto de María arriba y los textos debajo.
+   El video del hero se mudó a la sección Sobre María. */
+.hero { grid-template-columns: 1fr; }
+.hero__photo {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 100%;
+  max-width: 390px;
+  margin-top: 8px;
+}
+.hero__photo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+@media (max-width: 650px) {
+  .hero__photo { max-width: 340px; }
+}
+.hero__content {
+  text-align: center;
+  max-width: 760px;
+  margin-inline: auto;
+}
+.hero__eyebrow { justify-content: center; }
+.hero__lead { margin-inline: auto; }
+.hero__actions { justify-content: center; }
+.hero__care { justify-content: center; }
+.about__media .hero__media { width: 100%; }
