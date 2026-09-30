@@ -193,9 +193,9 @@ panels.forEach((panel) => {
   panel.hidden = true;
 });
 
-// Only the hero and treatment cards play, and only while they are visible.
-// Hidden categories do not load their videos.
-const mediaButtons = [];
+// Every video on the site is ambient: infinite muted loop, no play/pause
+// icons anywhere. Videos load lazily and only play while visible.
+const ambientVideos = $$("video");
 const visibleVideos = new Set();
 function loadVideo(video) {
   const source = video.querySelector("source[data-src]");
@@ -204,30 +204,6 @@ function loadVideo(video) {
   source.removeAttribute("data-src");
   video.load();
 }
-function syncVideoButton(video, button) {
-  const playing = !video.paused;
-  button.classList.toggle("is-playing", playing);
-  button.setAttribute("aria-label", playing
-    ? copy("Pausar video", "Pause video")
-    : copy("Reproducir video", "Play video"));
-  button.querySelector(".media-play__icon").textContent = playing ? "Ⅱ" : "▶";
-}
-async function playVideo(video, button) {
-  loadVideo(video);
-  video.muted = true;
-  video.playsInline = true;
-  video.loop = true;
-  try {
-    await video.play();
-    if (!visibleVideos.has(video) || document.hidden || !video.getClientRects().length)
-      video.pause();
-  } catch {
-    // The same visible button provides a user-gesture retry if autoplay is blocked.
-  }
-  syncVideoButton(video, button);
-}
-// Feature videos (hero / Sobre María): ambient autoplay, no visible controls.
-const ambientVideos = $$(".hero__media > video");
 function playAmbient(video) {
   loadVideo(video);
   video.muted = true;
@@ -235,51 +211,21 @@ function playAmbient(video) {
   video.loop = true;
   video.play().catch(() => {});
 }
-// Treatment card videos keep their play/pause button.
-$$(".card__media video").forEach((video) => {
-  const media = video.closest(".card__media");
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "media-play";
-  button.innerHTML = '<span class="media-play__icon" aria-hidden="true">▶</span>';
-  media.append(button);
-  mediaButtons.push({ button, video });
-  button.addEventListener("click", () => {
-    if (video.paused) playVideo(video, button);
-    else video.pause();
-  });
-  video.addEventListener("play", () => syncVideoButton(video, button));
-  video.addEventListener("pause", () => syncVideoButton(video, button));
-});
-function updateVideoButtons() {
-  mediaButtons.forEach(({ button, video }) => {
-    syncVideoButton(video, button);
-  });
-}
 const videoObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     const video = entry.target;
     if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
       visibleVideos.add(video);
-      if (ambientVideos.includes(video)) {
-        playAmbient(video);
-      } else {
-        const button = mediaButtons.find((item) => item.video === video).button;
-        playVideo(video, button);
-      }
+      playAmbient(video);
     } else {
       visibleVideos.delete(video);
       video.pause();
     }
   });
 }, { threshold: [0, 0.3] });
-mediaButtons.forEach(({ video }) => videoObserver.observe(video));
 ambientVideos.forEach((video) => videoObserver.observe(video));
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    mediaButtons.forEach(({ video }) => video.pause());
-    ambientVideos.forEach((video) => video.pause());
-  }
+  if (document.hidden) ambientVideos.forEach((video) => video.pause());
 });
 $("#year").textContent = new Date().getFullYear();
 let savedLang = "es";

@@ -2267,43 +2267,6 @@ body { background: var(--paper); }
 .card__body { padding: 22px; gap: 10px; }
 .card h3 { font-size: 25px; }
 .card__link i { box-shadow: none; background: transparent; width: auto; height: auto; }
-.card__media--duo .media-play { left: 75%; }
-.media-play {
-  position: absolute;
-  z-index: 5;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px;
-  border-radius: 2px;
-  color: white;
-  background: #17130fcc;
-  font-size: 10px;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-.media-play[hidden] { display: none; }
-.media-play:hover { background: #17130f; }
-.media-play__icon { font-size: 16px; }
-.hero__media .media-play { top: auto; bottom: 24px; left: 26px; transform: none; flex-direction: row; gap: 10px; }
-.media-play.is-playing,
-.hero__media .media-play.is-playing {
-  top: auto;
-  bottom: 12px;
-  left: auto;
-  right: 12px;
-  transform: none;
-  flex-direction: row;
-  gap: 7px;
-  padding: 8px 10px;
-  background: #17130fa8;
-  font-size: 9px;
-}
-.media-play.is-playing .media-play__icon { font-size: 12px; }
 .card__media .media-caption { pointer-events: none; }
 
 .ritual { padding: clamp(64px, 7vw, 100px) 0; background: #efe5d7; color: var(--ink); }
