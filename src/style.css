@@ -638,6 +638,18 @@ summary:focus-visible,
 .card[data-service="drenaje-yoga-facial"]:hover .card__media video {
   transform: none;
 }
+/* The Hesed Firm Up clip is portrait (9:16): show it whole in a taller
+   frame instead of a cropped slice of the bottom. */
+.card[data-booking-id="hesed-firm-up"] .card__media {
+  aspect-ratio: 4 / 5;
+  background: var(--sand);
+}
+.card[data-booking-id="hesed-firm-up"] .card__media video,
+.card[data-booking-id="hesed-firm-up"]:hover .card__media video {
+  object-fit: contain;
+  filter: none;
+  transform: none;
+}
 .card__body {
   display: flex;
   flex-direction: column;
