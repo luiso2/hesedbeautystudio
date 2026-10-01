@@ -46,6 +46,7 @@ export const EN = {
   "srv.category4": "Brow design, eye-area care and waxing.",
   "srv.detail": "Services & prices",
   "srv.book": "Book this treatment",
+  "srv.bookShort": "Book",
   "srv.moreInfo": "More information",
   "srv.bookNow": "Book now",
   "srv.eval": "Request assessment",

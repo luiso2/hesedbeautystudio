@@ -2470,6 +2470,46 @@ body { background: var(--paper); }
   width: 100%;
   text-align: left;
 }
+/* Card footer: fast direct booking + optional info popup. No distractions. */
+.card__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+  padding-top: 6px;
+}
+.card__info {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 0;
+}
+.card__info:hover {
+  color: var(--gold);
+}
+.card__book {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 12px 0;
+  white-space: nowrap;
+}
+.card__book i {
+  font-size: 20px;
+  font-style: normal;
+}
+.card__book:hover {
+  color: var(--gold-bright);
+}
 .svc-modal {
   position: fixed;
   inset: 0;
@@ -2490,9 +2530,11 @@ body { background: var(--paper); }
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: min(560px, calc(100vw - 40px));
-  max-height: calc(100dvh - 48px);
+  width: min(600px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -2527,7 +2569,7 @@ body { background: var(--paper); }
 .svc-modal__media video,
 .svc-modal__media img {
   width: 100%;
-  max-height: 44vh;
+  max-height: 52vh;
   object-fit: cover;
 }
 .svc-modal__media .card__media--proof img,
