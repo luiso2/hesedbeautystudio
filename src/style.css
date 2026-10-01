@@ -2460,3 +2460,142 @@ body { background: var(--paper); }
 .hero__actions { justify-content: center; }
 .hero__care { justify-content: center; }
 .about__media .hero__media { width: 100%; }
+
+/* Service info modal: cards stay text-only in the grid; photos and videos
+   live inside this popup with the explanation, price and the booking CTA. */
+.card .card__media {
+  display: none;
+}
+.card__info {
+  width: 100%;
+  text-align: left;
+}
+.svc-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: none;
+}
+.svc-modal.is-open {
+  display: block;
+}
+.svc-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(23, 19, 15, 0.6);
+  backdrop-filter: blur(6px);
+}
+.svc-modal__dialog {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(560px, calc(100vw - 40px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(23, 19, 15, 0.4);
+}
+.svc-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(23, 19, 15, 0.6);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+.svc-modal__media {
+  background: #17130f;
+  border-radius: 22px 22px 0 0;
+  overflow: hidden;
+}
+.svc-modal__media[hidden] {
+  display: none;
+}
+.svc-modal__media .card__media {
+  display: block;
+}
+.svc-modal__media video,
+.svc-modal__media img {
+  width: 100%;
+  max-height: 44vh;
+  object-fit: cover;
+}
+.svc-modal__media .card__media--proof img,
+.svc-modal__media .card__media--ba img {
+  object-fit: contain;
+  max-height: 52vh;
+}
+.svc-modal__body {
+  padding: 22px 24px 26px;
+}
+.svc-modal__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.15;
+  margin: 0 0 8px;
+}
+.svc-modal__price {
+  margin: 0 0 12px;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  font-size: 14px;
+}
+.svc-modal__price[hidden] {
+  display: none;
+}
+.svc-modal__desc p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.svc-modal__desc .card__list {
+  margin: 0 0 10px;
+}
+.svc-modal__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 20px;
+}
+.svc-modal__meta[hidden] {
+  display: none;
+}
+.svc-modal__meta span {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+.svc-modal__cta {
+  display: block;
+  text-align: center;
+  background: var(--gold);
+  color: #fff;
+  border-radius: 999px;
+  padding: 15px 20px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 15px;
+}
+.svc-modal__cta:hover {
+  background: var(--gold-bright);
+  color: #fff;
+}
+body.modal-open {
+  overflow: hidden;
+}

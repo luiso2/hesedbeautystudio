@@ -37,8 +37,8 @@ function setLang(next) {
       "Massage at María Hesed · Aesthetic Studio",
     ),
   );
+  $(".svc-modal__close").setAttribute("aria-label", copy("Cerrar", "Close"));
   updateMenuLabel();
-  updateVideoButtons();
   updateCategoryButtons();
   try {
     localStorage.setItem("hesed-lang", lang);
@@ -226,6 +226,91 @@ const videoObserver = new IntersectionObserver((entries) => {
 ambientVideos.forEach((video) => videoObserver.observe(video));
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) ambientVideos.forEach((video) => video.pause());
+});
+
+// Service info modal: the cards stay text-only in the grid. Tapping
+// "Más información" opens a popup with the photo or video, the explanation,
+// the price and a "Reservar ahora" button that jumps into the booking flow.
+const svcModal = $("#svc-modal");
+let svcReturnFocus = null;
+function openServiceModal(card) {
+  if (!svcModal || !card) return;
+  svcReturnFocus = document.activeElement;
+  const mediaHost = $(".svc-modal__media", svcModal);
+  mediaHost.innerHTML = "";
+  const media = $(".card__media", card);
+  if (media) {
+    const clone = media.cloneNode(true);
+    const video = $("video", clone);
+    if (video) {
+      const source = $("source", video);
+      if (source && source.dataset.src) {
+        source.src = source.dataset.src;
+        source.removeAttribute("data-src");
+      }
+      video.removeAttribute("preload");
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.load();
+      video.play().catch(() => {});
+    }
+    mediaHost.append(clone);
+  }
+  mediaHost.hidden = !media;
+  const title = $("h3", card);
+  $("#svc-modal-title").innerHTML = title ? title.innerHTML : "";
+  const price = $(".card__price", card);
+  const priceHost = $(".svc-modal__price", svcModal);
+  priceHost.innerHTML = price ? price.innerHTML : "";
+  priceHost.hidden = !price;
+  const descHost = $(".svc-modal__desc", svcModal);
+  descHost.innerHTML = "";
+  $$(".card__body > p:not(.card__price)", card).forEach((p) =>
+    descHost.append(p.cloneNode(true)),
+  );
+  const list = $(".card__list", card);
+  if (list) descHost.append(list.cloneNode(true));
+  const meta = $(".card__meta", card);
+  const metaHost = $(".svc-modal__meta", svcModal);
+  metaHost.innerHTML = meta ? meta.innerHTML : "";
+  metaHost.hidden = !meta;
+  const bookBtn = $("[data-book]", card);
+  $(".svc-modal__cta", svcModal).href = bookBtn
+    ? bookBtn.dataset.book
+    : "/reservar";
+  svcModal.classList.add("is-open");
+  svcModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  $(".svc-modal__close", svcModal).focus();
+}
+function closeServiceModal(restoreFocus = false) {
+  if (!svcModal) return;
+  const video = $("video", svcModal);
+  if (video) video.pause();
+  svcModal.classList.remove("is-open");
+  svcModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+  if (restoreFocus && svcReturnFocus) svcReturnFocus.focus();
+}
+$$("[data-book]").forEach((button) =>
+  button.addEventListener("click", () => {
+    const card = button.closest(".card");
+    if (card) openServiceModal(card);
+  }),
+);
+$$("[data-modal-close]").forEach((element) =>
+  element.addEventListener("click", () => closeServiceModal(true)),
+);
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Escape" &&
+    svcModal &&
+    svcModal.classList.contains("is-open")
+  ) {
+    event.preventDefault();
+    closeServiceModal(true);
+  }
 });
 $("#year").textContent = new Date().getFullYear();
 let savedLang = "es";
