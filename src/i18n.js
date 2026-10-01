@@ -66,7 +66,12 @@ export const EN = {
     "Stimulates lymphatic circulation, reduces swelling and fluid retention. Your body feels it, sees it and notices it from the very first session.",
   "srv.m3": "45–60 min",
   "srv.c4":
-    "Our exclusive anti-sagging protocol: thermal activation, body lifting radiofrequency, cavitation, chromotherapy and the Hesed Firm Up peptide active.",
+    "Our exclusive anti-sagging protocol: it combines body equipment technology, chromotherapy and the Hesed Firm Up peptide active.",
+  "srv.firm1": "Body radiofrequency",
+  "srv.firm2": "Cavitation",
+  "srv.firm3": "Vacuum therapy",
+  "srv.firm4": "Passive LED gymnastics",
+  "srv.firm5": "Chromotherapy",
   "srv.m4": "75–90 min",
   "srv.n5": "Intensive Firming Abdomen",
   "srv.c5":
