@@ -40,7 +40,47 @@ export const EN = {
   "srv.tab2": "Facial",
   "srv.tab3": "Fibroblast",
   "srv.tab4": "Brows",
-  "srv.category1": "Drainage, sculpting and body technology in treatments tailored to you.",
+  "srv.category1": "Personalized body treatments to shape, define and enhance your silhouette.",
+  "srv.category2": "Cleansing, hydration and personalized care for your skin's needs.",
+  "srv.category3": "Precise treatments by area, always preceded by an assessment.",
+  "srv.category4": "Brow design, eye-area care and waxing.",
+  "srv.sub1": "Drainage & Sculpting",
+  "srv.sub2": "Body Contouring",
+  "srv.sub3": "Hesed Signature",
+  "srv.bn1": "Manual Lymphatic Drainage",
+  "srv.bn2": "Brazilian Slim",
+  "srv.bn3": "Body Wood Therapy",
+  "srv.bn4": "Metalterapia Sculpt",
+  "srv.bn5": "Body Radiofrequency",
+  "srv.bn6": "Ultrasonic Cavitation",
+  "srv.bn7": "Vacuum Sculpt",
+  "srv.bn8": "Hesed Body Sculpt",
+  "srv.bd1":
+    "A gentle, rhythmic manual technique that supports lymphatic flow and helps temporarily ease the feeling of swelling and heaviness.",
+  "srv.bd2":
+    "A technique inspired by the Brazilian method, combining drainage maneuvers and body-sculpting movements to work on the appearance of the silhouette.",
+  "srv.bd3":
+    "A body massage technique performed with wooden instruments and specific sculpting maneuvers to work on the appearance of the silhouette and skin texture.",
+  "srv.bd4":
+    "A body technique performed with specialized metal instruments to work on contour and improve the appearance of the skin, supporting fluid drainage.",
+  "srv.bd5":
+    "An aesthetic radiofrequency treatment aimed at improving the appearance of skin firmness and texture.",
+  "srv.bd6": "A non-invasive aesthetic treatment for selected body areas.",
+  "srv.bd7":
+    "A non-invasive body technique using controlled suction to work on specific areas and improve the appearance of contour and skin texture.",
+  "srv.bd8":
+    "Our exclusive, personalized body protocol, designed to combine different sculpting and contouring techniques according to each client's needs.",
+  "srv.bd8t": "May include:",
+  "srv.bd8i1": "Brazilian Slim",
+  "srv.bd8i2": "Wood therapy",
+  "srv.bd8i3": "Metalterapia Sculpt",
+  "srv.bd8i4": "Vacuum Sculpt",
+  "srv.bd8i5": "Ultrasonic Cavitation",
+  "srv.bd8i6": "Body Radiofrequency",
+  "srv.bd8i7": "Manual sculpting techniques",
+  "srv.bd8i8": "Manual drainage",
+  "srv.bd8f":
+    "The combination of techniques is determined by the area being treated and the individual assessment.",
   "srv.category2": "Cleansing, hydration and personalized care for your skin's needs.",
   "srv.category3": "Precise treatments by area, always preceded by an assessment.",
   "srv.category4": "Brow design, eye-area care and waxing.",

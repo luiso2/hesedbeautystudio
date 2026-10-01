@@ -662,6 +662,20 @@ summary:focus-visible,
   letter-spacing: 0.15em;
   color: var(--gold);
 }
+.card__eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 10px 0 0;
+}
+.card__list-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 14px 0 -2px;
+}
 .card h3 {
   font: 400 28px/1.2 var(--font-display);
   letter-spacing: -0.02em;

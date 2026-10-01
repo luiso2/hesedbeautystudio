@@ -1,156 +1,75 @@
 [
   {
-    "id": "brazilian-slim-body",
+    "id": "drenaje-linfatico-manual",
     "category": "corporal",
     "name": {
-      "es": "Brazilian Slim Body",
-      "en": "Brazilian Slim Body"
-    },
-    "price": null
-  },
-  {
-    "id": "abdomen-lipo-4d",
-    "category": "corporal",
-    "name": {
-      "es": "Abdomen Lipo 4D Manual",
-      "en": "Abdomen Lipo 4D Manual"
-    },
-    "price": null
-  },
-  {
-    "id": "drenaje-linfatico",
-    "category": "corporal",
-    "name": {
-      "es": "Drenaje Linfático",
-      "en": "Lymphatic Drainage"
+      "es": "Drenaje Linfático Manual",
+      "en": "Manual Lymphatic Drainage"
     },
     "price": 85
   },
   {
-    "id": "hesed-firm-up",
+    "id": "brazilian-slim",
     "category": "corporal",
     "name": {
-      "es": "Hesed Firm Up",
-      "en": "Hesed Firm Up"
+      "es": "Brazilian Slim",
+      "en": "Brazilian Slim"
     },
-    "price": null
+    "price": 95
   },
   {
-    "id": "abdomen-reafirmante",
+    "id": "maderoterapia-corporal",
     "category": "corporal",
     "name": {
-      "es": "Abdomen Reafirmante Intensivo",
-      "en": "Intensive Firming Abdomen"
+      "es": "Maderoterapia Corporal",
+      "en": "Body Wood Therapy"
     },
-    "price": null
+    "price": 85
   },
   {
-    "id": "piedras-calientes",
+    "id": "metalterapia-sculpt",
     "category": "corporal",
     "name": {
-      "es": "Masaje Relajante · Piedras Calientes",
-      "en": "Relaxing Massage · Hot Stones"
+      "es": "Metalterapia Sculpt",
+      "en": "Metalterapia Sculpt"
     },
-    "price": null
-  },
-  {
-    "id": "maderoterapia",
-    "category": "corporal",
-    "name": {
-      "es": "Maderoterapia · Wood Therapy",
-      "en": "Wood Therapy Body Sculpting"
-    },
-    "price": 80
-  },
-  {
-    "id": "gimnasia-pasiva-led",
-    "category": "corporal",
-    "name": {
-      "es": "Gimnasia Pasiva + Terapia de Luz LED",
-      "en": "Passive Gymnastics + LED Light Therapy"
-    },
-    "price": null
-  },
-  {
-    "id": "kinesiologia-linfatica",
-    "category": "corporal",
-    "name": {
-      "es": "Kinesiología Linfática",
-      "en": "Lymphatic Kinesiology"
-    },
-    "price": null
-  },
-  {
-    "id": "masaje-hipopresivos",
-    "category": "corporal",
-    "name": {
-      "es": "Masaje + Hipopresivos",
-      "en": "Massage + Hypopressives"
-    },
-    "price": 90
+    "price": 85
   },
   {
     "id": "radiofrecuencia-corporal",
     "category": "corporal",
     "name": {
-      "es": "Radiofrecuencia corporal",
+      "es": "Radiofrecuencia Corporal",
       "en": "Body Radiofrequency"
     },
-    "price": 75
+    "price": 65
   },
   {
-    "id": "cavitacion",
+    "id": "cavitacion-ultrasonica",
     "category": "corporal",
     "name": {
-      "es": "Cavitación",
-      "en": "Cavitation"
+      "es": "Cavitación Ultrasónica",
+      "en": "Ultrasonic Cavitation"
     },
-    "price": 75
+    "price": 65
   },
   {
-    "id": "vacuum-therapy",
+    "id": "vacuum-sculpt",
     "category": "corporal",
     "name": {
-      "es": "Vacuum Therapy",
-      "en": "Vacuum Therapy"
+      "es": "Vacuum Sculpt",
+      "en": "Vacuum Sculpt"
     },
-    "price": 75
+    "price": 65
   },
   {
-    "id": "cavitacion-rf",
+    "id": "hesed-body-sculpt",
     "category": "corporal",
     "name": {
-      "es": "Cavitación + RF",
-      "en": "Cavitation + Radiofrequency"
+      "es": "Hesed Body Sculpt",
+      "en": "Hesed Body Sculpt"
     },
-    "price": 90
-  },
-  {
-    "id": "cavitacion-vacuum",
-    "category": "corporal",
-    "name": {
-      "es": "Cavitación + Vacuum",
-      "en": "Cavitation + Vacuum"
-    },
-    "price": 90
-  },
-  {
-    "id": "rf-vacuum",
-    "category": "corporal",
-    "name": {
-      "es": "RF + Vacuum",
-      "en": "Radiofrequency + Vacuum"
-    },
-    "price": 90
-  },
-  {
-    "id": "despigmentacion-corporal",
-    "category": "corporal",
-    "name": {
-      "es": "Despigmentación corporal",
-      "en": "Body Hyperpigmentation Care"
-    },
-    "price": null
+    "price": 125
   },
   {
     "id": "facial-deep-clean",
