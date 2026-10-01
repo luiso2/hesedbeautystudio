@@ -63,6 +63,15 @@
     "price": 65
   },
   {
+    "id": "kinesio-body",
+    "category": "corporal",
+    "name": {
+      "es": "Kinesio Body",
+      "en": "Kinesio Body"
+    },
+    "price": 65
+  },
+  {
     "id": "hesed-body-sculpt",
     "category": "corporal",
     "name": {
