@@ -2470,45 +2470,57 @@ body { background: var(--paper); }
   width: 100%;
   text-align: left;
 }
-/* Card footer: fast direct booking + optional info popup. No distractions. */
+/* Card footer: premium framed actions. Reservar first (fast path, no popup),
+   Más información second (popup only for those who want it). */
 .card__actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  min-height: 48px;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 18px;
   border-top: 1px solid var(--line);
-  margin-top: 4px;
-  padding-top: 6px;
-}
-.card__info {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  padding: 12px 0;
-}
-.card__info:hover {
-  color: var(--gold);
 }
 .card__book {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 14px 20px;
+  background: var(--ink);
+  color: var(--ivory);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gold);
-  padding: 12px 0;
-  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
 }
 .card__book i {
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
 }
 .card__book:hover {
-  color: var(--gold-bright);
+  background: #2b231a;
+  color: var(--ivory);
+}
+.card__info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+.card__info:hover {
+  border-color: var(--gold);
+  color: var(--gold);
 }
 .svc-modal {
   position: fixed;
