@@ -81,15 +81,6 @@
     "price": null
   },
   {
-    "id": "quemadores-localizados",
-    "category": "corporal",
-    "name": {
-      "es": "Quemadores Localizados",
-      "en": "Localized Fat Burners"
-    },
-    "price": null
-  },
-  {
     "id": "masaje-hipopresivos",
     "category": "corporal",
     "name": {

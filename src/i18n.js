@@ -87,10 +87,6 @@ export const EN = {
   "srv.n10": "Lymphatic Kinesiology",
   "srv.c10":
     "Kinesiological lymphatic drainage: kinesio tape placed along the lymphatic pathways to prolong the drainage effect, reduce swelling and relieve the area between sessions.",
-  "srv.n11": "Localized Fat Burners",
-  "srv.c11":
-    "Localized application of active ingredients in the abdominal area to work on stubborn fat. A complement to your body plan, always after a prior assessment.",
-  "srv.m11": "Abdominal area",
   "srv.consult": "Based on assessment",
   "srv.prior": "Prior assessment",
   "srv.kinesio": "Kinesio tape",
@@ -119,6 +115,7 @@ export const EN = {
   "srv.b3n": "Plasma Pen · Stretch Marks & Laxity",
   "srv.b3":
     "Plasma pen applied to stretch marks and loose abdominal skin: it stimulates skin retraction and renewal to progressively improve texture and firmness.",
+  "srv.bm2": "3+ session plan",
   "srv.e1n": "Brow Design",
   "srv.e1":
     "Face mapping, precision hair removal and tint for brows that frame your gaze according to the geometry of your face.",
