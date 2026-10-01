@@ -175,7 +175,8 @@
 .booking-input > span { margin-bottom: 10px; font-size: 13px; }
 .booking-option select,
 .booking-input input,
-.booking-input textarea { min-height: 56px; border-radius: 9px; padding: 14px 16px; font-size: 16px; }
+.booking-input textarea { min-height: 56px; border-radius: 9px; padding: 14px 16px; font-size: 16px; box-sizing: border-box; max-width: 100%; }
+.booking-input { min-width: 0; }
 .booking-note { padding: 19px 21px; border-left-width: 4px; border-radius: 0 10px 10px 0; font-size: 14px; }
 .booking-consent { font-size: 14px; }
 .booking-review dt,
