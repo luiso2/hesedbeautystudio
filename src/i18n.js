@@ -75,6 +75,7 @@ export const EN = {
   "srv.bd8i5": "Brazilian Slim techniques",
   "srv.bd8i6": "Manual drainage",
   "srv.bd8i7": "Hypopressives",
+  "srv.bd8i8": "Metabolic support",
   "srv.bd9":
     "Application of kinesiotape using specific taping techniques, integrated into personalized body protocols to provide support and complement the work on targeted areas.",
   "srv.bd8f":
