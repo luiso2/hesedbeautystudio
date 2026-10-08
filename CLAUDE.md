@@ -73,3 +73,5 @@ El video de Yoga facial y drenaje linfático facial también es vertical (480×7
 Facial Deep Clean ocupa la primera tarjeta de Facial y usa `public/img/facial-deep-clean-mascarilla.jpg`, foto de mascarilla en tres etapas enviada el 23 de septiembre. Salmon DNA conserva su video propio en la segunda tarjeta.
 
 Delux Facial sigue siendo un solo servicio de US$185. La clienta lo describió para pieles con flacidez y signos de envejecimiento y envió el video del tratamiento (`delux-facial-flacidez.mp4`).
+
+La sección Resultados usa una galería horizontal de cuatro comparativas: tres fotos enviadas el 8 de octubre de 2026 y la pareja original de drenaje. Mantener scroll táctil nativo, navegación por teclado, indicadores bilingües y fotos completas sin recorte. El cartel anterior comparte la foto frontal de la primera diapositiva; no volver a incluirlo como otra imagen de la misma galería.

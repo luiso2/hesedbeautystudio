@@ -40,6 +40,7 @@ function setLang(next) {
   $(".svc-modal__close").setAttribute("aria-label", copy("Cerrar", "Close"));
   updateMenuLabel();
   updateCategoryButtons();
+  updateResultsGallery();
   try {
     localStorage.setItem("hesed-lang", lang);
   } catch {
@@ -312,6 +313,77 @@ document.addEventListener("keydown", (event) => {
     closeServiceModal(true);
   }
 });
+// Native horizontal scrolling supports touch, trackpads and keyboard navigation.
+const resultsGallery = $(".results-gallery");
+const resultsTrack = $(".results-gallery__track", resultsGallery);
+const resultSlides = $$(".results-gallery__slide", resultsGallery);
+const resultDots = $$("[data-results-index]", resultsGallery);
+const resultPrev = $("[data-results-prev]", resultsGallery);
+const resultNext = $("[data-results-next]", resultsGallery);
+const resultCount = $(".results-gallery__count", resultsGallery);
+let resultIndex = 0;
+
+function updateResultsGallery() {
+  resultsGallery.setAttribute("aria-label", copy("Galería de resultados", "Results gallery"));
+  resultsGallery.setAttribute("aria-roledescription", copy("carrusel", "carousel"));
+  $(".results-gallery__dots", resultsGallery).setAttribute("aria-label", copy("Seleccionar imagen", "Choose an image"));
+  resultSlides.forEach((slide, index) => {
+    slide.setAttribute("aria-roledescription", copy("diapositiva", "slide"));
+    slide.setAttribute("aria-label", copy(`${index + 1} de ${resultSlides.length}`, `${index + 1} of ${resultSlides.length}`));
+  });
+  resultDots.forEach((dot, index) => {
+    dot.setAttribute("aria-label", copy(`Ver imagen ${index + 1} de ${resultSlides.length}`, `View image ${index + 1} of ${resultSlides.length}`));
+    if (index === resultIndex) dot.setAttribute("aria-current", "true");
+    else dot.removeAttribute("aria-current");
+  });
+  resultPrev.disabled = resultIndex === 0;
+  resultNext.disabled = resultIndex === resultSlides.length - 1;
+  resultCount.textContent = `${resultIndex + 1} / ${resultSlides.length}`;
+  resultCount.setAttribute("aria-label", copy(`Imagen ${resultIndex + 1} de ${resultSlides.length}`, `Image ${resultIndex + 1} of ${resultSlides.length}`));
+  $$("[data-i18n-alt]", resultsGallery).forEach((image) => {
+    image.dataset.altEs ??= image.alt;
+    image.alt = lang === "en" ? EN[image.dataset.i18nAlt] || image.dataset.altEs : image.dataset.altEs;
+  });
+}
+
+function goToResult(index, animate = true) {
+  const target = Math.max(0, Math.min(resultSlides.length - 1, index));
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  resultsTrack.scrollTo({
+    left: resultSlides[target].offsetLeft - resultSlides[0].offsetLeft,
+    behavior: animate && !reducedMotion ? "smooth" : "auto",
+  });
+}
+
+$(".results-gallery__controls", resultsGallery).hidden = false;
+resultCount.hidden = false;
+resultPrev.addEventListener("click", () => goToResult(resultIndex - 1));
+resultNext.addEventListener("click", () => goToResult(resultIndex + 1));
+resultDots.forEach((dot) => dot.addEventListener("click", () => goToResult(Number(dot.dataset.resultsIndex))));
+resultsTrack.addEventListener("keydown", (event) => {
+  if (event.target !== resultsTrack) return;
+  const targets = { ArrowLeft: resultIndex - 1, ArrowRight: resultIndex + 1, Home: 0, End: resultSlides.length - 1 };
+  if (!(event.key in targets)) return;
+  event.preventDefault();
+  goToResult(targets[event.key]);
+});
+let resultScrollFrame = 0;
+resultsTrack.addEventListener("scroll", () => {
+  if (resultScrollFrame) return;
+  resultScrollFrame = requestAnimationFrame(() => {
+    resultScrollFrame = 0;
+    const start = resultSlides[0].offsetLeft;
+    const nearest = resultSlides.reduce((best, slide, index) =>
+      Math.abs(slide.offsetLeft - start - resultsTrack.scrollLeft) <
+      Math.abs(resultSlides[best].offsetLeft - start - resultsTrack.scrollLeft) ? index : best, 0);
+    if (nearest !== resultIndex) {
+      resultIndex = nearest;
+      updateResultsGallery();
+    }
+  });
+}, { passive: true });
+new ResizeObserver(() => goToResult(resultIndex, false)).observe(resultsTrack);
+
 $("#year").textContent = new Date().getFullYear();
 let savedLang = "es";
 try {

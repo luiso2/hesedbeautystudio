@@ -922,27 +922,57 @@
           </div>
 
           <div class="results__minimal">
-            <figure class="results__comparison">
-              <div>
-                <img src="/img/drenaje-antes.jpg" alt="Abdomen antes del drenaje linfático" width="800" height="1067" loading="lazy" />
-                <span data-i18n="res.before">Antes</span>
+            <div class="results-gallery" role="region" aria-label="Galería de resultados" aria-roledescription="carrusel">
+              <p class="results-gallery__hint" id="results-gallery-hint" data-i18n="res.swipe">Desliza para ver más resultados</p>
+              <div class="results-gallery__track" id="results-gallery-track" tabindex="0" aria-describedby="results-gallery-hint">
+                <figure class="results-gallery__slide" role="group" aria-roledescription="diapositiva" aria-label="1 de 4">
+                  <div class="results-gallery__image">
+                    <img src="/img/resultados-corporal-frontal.jpg" alt="Comparativa del contorno corporal en vista frontal" data-i18n-alt="res.gallery1Alt" width="1312" height="1199" loading="lazy" decoding="async" />
+                  </div>
+                  <figcaption data-i18n="res.gallery1">Contorno corporal · vista frontal</figcaption>
+                </figure>
+                <figure class="results-gallery__slide" role="group" aria-roledescription="diapositiva" aria-label="2 de 4">
+                  <div class="results-gallery__image">
+                    <img src="/img/resultados-corporal-abdomen.jpg" alt="Comparativa de abdomen y vista lateral de un tratamiento corporal" data-i18n-alt="res.gallery2Alt" width="1279" height="1230" loading="lazy" decoding="async" />
+                  </div>
+                  <figcaption data-i18n="res.gallery2">Cuidado corporal · abdomen</figcaption>
+                </figure>
+                <figure class="results-gallery__slide" role="group" aria-roledescription="diapositiva" aria-label="3 de 4">
+                  <div class="results-gallery__image">
+                    <img src="/img/resultados-abdomen-antes-despues.jpg" alt="Abdomen antes y después en una comparativa vertical" data-i18n-alt="res.gallery3Alt" width="1206" height="1503" loading="lazy" decoding="async" />
+                  </div>
+                  <figcaption data-i18n="res.gallery3">Abdomen · antes y después</figcaption>
+                </figure>
+                <figure class="results-gallery__slide" role="group" aria-roledescription="diapositiva" aria-label="4 de 4">
+                  <div class="results-gallery__image results-gallery__pair">
+                    <div>
+                      <img src="/img/drenaje-antes.jpg" alt="Abdomen antes del drenaje linfático" data-i18n-alt="res.drainageBeforeAlt" width="800" height="1067" loading="lazy" decoding="async" />
+                      <span data-i18n="res.before">Antes</span>
+                    </div>
+                    <div>
+                      <img src="/img/drenaje-despues.jpg" alt="Abdomen después del drenaje linfático" data-i18n-alt="res.drainageAfterAlt" width="800" height="1067" loading="lazy" decoding="async" />
+                      <span data-i18n="res.after">Después</span>
+                    </div>
+                  </div>
+                  <figcaption data-i18n="res.f4">Drenaje linfático manual · antes y después</figcaption>
+                </figure>
               </div>
-              <div>
-                <img src="/img/drenaje-despues.jpg" alt="Abdomen después del drenaje linfático" width="800" height="1067" loading="lazy" />
-                <span data-i18n="res.after">Después</span>
+              <div class="results-gallery__controls" hidden>
+                <button class="results-gallery__nav" type="button" data-results-prev aria-controls="results-gallery-track" disabled><span data-i18n="res.previous">Anterior</span></button>
+                <div class="results-gallery__dots" role="group" aria-label="Seleccionar imagen">
+                  <button type="button" data-results-index="0" aria-controls="results-gallery-track" aria-label="Ver imagen 1 de 4" aria-current="true"></button>
+                  <button type="button" data-results-index="1" aria-controls="results-gallery-track" aria-label="Ver imagen 2 de 4"></button>
+                  <button type="button" data-results-index="2" aria-controls="results-gallery-track" aria-label="Ver imagen 3 de 4"></button>
+                  <button type="button" data-results-index="3" aria-controls="results-gallery-track" aria-label="Ver imagen 4 de 4"></button>
+                </div>
+                <button class="results-gallery__nav" type="button" data-results-next aria-controls="results-gallery-track"><span data-i18n="res.next">Siguiente</span></button>
               </div>
-              <figcaption data-i18n="res.f4">Drenaje linfático manual · antes y después</figcaption>
-            </figure>
+              <p class="results-gallery__count" aria-live="polite" aria-atomic="true" hidden>1 / 4</p>
+            </div>
             <div class="results__aside">
               <p class="eyebrow"><span class="line"></span><span data-i18n="res.eyebrow">Resultados</span></p>
               <p data-i18n="res.minimal">Mira el trabajo real de María y encuentra lo que tu cuerpo está pidiendo.</p>
               <a class="text-link" href="#servicios"><span data-i18n="res.explore">Explorar tratamientos</span><span aria-hidden="true">↓</span></a>
-              <details class="results__more">
-                <summary data-i18n="res.more">Ver más resultados</summary>
-                <a href="/img/cuidar-tu-cuerpo-resultados.jpg" target="_blank" rel="noopener" aria-label="Ampliar imagen de antes y después en vistas frontal y lateral">
-                  <img src="/img/cuidar-tu-cuerpo-resultados.jpg" alt="Cuidar tu cuerpo es una forma de amor propio: comparativa de antes y después en vista frontal y lateral" width="1024" height="1110" loading="lazy" decoding="async" />
-                </a>
-              </details>
             </div>
           </div>
 
