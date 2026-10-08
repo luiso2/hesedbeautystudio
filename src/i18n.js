@@ -53,8 +53,6 @@ export const EN = {
   "srv.bn3": "Body Wood Therapy",
   "srv.bn4": "Metalterapia Sculpt",
   "srv.bn5": "Body Radiofrequency",
-  "srv.bn6": "Ultrasonic Cavitation",
-  "srv.bn7": "Vacuum Sculpt",
   "srv.bn8": "Hesed Body Sculpt",
   "srv.bn9": "Kinesio Body",
   "srv.bd1":
@@ -67,9 +65,6 @@ export const EN = {
     "A body technique with specialized metal instruments to work on contour and improve the appearance of the skin, supporting fluid drainage and the elimination of toxins.",
   "srv.bd5":
     "An aesthetic radiofrequency treatment aimed at improving the appearance of skin firmness and texture.",
-  "srv.bd6": "A non-invasive aesthetic treatment for selected body areas.",
-  "srv.bd7":
-    "A non-invasive body technique using controlled suction to work on specific areas of the body, enhancing the appearance of contour and skin texture.",
   "srv.bd8":
     "An exclusive protocol combining Brazilian Slim, Metalterapia, Maderoterapia, Body Contouring and manual techniques, personalized to each client's needs and goals.",
   "srv.bd8t": "The protocol may include:",

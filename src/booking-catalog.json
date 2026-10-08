@@ -45,24 +45,6 @@
     "price": 65
   },
   {
-    "id": "cavitacion-ultrasonica",
-    "category": "corporal",
-    "name": {
-      "es": "Cavitación Ultrasónica",
-      "en": "Ultrasonic Cavitation"
-    },
-    "price": 65
-  },
-  {
-    "id": "vacuum-sculpt",
-    "category": "corporal",
-    "name": {
-      "es": "Vacuum Sculpt",
-      "en": "Vacuum Sculpt"
-    },
-    "price": 65
-  },
-  {
     "id": "kinesio-body",
     "category": "corporal",
     "name": {
