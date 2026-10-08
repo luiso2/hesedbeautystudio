@@ -75,3 +75,5 @@ Facial Deep Clean ocupa la primera tarjeta de Facial y usa `public/img/facial-de
 Delux Facial sigue siendo un solo servicio de US$185. La clienta lo describió para pieles con flacidez y signos de envejecimiento y envió el video del tratamiento (`delux-facial-flacidez.mp4`).
 
 La sección Resultados usa una galería horizontal de cuatro comparativas: tres fotos enviadas el 8 de octubre de 2026 y la pareja original de drenaje. Mantener scroll táctil nativo, navegación por teclado, indicadores bilingües y fotos completas sin recorte. El cartel anterior comparte la foto frontal de la primera diapositiva; no volver a incluirlo como otra imagen de la misma galería.
+
+La portada al compartir enlaces usa `https://mariahesed.com/img/maria-hesed-portrait.jpg`. Conservar esa imagen en Open Graph, Twitter Cards y los datos estructurados de la página principal, y en los metadatos sociales de la página de reservas.
