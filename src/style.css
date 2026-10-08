@@ -2603,12 +2603,14 @@ body { background: var(--paper); }
   object-fit: contain;
   max-height: 52vh;
 }
-.svc-modal__media .card__media--metaloterapia {
+.svc-modal__media .card__media--metaloterapia,
+.svc-modal__media .card__media--kinesio {
   display: flex;
   justify-content: center;
   aspect-ratio: auto;
 }
-.svc-modal__media .card__media--metaloterapia img {
+.svc-modal__media .card__media--metaloterapia img,
+.svc-modal__media .card__media--kinesio img {
   display: block;
   width: auto;
   max-width: 100%;
