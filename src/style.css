@@ -2605,14 +2605,16 @@ body { background: var(--paper); }
 }
 .svc-modal__media .card__media--metaloterapia,
 .svc-modal__media .card__media--kinesio,
-.svc-modal__media .card__media--rejuvenation {
+.svc-modal__media .card__media--rejuvenation,
+.svc-modal__media .card__media--brow-design {
   display: flex;
   justify-content: center;
   aspect-ratio: auto;
 }
 .svc-modal__media .card__media--metaloterapia img,
 .svc-modal__media .card__media--kinesio img,
-.svc-modal__media .card__media--rejuvenation img {
+.svc-modal__media .card__media--rejuvenation img,
+.svc-modal__media .card__media--brow-design img {
   display: block;
   width: auto;
   max-width: 100%;
