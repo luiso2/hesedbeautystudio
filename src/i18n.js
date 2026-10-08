@@ -66,14 +66,15 @@ export const EN = {
   "srv.bd5":
     "An aesthetic radiofrequency treatment aimed at improving the appearance of skin firmness and texture.",
   "srv.bd8":
-    "An exclusive protocol combining Brazilian Slim, Metalterapia, Maderoterapia, Body Contouring and manual techniques, personalized to each client's needs and goals.",
+    "An exclusive protocol combining Brazilian Slim techniques, Metalterapia, Maderoterapia, Body Contouring and hypopressives, personalized to each client's needs and goals.",
   "srv.bd8t": "The protocol may include:",
   "srv.bd8i1": "Ultrasonic cavitation",
   "srv.bd8i2": "Body radiofrequency",
   "srv.bd8i3": "Metalterapia Sculpt",
   "srv.bd8i4": "Wood therapy",
-  "srv.bd8i5": "Manual sculpting techniques",
+  "srv.bd8i5": "Brazilian Slim techniques",
   "srv.bd8i6": "Manual drainage",
+  "srv.bd8i7": "Hypopressives",
   "srv.bd9":
     "Application of kinesiotape using specific taping techniques, integrated into personalized body protocols to provide support and complement the work on targeted areas.",
   "srv.bd8f":
