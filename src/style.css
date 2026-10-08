@@ -2604,13 +2604,15 @@ body { background: var(--paper); }
   max-height: 52vh;
 }
 .svc-modal__media .card__media--metaloterapia,
-.svc-modal__media .card__media--kinesio {
+.svc-modal__media .card__media--kinesio,
+.svc-modal__media .card__media--rejuvenation {
   display: flex;
   justify-content: center;
   aspect-ratio: auto;
 }
 .svc-modal__media .card__media--metaloterapia img,
-.svc-modal__media .card__media--kinesio img {
+.svc-modal__media .card__media--kinesio img,
+.svc-modal__media .card__media--rejuvenation img {
   display: block;
   width: auto;
   max-width: 100%;
