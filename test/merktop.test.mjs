@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { eligibleForDeposit, findDepositLink, paymentDescription, verifyMerktopEvent } from "../src/merktop.js";
+import { eligibleForDeposit, findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent } from "../src/merktop.js";
+import paymentLinks from "../src/payment-links.json" with { type: "json" };
+import catalog from "../src/booking-catalog.json" with { type: "json" };
 
 const businessId = "aaeee082-a486-4bee-a1f2-c736d45e6a10";
 const payUrl = "https://payments.merktop.com/pay/d/example-link";
@@ -11,6 +13,35 @@ test("fixed and unpriced services request a deposit, but prices below $40 do not
   assert.equal(eligibleForDeposit({ price: 300, from: true }), true);
   assert.equal(eligibleForDeposit({ price: null }), true);
   assert.equal(paymentDescription({ name: { es: "Fibroblast" } }, { name: { es: "Frente" } }), "Fibroblast · Frente");
+});
+
+test("every deposit-eligible treatment has a stable payment link", () => {
+  const eligible = catalog.flatMap((service) => service.options?.length
+    ? service.options.filter(eligibleForDeposit).map((option) => paymentLinkKey(service, option))
+    : eligibleForDeposit(service) ? [paymentLinkKey(service)] : []);
+  assert.equal(eligible.length, 28);
+  assert.deepEqual(Object.keys(paymentLinks).sort(), eligible.sort());
+  assert.equal(new Set(Object.values(paymentLinks)).size, eligible.length);
+});
+
+test("stable link survives a treatment rename but never a price mismatch", async () => {
+  const previous = globalThis.fetch;
+  const linkId = paymentLinks["drenaje-linfatico-manual"];
+  try {
+    globalThis.fetch = async () => Response.json({
+      business: { id: businessId, merchant_ready: true, bookings_paused: false },
+      catalog: { services: [{ link_id: linkId, description: "Nombre actualizado en Merktop",
+        deposit_amount: 4000, total_amount: 8500, currency: "usd",
+        reservation_mode: false, pay_url: `https://payments.merktop.com/pay/d/${linkId}` }] },
+    });
+    const env = { MERKTOP_SITE_READ_KEY: "test-read-key" };
+    assert.equal((await findDepositLink(env, "Drenaje Linfático Manual", 8500, false,
+      "drenaje-linfatico-manual")).id, linkId);
+    await assert.rejects(findDepositLink(env, "Drenaje Linfático Manual", 7500, false,
+      "drenaje-linfatico-manual"), /merktop_link_unavailable/);
+  } finally {
+    globalThis.fetch = previous;
+  }
 });
 
 test("payment link must belong to María, match the treatment and charge $40", async () => {

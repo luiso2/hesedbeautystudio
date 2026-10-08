@@ -1,3 +1,5 @@
+import paymentLinks from "./payment-links.json" with { type: "json" };
+
 const MERKTOP_BUSINESS_ID = "aaeee082-a486-4bee-a1f2-c736d45e6a10";
 const CONFIG_URL = "https://merktop-payments.odd-forest-9504.workers.dev/pub/site-config";
 const PAYMENT_ORIGIN = "https://payments.merktop.com";
@@ -6,12 +8,16 @@ export function paymentDescription(service, option) {
   return `${service.name.es}${option ? ` · ${option.name.es}` : ""}`;
 }
 
+export function paymentLinkKey(service, option) {
+  return option ? `${service.id}/${option.id}` : service.id;
+}
+
 export function eligibleForDeposit(selected) {
   return selected.price == null || selected.from ||
     (Number.isInteger(selected.price) && selected.price >= 40);
 }
 
-export async function findDepositLink(env, description, priceCents, reservationMode = false) {
+export async function findDepositLink(env, description, priceCents, reservationMode = false, catalogKey = null) {
   if (!env.MERKTOP_SITE_READ_KEY) throw new Error("merktop_not_configured");
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 5000);
@@ -29,13 +35,16 @@ export async function findDepositLink(env, description, priceCents, reservationM
   if (config.business?.id !== MERKTOP_BUSINESS_ID ||
       !config.business.merchant_ready || config.business.bookings_paused)
     throw new Error("merktop_merchant_unavailable");
-  const link = config.catalog?.services?.find((entry) =>
-    entry.description === description &&
+  const matchesAmount = (entry) =>
     entry.deposit_amount === 4000 &&
     entry.total_amount === (reservationMode ? 4000 : priceCents) &&
     entry.currency === "usd" &&
-    entry.reservation_mode === reservationMode,
-  );
+    entry.reservation_mode === reservationMode;
+  const services = config.catalog?.services || [];
+  const savedLinkId = catalogKey && paymentLinks[catalogKey];
+  const link = (savedLinkId && services.find((entry) =>
+    entry.link_id === savedLinkId && matchesAmount(entry))) ||
+    services.find((entry) => entry.description === description && matchesAmount(entry));
   if (!link) throw new Error("merktop_link_unavailable");
   const payUrl = new URL(link.pay_url);
   if (payUrl.origin !== PAYMENT_ORIGIN ||

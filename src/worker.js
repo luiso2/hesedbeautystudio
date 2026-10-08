@@ -1,5 +1,5 @@
 import catalog from "./booking-catalog.json";
-import { eligibleForDeposit, findDepositLink, paymentDescription, verifyMerktopEvent } from "./merktop.js";
+import { eligibleForDeposit, findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent } from "./merktop.js";
 
 const json = (data, status = 200) =>
   Response.json(data, {
@@ -119,7 +119,7 @@ async function createBooking(request, env) {
       const reservationMode = selected.price == null || !!selected.from;
       payment = await findDepositLink(
         env, paymentDescription(service, option), selected.price == null ? null : selected.price * 100,
-        reservationMode,
+        reservationMode, paymentLinkKey(service, option),
       );
     } catch (error) {
       console.error(JSON.stringify({ event: "merktop_link_error", message: String(error) }));
