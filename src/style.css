@@ -2607,7 +2607,8 @@ body { background: var(--paper); }
 .svc-modal__media .card__media--kinesio,
 .svc-modal__media .card__media--rejuvenation,
 .svc-modal__media .card__media--brow-design,
-.svc-modal__media .card__media--brow-lamination {
+.svc-modal__media .card__media--brow-lamination,
+.svc-modal__media .card__media--lash-lifting {
   display: flex;
   justify-content: center;
   aspect-ratio: auto;
@@ -2616,7 +2617,8 @@ body { background: var(--paper); }
 .svc-modal__media .card__media--kinesio img,
 .svc-modal__media .card__media--rejuvenation img,
 .svc-modal__media .card__media--brow-design img,
-.svc-modal__media .card__media--brow-lamination img {
+.svc-modal__media .card__media--brow-lamination img,
+.svc-modal__media .card__media--lash-lifting img {
   display: block;
   width: auto;
   max-width: 100%;
