@@ -2603,6 +2603,19 @@ body { background: var(--paper); }
   object-fit: contain;
   max-height: 52vh;
 }
+.svc-modal__media .card__media--metaloterapia {
+  display: flex;
+  justify-content: center;
+  aspect-ratio: auto;
+}
+.svc-modal__media .card__media--metaloterapia img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 52vh;
+  object-fit: contain;
+}
 .svc-modal__body {
   padding: 22px 24px 26px;
 }
