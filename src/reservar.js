@@ -128,10 +128,32 @@ function renderOptions() {
   const wrap = $("#booking-option-wrap");
   const select = $("#booking-option");
   const options = service()?.options || [];
-  wrap.hidden = !options.length;
+  const showZonePrices = service()?.category === "fibroblast" && options.length > 0;
+  const zonePrices = $("#booking-zone-prices");
+  const zoneOptions = $("#booking-zone-options");
+  wrap.hidden = !options.length || showZonePrices;
+  zonePrices.hidden = !showZonePrices;
+  zoneOptions.replaceChildren();
   select.replaceChildren(new Option(tr("selectArea"), ""));
   options.forEach((item) => {
     select.add(new Option(`${item.name[lang]} · ${priceText(item)}`, item.id));
+    if (showZonePrices) {
+      const label = document.createElement("label");
+      label.className = "booking-zone-choice";
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = "bookingArea";
+      radio.value = item.id;
+      radio.checked = item.id === optionId;
+      const name = document.createElement("span");
+      name.className = "booking-zone-choice__name";
+      name.textContent = item.name[lang];
+      const price = document.createElement("span");
+      price.className = "booking-zone-choice__price";
+      price.textContent = priceText(item);
+      label.append(radio, name, price);
+      zoneOptions.append(label);
+    }
   });
   select.value = options.some((item) => item.id === optionId) ? optionId : "";
 }
@@ -166,6 +188,11 @@ function renderServices(focusSelected = false) {
         renderServices(true);
         renderOptions();
         updateSummary();
+        const zones = $("#booking-zone-prices");
+        if (!zones.hidden) {
+          zones.scrollIntoView({ block: "nearest" });
+          $("input", zones)?.focus({ preventScroll: true });
+        }
       });
       root.append(button);
     });
@@ -256,7 +283,12 @@ function showStep(next, focus = true) {
 function validStep() {
   if (step === 1) {
     if (!service()) return showError("selectServiceError"), false;
-    if (service().options?.length && !option()) return showError("selectAreaError"), $("#booking-option").focus(), false;
+    if (service().options?.length && !option()) {
+      showError("selectAreaError");
+      const firstZone = $("#booking-zone-prices").hidden ? null : $("#booking-zone-options input");
+      (firstZone || $("#booking-option")).focus();
+      return false;
+    }
   }
   if (step === 2) {
     const date = $("#booking-date");
@@ -338,6 +370,13 @@ $$("[data-lang]").forEach((button) =>
   button.addEventListener("click", () => setLang(button.dataset.lang, true)));
 $("#booking-option").addEventListener("change", (event) => {
   optionId = event.target.value;
+  clearError();
+  updateSummary();
+});
+$("#booking-zone-options").addEventListener("change", (event) => {
+  if (!event.target.matches('input[type="radio"]') || !event.target.checked) return;
+  optionId = event.target.value;
+  $("#booking-option").value = optionId;
   clearError();
   updateSummary();
 });

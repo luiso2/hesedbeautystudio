@@ -77,3 +77,5 @@ Delux Facial sigue siendo un solo servicio de US$185. La clienta lo describió p
 La sección Resultados usa una galería horizontal de cuatro comparativas: tres fotos enviadas el 8 de octubre de 2026 y la pareja original de drenaje. Mantener scroll táctil nativo, navegación por teclado, indicadores bilingües y fotos completas sin recorte. El cartel anterior comparte la foto frontal de la primera diapositiva; no volver a incluirlo como otra imagen de la misma galería.
 
 La portada al compartir enlaces usa `https://mariahesed.com/img/maria-hesed-portrait.jpg`. Conservar esa imagen en Open Graph, Twitter Cards y los datos estructurados de la página principal, y en los metadatos sociales de la página de reservas.
+
+En reservas, Fibroblast Plasma muestra las cinco zonas con sus precios como opciones de radio visibles junto a la selección del tratamiento. Usar los importes y la marca `from` del catálogo compartido; el resumen y la revisión final deben reflejar la zona elegida. No ocultar estos precios en un desplegable ni asignar precios a párpados o Plasma Pen sin confirmación.

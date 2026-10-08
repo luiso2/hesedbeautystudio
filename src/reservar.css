@@ -62,6 +62,16 @@
 .booking-option label, .booking-input > span { display: block; margin-bottom: 8px; color: #342b21; font-size: 11px; font-weight: 600; }
 .booking-option select, .booking-input input, .booking-input textarea { display: block; width: 100%; min-height: 50px; padding: 12px 14px; border: 1px solid #d7c8b6; border-radius: 2px; background: #fffbf5; color: #17130f; font: 13px/1.45 "Montserrat", sans-serif; }
 .booking-option select:focus-visible, .booking-input input:focus-visible, .booking-input textarea:focus-visible { outline: 2px solid #85601f; outline-offset: 2px; }
+.booking-zone-prices { min-width: 0; margin: 0 0 26px; padding: 0; border: 0; }
+.booking-zone-prices[hidden] { display: none; }
+.booking-zone-prices legend { padding: 0; margin-bottom: 12px; color: #342b21; font-size: 13px; font-weight: 600; }
+.booking-zone-options { display: grid; gap: 8px; }
+.booking-zone-choice { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 54px; padding: 12px; border: 1px solid #d7c8b6; border-radius: 10px; background: #fffaf3; cursor: pointer; }
+.booking-zone-choice input { width: 17px; height: 17px; margin: 0; accent-color: #85601f; }
+.booking-zone-choice__name { color: #342b21; font-size: 13px; line-height: 1.5; }
+.booking-zone-choice__price { color: #6f4e16; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.booking-zone-choice:has(input:checked) { border-color: #85601f; background: #f5e9d6; }
+.booking-zone-choice:has(input:focus-visible) { outline: 2px solid #85601f; outline-offset: 2px; }
 .booking-date-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .booking-input { display: block; margin-bottom: 17px; }
 .booking-input textarea { min-height: 94px; resize: vertical; }
