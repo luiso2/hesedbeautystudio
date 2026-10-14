@@ -69,7 +69,7 @@
       "es": "Facial Deep Clean + Cóctel de Vitaminas",
       "en": "Facial Deep Clean + Vitamin Cocktail"
     },
-    "price": null
+    "price": 125
   },
   {
     "id": "salmon-dna",
@@ -78,7 +78,7 @@
       "es": "Salmon DNA",
       "en": "Salmon DNA"
     },
-    "price": null
+    "price": 220
   },
   {
     "id": "skin-rejuvenation",
@@ -87,7 +87,7 @@
       "es": "Skin Rejuvenation",
       "en": "Skin Rejuvenation"
     },
-    "price": null
+    "price": 150
   },
   {
     "id": "facial-detox",
@@ -96,7 +96,7 @@
       "es": "Facial Detox + Hidratación con Ácido Hialurónico",
       "en": "Detox Facial + Hyaluronic Acid Hydration"
     },
-    "price": null
+    "price": 125
   },
   {
     "id": "yoga-facial",
@@ -105,7 +105,7 @@
       "es": "Yoga facial y drenaje linfático facial",
       "en": "Facial Yoga & Facial Lymphatic Drainage"
     },
-    "price": null
+    "price": 95
   },
   {
     "id": "delux-facial",
