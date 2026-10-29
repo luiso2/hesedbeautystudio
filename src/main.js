@@ -1,4 +1,5 @@
 import { EN } from "./i18n.js";
+import { initGiftCardForm } from "./gift-card-form.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -7,6 +8,7 @@ $$("[data-i18n]").forEach((el) => {
   ES[el.dataset.i18n] ??= el.innerHTML;
 });
 let lang = "es";
+const giftCards = initGiftCardForm(() => lang);
 const copy = (es, en) => (lang === "en" ? en : es);
 
 function setLang(next) {
@@ -41,6 +43,7 @@ function setLang(next) {
   updateMenuLabel();
   updateCategoryButtons();
   updateResultsGallery();
+  giftCards?.refreshLanguage();
   try {
     localStorage.setItem("hesed-lang", lang);
   } catch {

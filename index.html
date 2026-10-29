@@ -96,6 +96,7 @@
         <a href="#servicios" data-i18n="nav.services">Tratamientos</a>
         <a href="#resultados" data-i18n="nav.results">Resultados</a>
         <a href="#maria" data-i18n="nav.about">María Hesed</a>
+        <a href="#gift-cards" data-i18n="nav.gifts">Gift Cards</a>
         <a href="#faq" data-i18n="nav.faq">FAQ</a>
       </nav>
       <div class="nav__right">
@@ -130,6 +131,7 @@
         <a href="#servicios" data-i18n="nav.services">Tratamientos</a>
         <a href="#resultados" data-i18n="nav.results">Resultados</a>
         <a href="#maria" data-i18n="nav.about">María Hesed</a>
+        <a href="#gift-cards" data-i18n="nav.gifts">Gift Cards</a>
         <a href="#faq" data-i18n="nav.faq">FAQ</a>
         <a
           href="/reservar"
@@ -987,6 +989,67 @@
       </section>
 
 
+      <!-- ═══════════ GIFT CARDS ═══════════ -->
+      <section class="gifts" id="gift-cards" aria-labelledby="gift-title">
+        <div class="container gifts__grid">
+          <div class="gifts__intro">
+            <p class="eyebrow"><span class="line"></span><span data-i18n="gift.eyebrow">El detalle perfecto</span></p>
+            <h2 class="title-xl" id="gift-title" data-i18n="gift.title">Regala un momento para cuidarse.</h2>
+            <p class="gifts__lead" data-i18n="gift.intro">Tú eliges el monto. Esa persona especial elige su momento y su tratamiento con María.</p>
+            <div class="gift-card-preview">
+              <div class="gift-card-preview__top">
+                <span class="brand-monogram" aria-hidden="true"><span>M</span><i></i><span>H</span></span>
+                <span class="gift-card-preview__brand">María Hesed<small>Aesthetic Studio</small></span>
+              </div>
+              <p class="gift-card-preview__label">Gift Card</p>
+              <p class="gift-card-preview__amount" data-gift-preview-amount>US$100</p>
+              <div class="gift-card-preview__bottom"><span data-i18n="gift.cardNote">El arte de cuidarte.</span><span>Miami, FL</span></div>
+            </div>
+            <ul class="gifts__benefits">
+              <li><span aria-hidden="true">01</span><span data-i18n="gift.benefit1">Monto a tu elección, desde US$5.</span></li>
+              <li><span aria-hidden="true">02</span><span data-i18n="gift.benefit2">Entrega digital por correo después del pago.</span></li>
+              <li><span aria-hidden="true">03</span><span data-i18n="gift.benefit3">Saldo para sus tratamientos, sin fecha de vencimiento.</span></li>
+            </ul>
+          </div>
+          <div class="gifts__purchase">
+            <form class="gift-form" id="gift-form" hidden>
+              <fieldset class="gift-form__fields" id="gift-controls">
+                <legend class="gift-form__legend" data-i18n="gift.formTitle">Crea tu regalo</legend>
+                <div class="gift-form__presets" role="group" aria-label="Montos sugeridos">
+                  <button type="button" data-gift-amount="50" aria-pressed="false">US$50</button>
+                  <button type="button" data-gift-amount="100" aria-pressed="true">US$100</button>
+                  <button type="button" data-gift-amount="150" aria-pressed="false">US$150</button>
+                  <button type="button" data-gift-amount="200" aria-pressed="false">US$200</button>
+                </div>
+                <label class="gift-form__label" for="gift-amount"><span data-i18n="gift.amount">Escribe el monto que prefieras</span><span class="gift-form__currency">USD</span></label>
+                <input id="gift-amount" name="amount" type="text" inputmode="decimal" autocomplete="off" required value="100" maxlength="9" aria-describedby="gift-amount-hint" />
+                <p class="gift-form__hint" id="gift-amount-hint" data-i18n="gift.amountHint">Desde US$5. Puedes incluir centavos.</p>
+                <div class="gift-form__buyer">
+                  <label><span data-i18n="gift.buyerName">Tu nombre</span><input name="buyer_name" autocomplete="name" maxlength="120" required /></label>
+                  <label><span data-i18n="gift.buyerEmail">Tu correo electrónico</span><input name="buyer_email" type="email" autocomplete="email" maxlength="254" required /></label>
+                </div>
+                <label class="gift-form__toggle"><input type="checkbox" id="gift-send" /><span data-i18n="gift.sendToOther">Enviar directamente a otra persona</span></label>
+                <fieldset class="gift-form__recipient" id="gift-recipient" disabled hidden>
+                  <legend data-i18n="gift.recipientTitle">Un regalo para alguien especial</legend>
+                  <label><span data-i18n="gift.recipientName">Su nombre · opcional</span><input name="recipient_name" autocomplete="off" maxlength="120" /></label>
+                  <label><span data-i18n="gift.recipientEmail">Su correo electrónico</span><input name="recipient_email" type="email" autocomplete="off" maxlength="254" required /></label>
+                  <label><span data-i18n="gift.message">Tu mensaje · opcional</span><textarea name="message" rows="3" maxlength="500"></textarea></label>
+                </fieldset>
+              </fieldset>
+              <div class="gift-form__total"><span data-i18n="gift.total">Valor de tu regalo</span><output for="gift-amount" data-gift-total aria-live="polite" aria-atomic="true">US$100</output></div>
+              <p class="gift-form__error" id="gift-error" role="alert" hidden></p>
+              <button type="submit" class="btn btn--gold btn--lg gift-form__submit"><span data-gift-submit>Comprar Gift Card</span></button>
+              <p class="gift-form__status" id="gift-status" role="status" aria-live="polite"></p>
+              <p class="gift-form__secure" data-i18n="gift.secure">Pago seguro con Merktop y Stripe. La tarjeta se activa al completar el pago.</p>
+            </form>
+            <div class="gifts__fallback" id="gift-fallback">
+              <p data-i18n="gift.fallback">Elige el monto y personaliza tu Gift Card en nuestra página de pago.</p>
+              <a class="btn btn--gold btn--lg" href="https://payments.merktop.com/gift/aaeee082-a486-4bee-a1f2-c736d45e6a10" data-i18n="gift.buy">Comprar Gift Card</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ═══════════ FAQ ═══════════ -->
       <section class="faq" id="faq">
         <div class="container faq__grid">
@@ -1115,6 +1178,7 @@
           <a href="#servicios" data-i18n="nav.services">Tratamientos</a>
             <a href="#resultados" data-i18n="nav.results">Resultados</a>
           <a href="#maria" data-i18n="nav.about">María Hesed</a>
+          <a href="#gift-cards" data-i18n="nav.gifts">Gift Cards</a>
           <a href="#faq">FAQ</a>
         </div>
         <div class="footer__col">
