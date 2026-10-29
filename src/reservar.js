@@ -274,7 +274,10 @@ function showStep(next, focus = true) {
   $("#booking-submit").hidden = step !== 4;
   if (step === 4) renderReview();
   if (focus) {
-    $(".booking-wizard").scrollIntoView({ behavior: "smooth", block: "start" });
+    $(".booking-wizard").scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start",
+    });
     $(`[data-step="${step}"] h2`).setAttribute("tabindex", "-1");
     $(`[data-step="${step}"] h2`).focus({ preventScroll: true });
   }

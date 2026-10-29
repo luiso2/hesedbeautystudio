@@ -74,6 +74,7 @@
       }
     </script>
     <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/refinement.css" />
   </head>
   <body>
     <a class="skip-link" href="#servicios" data-i18n="ui.skip"
@@ -85,7 +86,6 @@
       <a
         href="#top"
         class="nav__logo"
-        aria-label="María Hesed · Aesthetic Studio"
       >
         <span class="brand-monogram nav__mark" aria-hidden="true"
           ><span>M</span><i></i><span>H</span></span
@@ -154,17 +154,6 @@
 
     <main id="top">
       <section class="hero" id="hero" aria-labelledby="hero-title">
-        <div class="hero__photo">
-          <img
-            class="hero__photo-img"
-            src="/img/maria-hesed-portrait.jpg"
-            alt="María Hesed en su estudio, con un instrumento de maderoterapia"
-            width="945"
-            height="1665"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </div>
         <div class="hero__content">
           <p class="hero__eyebrow">
             <span class="line"></span
@@ -200,6 +189,22 @@
             </p>
           </div>
         </div>
+        <div class="hero__photo" data-motion-photo>
+          <svg class="hero__line-art" viewBox="0 0 100 260" fill="none" aria-hidden="true">
+            <path d="M87 2C5 38 94 105 28 151C-22 187 22 229 73 258" pathLength="1" />
+            <path d="M99 1C17 38 106 105 40 151C-10 187 34 229 85 258" pathLength="1" />
+          </svg>
+          <img
+            class="hero__photo-img"
+            src="/img/maria-hesed-portrait.jpg"
+            alt="María Hesed en su estudio, con un instrumento de maderoterapia"
+            width="945"
+            height="1665"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <div class="hero__photo-note"><span>María Hesed</span><span>Miami, FL</span></div>
+        </div>
         <div class="hero__foot">
           <span data-i18n="hero.foot">CIENCIA · BELLEZA · BIENESTAR</span
           ><a href="#maria"
@@ -208,64 +213,6 @@
         </div>
       </section>
 
-      <!-- ═══════════ ABOUT ═══════════ -->
-      <section class="about" id="maria">
-        <div class="container about__grid">
-          <div class="about__media about__media--photo">
-            <div class="hero__media">
-            <video
-            class="hero__video"
-            playsinline
-            muted
-            preload="none"
-            poster="/img/maria-hesed-home-poster.jpg"
-            aria-label="Masaje en María Hesed · Aesthetic Studio"
-            >
-            <source data-src="/videos/maria-hesed-home.mp4" type="video/mp4" />
-            </video>
-            <div class="hero__veil"></div>
-            <div class="hero__image-top">
-            <span>MARÍA HESED</span><span>MIAMI, FL</span>
-            </div>
-            <div class="hero__image-bottom">
-            <p data-i18n="hero.image">Tu bienestar.<br />Nuestro ritual.</p>
-            </div>
-            <span class="hero__edition" aria-hidden="true"
-            >CIENCIA · BELLEZA · BIENESTAR</span
-            >
-            </div>
-
-          </div>
-          <div class="about__text">
-            <p class="eyebrow" data-reveal>
-              <span class="line"></span
-              ><span data-i18n="abt.eyebrow">Quién está detrás</span>
-            </p>
-            <h2 class="title-xl" data-reveal-lines>
-              <span data-i18n="abt.t1">Manos que escuchan,</span>
-              <em data-i18n="abt.t2">técnica que transforma.</em>
-            </h2>
-            <p class="lead" data-reveal data-i18n="abt.p1">
-              María Hesed es esteticista licenciada, especialista en facial y corporal, Master en Fibroblast y Brow Artist. Creó María Hesed · Aesthetic Studio con una idea muy clara: el cuidado estético puede ser riguroso y humano a la vez.
-            </p>
-            <p data-reveal data-i18n="abt.p2">
-              Su forma de trabajar une dos mundos: la precisión de la tecnología (radiofrecuencia, cavitación, plasma, luz LED) y la sensibilidad de las manos (drenaje, moldeo, maderoterapia, kinesiología). El resultado no solo se ve: se siente.
-            </p>
-            <p data-reveal data-i18n="abt.p3">
-              “La técnica es parte del proceso. Tus hábitos hacen la
-              diferencia.” Por eso cada plan incluye guía de verdad: alimentación, hidratación y constancia.
-            </p>
-            <a
-              class="btn btn--ghost magnetic"
-              data-reveal
-              href="https://www.instagram.com/mariahesed.esthetics"
-              target="_blank"
-              rel="noopener"
-              ><span data-i18n="abt.cta">Conocer a Maria en Instagram</span></a
-            >
-          </div>
-        </div>
-      </section>
       <!-- ═══════════ SERVICES ═══════════ -->
       <section class="services" id="servicios">
         <div class="container">
@@ -873,12 +820,76 @@
         </div>
       </section>
 
+      <!-- ═══════════ ABOUT ═══════════ -->
+      <section class="about" id="maria">
+        <div class="container about__grid">
+          <div class="about__media about__media--photo">
+            <div class="hero__media">
+            <video
+            class="hero__video"
+            playsinline
+            muted
+            preload="none"
+            poster="/img/maria-hesed-home-poster.jpg"
+            aria-label="Masaje en María Hesed · Aesthetic Studio"
+            >
+            <source data-src="/videos/maria-hesed-home.mp4" type="video/mp4" />
+            </video>
+            <div class="hero__veil"></div>
+            <div class="hero__image-top">
+            <span>MARÍA HESED</span><span>MIAMI, FL</span>
+            </div>
+            <div class="hero__image-bottom">
+            <p data-i18n="hero.image">Tu bienestar.<br />Nuestro ritual.</p>
+            </div>
+            <span class="hero__edition" aria-hidden="true"
+            >CIENCIA · BELLEZA · BIENESTAR</span
+            >
+            </div>
+
+          </div>
+          <div class="about__text">
+            <p class="eyebrow" data-reveal>
+              <span class="line"></span
+              ><span data-i18n="abt.eyebrow">Quién está detrás</span>
+            </p>
+            <h2 class="title-xl" data-reveal-lines>
+              <span data-i18n="abt.t1">Manos que escuchan,</span>
+              <em data-i18n="abt.t2">técnica que transforma.</em>
+            </h2>
+            <p class="lead" data-reveal data-i18n="abt.p1">
+              María Hesed es esteticista licenciada, especialista en facial y corporal, Master en Fibroblast y Brow Artist. Creó María Hesed · Aesthetic Studio con una idea muy clara: el cuidado estético puede ser riguroso y humano a la vez.
+            </p>
+            <details class="about__details">
+              <summary data-i18n="abt.more">Nuestra forma de cuidar</summary>
+              <div>
+            <p data-reveal data-i18n="abt.p2">
+              Su forma de trabajar une dos mundos: la precisión de la tecnología (radiofrecuencia, cavitación, plasma, luz LED) y la sensibilidad de las manos (drenaje, moldeo, maderoterapia, kinesiología). El resultado no solo se ve: se siente.
+            </p>
+            <p data-reveal data-i18n="abt.p3">
+              “La técnica es parte del proceso. Tus hábitos hacen la
+              diferencia.” Por eso cada plan incluye guía de verdad: alimentación, hidratación y constancia.
+            </p>
+              </div>
+            </details>
+            <a
+              class="btn btn--ghost magnetic"
+              data-reveal
+              href="https://www.instagram.com/mariahesed.esthetics"
+              target="_blank"
+              rel="noopener"
+              ><span data-i18n="abt.cta">Conocer a Maria en Instagram</span></a
+            >
+          </div>
+        </div>
+      </section>
       <!-- ═══════════ HOW IT WORKS ═══════════ -->
       <section class="ritual" id="ritual">
         <div class="ritual__pin">
           <div class="ritual__head container">
             <p class="eyebrow"><span class="line"></span><span data-i18n="rit.eyebrow">Tu experiencia</span></p>
             <h2 class="title-xl"><span data-i18n="rit.t1">Sencillo desde el inicio.</span></h2>
+            <a class="btn btn--gold ritual__cta" data-booking-open href="/reservar"><span data-i18n="nav.cta">Reservar cita</span></a>
           </div>
           <div class="ritual__track">
             <article class="step">
@@ -902,18 +913,13 @@
                 <p data-i18n="rit.p3">Todo empieza escuchándote: una valoración personal para adaptar el tratamiento a ti.</p>
               </div>
             </article>
-            <div class="step step--cta">
-              <div class="step__body">
-                <a class="btn btn--gold" data-booking-open href="/reservar"><span data-i18n="nav.cta">Reservar cita</span></a>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
       <!-- ═══════════ RESULTS ═══════════ -->
       <section class="results" id="resultados">
-        <div class="container">
+        <div class="container results__layout">
           <div class="section-head section-head--split">
             <div>
               <p class="eyebrow" data-reveal>
@@ -928,6 +934,7 @@
             <p class="lead" data-reveal data-i18n="res.lead">
               Resultados reales, compartidos por María. Cada cuerpo es distinto: todo empieza con una valoración de tus objetivos.
             </p>
+            <a class="text-link" href="#servicios"><span data-i18n="res.explore">Explorar tratamientos</span></a>
           </div>
 
           <div class="results__minimal">
@@ -977,11 +984,6 @@
                 <button class="results-gallery__nav" type="button" data-results-next aria-controls="results-gallery-track"><span data-i18n="res.next">Siguiente</span></button>
               </div>
               <p class="results-gallery__count" aria-live="polite" aria-atomic="true" hidden>1 / 4</p>
-            </div>
-            <div class="results__aside">
-              <p class="eyebrow"><span class="line"></span><span data-i18n="res.eyebrow">Resultados</span></p>
-              <p data-i18n="res.minimal">Mira el trabajo real de María y encuentra lo que tu cuerpo está pidiendo.</p>
-              <a class="text-link" href="#servicios"><span data-i18n="res.explore">Explorar tratamientos</span><span aria-hidden="true">↓</span></a>
             </div>
           </div>
 

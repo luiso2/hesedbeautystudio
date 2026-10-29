@@ -1,5 +1,6 @@
 import { EN } from "./i18n.js";
 import { initGiftCardForm } from "./gift-card-form.js";
+import { initSiteMotion } from "./site-motion.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -9,6 +10,7 @@ $$("[data-i18n]").forEach((el) => {
 });
 let lang = "es";
 const giftCards = initGiftCardForm(() => lang);
+const motion = initSiteMotion();
 const copy = (es, en) => (lang === "en" ? en : es);
 
 function setLang(next) {
@@ -44,6 +46,8 @@ function setLang(next) {
   updateCategoryButtons();
   updateResultsGallery();
   giftCards?.refreshLanguage();
+  $$(".media-toggle").forEach((button) =>
+    syncVideoControl(button, $("video", button.parentElement)));
   try {
     localStorage.setItem("hesed-lang", lang);
   } catch {
@@ -197,10 +201,47 @@ panels.forEach((panel) => {
   panel.hidden = true;
 });
 
-// Every video on the site is ambient: infinite muted loop, no play/pause
-// icons anywhere. Videos load lazily and only play while visible.
+// Videos load only while visible, have an explicit playback control and
+// respect reduced motion until the visitor chooses to play one.
 const ambientVideos = $$("video");
 const visibleVideos = new Set();
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+function syncVideoControl(button, video) {
+  if (!video) return;
+  const paused = video.paused || video.ended;
+  const label = paused ? copy("Reproducir video", "Play video") : copy("Pausar video", "Pause video");
+  button.classList.toggle("is-paused", paused);
+  button.setAttribute("aria-label", label);
+  $(".media-toggle__label", button).textContent = label;
+}
+function attachVideoControl(media, video) {
+  if (!media || !video) return;
+  $$(".media-toggle", media).forEach((button) => button.remove());
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "media-toggle";
+  const icon = document.createElement("span");
+  icon.className = "media-toggle__icon";
+  icon.setAttribute("aria-hidden", "true");
+  const label = document.createElement("span");
+  label.className = "media-toggle__label";
+  button.append(icon, label);
+  media.append(button);
+  button.addEventListener("click", () => {
+    if (video.paused || video.ended) {
+      video.dataset.userPaused = "false";
+      video.dataset.userPlay = "true";
+      playAmbient(video);
+    } else {
+      video.dataset.userPaused = "true";
+      video.pause();
+    }
+    syncVideoControl(button, video);
+  });
+  ["play", "pause", "ended"].forEach((name) =>
+    video.addEventListener(name, () => syncVideoControl(button, video)));
+  syncVideoControl(button, video);
+}
 function loadVideo(video) {
   const source = video.querySelector("source[data-src]");
   if (!source) return;
@@ -209,6 +250,9 @@ function loadVideo(video) {
   video.load();
 }
 function playAmbient(video) {
+  if (document.hidden || video.dataset.userPaused === "true" ||
+      (reducedMotion.matches && video.dataset.userPlay !== "true") ||
+      ($("#svc-modal").classList.contains("is-open") && !video.closest("#svc-modal"))) return;
   loadVideo(video);
   video.muted = true;
   video.playsInline = true;
@@ -227,9 +271,21 @@ const videoObserver = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: [0, 0.3] });
-ambientVideos.forEach((video) => videoObserver.observe(video));
+ambientVideos.forEach((video) => {
+  attachVideoControl(video.parentElement, video);
+  videoObserver.observe(video);
+});
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) ambientVideos.forEach((video) => video.pause());
+  if (document.hidden) $$("video").forEach((video) => video.pause());
+  else visibleVideos.forEach(playAmbient);
+});
+reducedMotion.addEventListener("change", () => {
+  if (reducedMotion.matches) {
+    $$("video").forEach((video) => {
+      video.dataset.userPlay = "false";
+      video.pause();
+    });
+  } else visibleVideos.forEach(playAmbient);
 });
 
 // Service info modal: the cards stay text-only in the grid. Tapping
@@ -245,6 +301,7 @@ function openServiceModal(card) {
   const media = $(".card__media", card);
   if (media) {
     const clone = media.cloneNode(true);
+    $$(".media-toggle", clone).forEach((button) => button.remove());
     const video = $("video", clone);
     if (video) {
       const source = $("source", video);
@@ -252,12 +309,11 @@ function openServiceModal(card) {
         source.src = source.dataset.src;
         source.removeAttribute("data-src");
       }
-      video.removeAttribute("preload");
+      video.preload = "none";
       video.muted = true;
       video.loop = true;
       video.playsInline = true;
-      video.load();
-      video.play().catch(() => {});
+      attachVideoControl(clone, video);
     }
     mediaHost.append(clone);
   }
@@ -270,11 +326,18 @@ function openServiceModal(card) {
   priceHost.hidden = !price;
   const descHost = $(".svc-modal__desc", svcModal);
   descHost.innerHTML = "";
-  $$(".card__body > p:not(.card__price)", card).forEach((p) =>
-    descHost.append(p.cloneNode(true)),
+  $$(".card__body > p:not(.card__price):not(.card__eyebrow), .card__body > .card__list", card).forEach((node) =>
+    descHost.append(node.cloneNode(true)),
   );
-  const list = $(".card__list", card);
-  if (list) descHost.append(list.cloneNode(true));
+  const proof = $(".card__proof", card);
+  if (proof) {
+    const link = proof.cloneNode(true);
+    link.className = "svc-modal__proof";
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.setAttribute("aria-label", copy("Ampliar resultados del tratamiento", "View treatment results"));
+    descHost.append(link);
+  }
   const meta = $(".card__meta", card);
   const metaHost = $(".svc-modal__meta", svcModal);
   metaHost.innerHTML = meta ? meta.innerHTML : "";
@@ -286,7 +349,16 @@ function openServiceModal(card) {
   svcModal.classList.add("is-open");
   svcModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
-  $(".svc-modal__close", svcModal).focus();
+  visibleVideos.forEach((video) => video.pause());
+  ["main", ".nav", ".footer", ".skip-link"].forEach((selector) => {
+    const element = $(selector);
+    if (element) element.inert = true;
+  });
+  $(".svc-modal__dialog", svcModal).scrollTop = 0;
+  $(".svc-modal__close", svcModal).focus({ preventScroll: true });
+  motion?.modal($(".svc-modal__dialog", svcModal));
+  const activeVideo = $("video", mediaHost);
+  if (activeVideo) playAmbient(activeVideo);
 }
 function closeServiceModal(restoreFocus = false) {
   if (!svcModal) return;
@@ -295,7 +367,12 @@ function closeServiceModal(restoreFocus = false) {
   svcModal.classList.remove("is-open");
   svcModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
+  ["main", ".nav", ".footer", ".skip-link"].forEach((selector) => {
+    const element = $(selector);
+    if (element) element.inert = false;
+  });
   if (restoreFocus && svcReturnFocus) svcReturnFocus.focus();
+  visibleVideos.forEach(playAmbient);
 }
 $$("[data-book]").forEach((button) =>
   button.addEventListener("click", () => {
@@ -307,6 +384,19 @@ $$("[data-modal-close]").forEach((element) =>
   element.addEventListener("click", () => closeServiceModal(true)),
 );
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Tab" && svcModal?.classList.contains("is-open")) {
+    const items = $$('button:not([disabled]), a[href], [tabindex="0"]', svcModal)
+      .filter((element) => element.getClientRects().length);
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+  }
   if (
     event.key === "Escape" &&
     svcModal &&

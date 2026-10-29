@@ -13,6 +13,8 @@ WhatsApp: +1 (786) 709-5791.
 - Vite + HTML/CSS/JavaScript nativo; Cloudflare Vite plugin.
 - `index.html`: contenido español, semántica y metadatos.
 - `src/style.css`: diseño editorial responsive, marfil / tinta / dorado.
+- `src/refinement.css`: acabado editorial vigente, cargado después de los estilos base y compartido con reservas.
+- `src/site-motion.js`: entradas breves con Web Animations, navegación activa y respeto de movimiento reducido.
 - `src/main.js`: idioma, menú accesible, categorías desplegables y reproducción de videos.
 - `reservar.html`, `src/reservar.js`, `src/reservar.css` y `src/booking-catalog.json`: reserva bilingüe en cuatro pasos y catálogo de precios.
 - `src/worker.js`, `migrations/` y `BOOKING.md`: API de solicitudes, D1 y panel de administración.
@@ -83,3 +85,5 @@ La portada al compartir enlaces usa `https://mariahesed.com/img/maria-hesed-port
 En reservas, Fibroblast Plasma muestra las cinco zonas con sus precios como opciones de radio visibles junto a la selección del tratamiento. Usar los importes y la marca `from` del catálogo compartido; el resumen y la revisión final deben reflejar la zona elegida. No ocultar estos precios en un desplegable ni asignar precios a párpados o Plasma Pen sin confirmación.
 
 Gift Cards: sección `#gift-cards` con monto libre desde US$5 hasta US$100,000 (límite de Merktop), centavos, datos del comprador y destinatario/mensaje opcionales. `src/gift-cards.js` conecta directamente al endpoint público de Merktop para el negocio de María, sin claves en el navegador. Cada compra genera un Checkout de Stripe por el valor completo; no aplicar el depósito de US$40. Merktop activa el saldo y entrega el código por correo tras el pago confirmado. El enlace permanente alternativo es `https://payments.merktop.com/gift/aaeee082-a486-4bee-a1f2-c736d45e6a10`. No presentar un código pendiente como comprado ni activar saldo desde el cliente.
+
+Refinamiento del 29 de octubre de 2026: portada con el mensaje y la reserva a la izquierda y el retrato de María a la derecha en escritorio; en móvil el texto y el CTA van antes de la foto. Orden de contenido: portada, tratamientos, María, experiencia, resultados, Gift Cards, FAQ y reserva. Mantener el monograma, Italiana/Bodoni y la identidad marfil/tinta/dorado. Los textos ampliados de María están en un desplegable; las categorías comienzan cerradas y sus tarjetas muestran una vista breve, con toda la descripción, material y resultados en el modal. Las animaciones son cortas, una sola vez y se cancelan al activar movimiento reducido. No ocultar permanentemente contenido para animarlo ni introducir scroll artificial o loops decorativos. Cada video tiene un control visible; con movimiento reducido solo reproduce tras una acción explícita. El modal pausa los videos de fondo, conserva el foco dentro, cierra con Escape y devuelve el foco al botón de origen.

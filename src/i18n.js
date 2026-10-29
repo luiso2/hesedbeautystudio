@@ -7,6 +7,7 @@ export const EN = {
   "nav.about": "María Hesed",
   "nav.faq": "FAQ",
   "nav.gifts": "Gift Cards",
+  "abt.more": "Our approach to care",
   "nav.cta": "Book now",
 
   "gift.eyebrow": "A thoughtful gift",
