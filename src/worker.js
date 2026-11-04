@@ -1,4 +1,6 @@
 import catalog from "./booking-catalog.json";
+import { serveVideo } from "./video-assets.js";
+import videoSizes from "./video-sizes.json";
 import { eligibleForDeposit, findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent } from "./merktop.js";
 
 const json = (data, status = 200) =>
@@ -233,6 +235,8 @@ async function adminBookings(request, env, url) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname.startsWith("/videos/"))
+      return serveVideo(request, env.ASSETS, videoSizes[url.pathname]);
     if (!url.pathname.startsWith("/api/")) return json({ error: "not_found" }, 404);
     if (!env.BOOKINGS_DB) return json({ error: "not_configured" }, 503);
     try {

@@ -209,7 +209,9 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 function syncVideoControl(button, video) {
   if (!video) return;
   const paused = video.paused || video.ended;
-  const label = paused ? copy("Reproducir video", "Play video") : copy("Pausar video", "Pause video");
+  const label = video.error
+    ? copy("Reintentar video", "Retry video")
+    : paused ? copy("Reproducir video", "Play video") : copy("Pausar video", "Pause video");
   button.classList.toggle("is-paused", paused);
   button.setAttribute("aria-label", label);
   $(".media-toggle__label", button).textContent = label;
@@ -228,7 +230,7 @@ function attachVideoControl(media, video) {
   button.append(icon, label);
   media.append(button);
   button.addEventListener("click", () => {
-    if (video.paused || video.ended) {
+    if (video.error || video.paused || video.ended) {
       video.dataset.userPaused = "false";
       video.dataset.userPlay = "true";
       playAmbient(video);
@@ -238,16 +240,17 @@ function attachVideoControl(media, video) {
     }
     syncVideoControl(button, video);
   });
-  ["play", "pause", "ended"].forEach((name) =>
+  ["play", "pause", "ended", "error", "emptied"].forEach((name) =>
     video.addEventListener(name, () => syncVideoControl(button, video)));
   syncVideoControl(button, video);
 }
-function loadVideo(video) {
+function loadVideo(video, reload = false) {
   const source = video.querySelector("source[data-src]");
-  if (!source) return;
-  source.src = source.dataset.src;
-  source.removeAttribute("data-src");
-  video.load();
+  if (source) {
+    source.src = source.dataset.src;
+    source.removeAttribute("data-src");
+  }
+  if (source || reload || video.error) video.load();
 }
 function playAmbient(video) {
   if (document.hidden || video.dataset.userPaused === "true" ||
@@ -298,24 +301,35 @@ function openServiceModal(card) {
   svcReturnFocus = document.activeElement;
   const mediaHost = $(".svc-modal__media", svcModal);
   mediaHost.innerHTML = "";
+  mediaHost.dataset.service = card.dataset.bookingId;
   const media = $(".card__media", card);
   if (media) {
     const clone = media.cloneNode(true);
     $$(".media-toggle", clone).forEach((button) => button.remove());
     const video = $("video", clone);
     if (video) {
-      const source = $("source", video);
-      if (source && source.dataset.src) {
-        source.src = source.dataset.src;
-        source.removeAttribute("data-src");
-      }
-      video.preload = "none";
+      // Activate the source only after mounting the clone, then explicitly
+      // load it. Mobile browsers need to rescan dynamically cloned sources.
+      video.preload = "metadata";
       video.muted = true;
       video.loop = true;
       video.playsInline = true;
+      delete video.dataset.userPaused;
+      delete video.dataset.userPlay;
+      clone.classList.add("card__media--modal-video");
       attachVideoControl(clone, video);
     }
     mediaHost.append(clone);
+    if (video) {
+      const source = $("source", video);
+      const link = document.createElement("a");
+      link.className = "svc-modal__video-link";
+      link.href = source.dataset.src || source.src;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = copy("Abrir video completo", "Open full video");
+      mediaHost.append(link);
+    }
   }
   mediaHost.hidden = !media;
   const title = $("h3", card);
@@ -358,12 +372,20 @@ function openServiceModal(card) {
   $(".svc-modal__close", svcModal).focus({ preventScroll: true });
   motion?.modal($(".svc-modal__dialog", svcModal));
   const activeVideo = $("video", mediaHost);
-  if (activeVideo) playAmbient(activeVideo);
+  if (activeVideo) {
+    loadVideo(activeVideo, true);
+    playAmbient(activeVideo);
+  }
 }
 function closeServiceModal(restoreFocus = false) {
   if (!svcModal) return;
   const video = $("video", svcModal);
-  if (video) video.pause();
+  if (video) {
+    video.pause();
+    $$("source", video).forEach((source) => source.remove());
+    video.removeAttribute("src");
+    video.load();
+  }
   svcModal.classList.remove("is-open");
   svcModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
@@ -372,6 +394,8 @@ function closeServiceModal(restoreFocus = false) {
     if (element) element.inert = false;
   });
   if (restoreFocus && svcReturnFocus) svcReturnFocus.focus();
+  // Discard the cloned player so a closed dialog cannot keep downloading.
+  $(".svc-modal__media", svcModal).replaceChildren();
   visibleVideos.forEach(playAmbient);
 }
 $$("[data-book]").forEach((button) =>

@@ -172,6 +172,16 @@ body { background: var(--paper); }
 .svc-modal__dialog { position: relative; left: auto; top: auto; transform: none; width: min(600px, 100%); max-height: calc(100dvh - 48px); border-radius: 14px; box-shadow: 0 24px 70px #17130f30; }
 .svc-modal__media { border-radius: 14px 14px 0 0; }
 .svc-modal__media .card__media { position: relative; }
+.svc-modal__media .card__media--modal-video { aspect-ratio: auto; background: #17130f; }
+.svc-modal__media .card__media--modal-video video {
+  display: block; width: 100%; height: min(52svh, 480px); max-height: none;
+  object-fit: contain; object-position: center;
+}
+.svc-modal__media[data-service="facial-detox"] video { transform: rotate(180deg); }
+.svc-modal__video-link {
+  display: block; padding: 13px 20px; color: #fff; text-align: center;
+  font-size: 12px; text-decoration: underline; text-underline-offset: 4px;
+}
 .svc-modal__body { padding: 28px; }
 .svc-modal__title { font-size: 33px; }
 .svc-modal__cta { border-radius: 8px; font-size: 13px; }
