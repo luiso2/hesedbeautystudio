@@ -60,7 +60,13 @@
 .booking-service__price { color: #85601f; font-size: 11px; white-space: nowrap; text-align: right; }
 .booking-option { padding: 22px 0 0; }
 .booking-option label, .booking-input > span { display: block; margin-bottom: 8px; color: #342b21; font-size: 11px; font-weight: 600; }
-.booking-option select, .booking-input input, .booking-input textarea { display: block; width: 100%; min-height: 50px; padding: 12px 14px; border: 1px solid #d7c8b6; border-radius: 2px; background: #fffbf5; color: #17130f; font: 13px/1.45 "Montserrat", sans-serif; }
+.booking-option select, .booking-input input, .booking-input textarea { display: block; box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; min-height: 50px; padding: 12px 14px; border: 1px solid #d7c8b6; border-radius: 2px; background: #fffbf5; color: #17130f; font: 13px/1.45 "Montserrat", sans-serif; }
+/* Safari's native date/time theme overrides percentage widths with content-box
+   sizing. Remove that appearance while retaining the native picker and type. */
+.booking-input input[type="date"],
+.booking-input input[type="time"] { -webkit-appearance: none; appearance: none; }
+.booking-input input::-webkit-date-and-time-value { min-height: 1.45em; text-align: left; }
+.booking-input input::-webkit-datetime-edit { padding: 0; }
 .booking-option select:focus-visible, .booking-input input:focus-visible, .booking-input textarea:focus-visible { outline: 2px solid #85601f; outline-offset: 2px; }
 .booking-zone-prices { min-width: 0; margin: 0 0 26px; padding: 0; border: 0; }
 .booking-zone-prices[hidden] { display: none; }
@@ -139,7 +145,7 @@
   .booking-service__price { grid-column: 2; justify-self: start; text-align: left; margin-top: -8px; }
   .booking-service__name { font-size: 18px; }
   .booking-selection-inline { flex-direction: column; gap: 5px; }
-  .booking-date-grid { grid-template-columns: 1fr; gap: 0; }
+  .booking-date-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .booking-next { min-width: 0; flex: 1; }
   .booking-summary { padding: 23px; }
   .booking-footer { flex-direction: column; padding-inline: 18px; }
@@ -231,6 +237,10 @@
   .booking-next { min-width: 0; min-height: 56px; padding-inline: 16px; font-size: 13px; }
   .booking-back { min-height: 54px; padding-inline: 18px; }
   .booking-summary h2 { font-size: 36px; }
+}
+@media (max-width: 360px) {
+  .booking-nav { gap: 8px; padding-inline: 14px; }
+  .booking-nav__right { gap: 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .booking-categories button:hover,
