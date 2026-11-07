@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="theme-color" content="#fffbf5" />
+    <title>Tu experiencia · María Hesed</title>
+    <meta name="description" content="Comparte tu experiencia después de tu atención con María Hesed." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Tu experiencia · María Hesed" />
+    <meta property="og:description" content="Comparte tu experiencia después de tu atención con María Hesed." />
+    <meta property="og:url" content="https://mariahesed.com/resena" />
+    <meta property="og:locale" content="es_US" />
+    <meta property="og:image" content="https://mariahesed.com/img/maria-hesed-portrait.jpg" />
+    <meta property="og:image:secure_url" content="https://mariahesed.com/img/maria-hesed-portrait.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="945" />
+    <meta property="og:image:height" content="1665" />
+    <meta property="og:image:alt" content="María Hesed en su estudio, con un instrumento de maderoterapia" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tu experiencia · María Hesed" />
+    <meta name="twitter:description" content="Comparte tu experiencia después de tu atención con María Hesed." />
+    <meta name="twitter:image" content="https://mariahesed.com/img/maria-hesed-portrait.jpg" />
+    <meta name="twitter:image:alt" content="María Hesed en su estudio, con un instrumento de maderoterapia" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Italiana&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/refinement.css" />
+    <link rel="stylesheet" href="/src/reservar.css" />
+  </head>
+  <body class="booking-page">
+    <a class="skip-link" href="#booking-main" data-review-es="Saltar al contenido" data-review-en="Skip to content">Saltar al contenido</a>
+    <header class="booking-nav">
+      <a href="/" class="booking-brand" aria-label="María Hesed · Inicio">
+        <span class="booking-brand__mark" aria-hidden="true">M<span></span>H</span>
+        <span>MARÍA HESED<small>ESTÉTICA AVANZADA</small></span>
+      </a>
+      <div class="booking-nav__right">
+        <div class="booking-lang" role="group" aria-label="Idioma">
+          <button type="button" data-lang="es" aria-pressed="true">ES</button><span>/</span><button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a href="/" class="booking-close" data-t="close">Cerrar</a>
+      </div>
+    </header>
+
+    <main id="booking-main" class="booking-main review-page">
+      <p class="booking-kicker">MARÍA HESED · <span data-review-es="TU EXPERIENCIA" data-review-en="YOUR EXPERIENCE">TU EXPERIENCIA</span></p>
+      <h1 data-review-es="Gracias por confiar en María." data-review-en="Thank you for choosing María.">Gracias por confiar en María.</h1>
+      <p class="review-intro" data-review-es="Cuéntanos cómo fue tu atención. Todas las valoraciones son bienvenidas." data-review-en="Tell us about your visit. All ratings are welcome.">Cuéntanos cómo fue tu atención. Todas las valoraciones son bienvenidas.</p>
+      <div id="review-invitation" class="booking-note" hidden><p data-review-es="Para compartir tu opinión, abre el enlace personal que María te facilita después de tu atención. Así verificamos que cada reseña corresponde a una visita real." data-review-en="To share your review, open the personal link María provides after your visit. This helps us verify every review comes from a real client.">Para compartir tu opinión, abre el enlace personal que María te facilita después de tu atención. Así verificamos que cada reseña corresponde a una visita real.</p><a class="text-link" href="https://wa.me/17867095791?text=Hola%20Mar%C3%ADa%2C%20quiero%20el%20enlace%20para%20compartir%20mi%20experiencia." target="_blank" rel="noopener" data-review-es="Pedir mi enlace" data-review-en="Request my link">Pedir mi enlace</a></div>
+      <form id="review-form" class="booking-wizard" hidden>
+        <fieldset class="review-rating"><legend data-review-es="¿Cómo fue tu experiencia?" data-review-en="How was your experience?">¿Cómo fue tu experiencia?</legend>
+          <div><label><input type="radio" name="rating" value="1" required><span aria-hidden="true">1 ★</span><span class="sr-only">1 / 5</span></label><label><input type="radio" name="rating" value="2" required><span aria-hidden="true">2 ★</span><span class="sr-only">2 / 5</span></label><label><input type="radio" name="rating" value="3" required><span aria-hidden="true">3 ★</span><span class="sr-only">3 / 5</span></label><label><input type="radio" name="rating" value="4" required><span aria-hidden="true">4 ★</span><span class="sr-only">4 / 5</span></label><label><input type="radio" name="rating" value="5" required><span aria-hidden="true">5 ★</span><span class="sr-only">5 / 5</span></label></div>
+        </fieldset>
+        <label class="booking-input"><span data-review-es="Nombre que se mostrará" data-review-en="Public display name">Nombre que se mostrará</span><input name="name" autocomplete="given-name" minlength="2" maxlength="60" required></label>
+        <label class="booking-input"><span data-review-es="Tu opinión" data-review-en="Your review">Tu opinión</span><textarea name="comment" rows="5" minlength="10" maxlength="1500" required></textarea></label>
+        <label class="booking-consent"><input type="checkbox" name="consent" required><span data-review-es="Autorizo la publicación de mi nombre y opinión en este sitio. Mi teléfono y datos de reserva permanecen privados." data-review-en="I allow my display name and review to appear on this website. My phone and booking details remain private.">Autorizo la publicación de mi nombre y opinión en este sitio. Mi teléfono y datos de reserva permanecen privados.</span></label>
+        <p class="review-policy" data-review-es="Revisamos únicamente contenido ofensivo, información privada y spam antes de publicar. Aceptamos valoraciones de 1 a 5 estrellas." data-review-en="We check only for offensive content, private information and spam before publishing. We welcome ratings from 1 to 5 stars.">Revisamos únicamente contenido ofensivo, información privada y spam antes de publicar. Aceptamos valoraciones de 1 a 5 estrellas.</p>
+        <label class="booking-honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <button class="booking-next" type="submit" data-review-es="Enviar mi opinión" data-review-en="Submit my review">Enviar mi opinión</button>
+      </form>
+      <p id="review-message" role="status"></p>
+    </main>
+    <footer class="booking-footer">
+      <span>© <span id="year"></span> María Hesed · Aesthetic Studio</span>
+      <a href="https://www.merktop.com">Powered by <strong>Merktop</strong></a>
+    </footer>
+    <script type="module" src="/src/review-form.js"></script>
+  </body>
+</html>

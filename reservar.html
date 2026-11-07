@@ -65,27 +65,9 @@
             <p class="booking-step__count" data-t="step1count">PASO 01 / 04</p>
             <h2 id="booking-step-title-1" data-t="step1title">Elige tu tratamiento</h2>
             <p class="booking-step__lead" data-t="step1lead">Busca tu tratamiento o elige una categoría. Toca el servicio que prefieras para continuar.</p>
-            <div class="booking-selection-inline" id="booking-selection-inline" hidden aria-live="polite"></div>
-            <div class="booking-picker" id="booking-picker">
-              <button class="booking-picker__return" id="booking-picker-return" type="button" hidden data-t="returnSelection">Volver a mi selección</button>
-              <label class="booking-search-label" for="booking-search" data-t="searchService">Buscar un servicio</label>
-              <div class="booking-search">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
-                <input id="booking-search" type="search" autocomplete="off" enterkeyhint="search" placeholder="Ej. facial, maderoterapia…" aria-controls="booking-services" />
-                <button id="booking-search-clear" type="button" aria-label="Borrar búsqueda" hidden>×</button>
-              </div>
-              <div class="booking-categories" id="booking-categories" role="group" aria-label="Categorías de servicios"></div>
-              <p class="booking-results-count" id="booking-results-count" role="status" aria-live="polite"></p>
-              <div class="booking-services" id="booking-services" role="group" aria-label="Tratamientos"></div>
-              <div class="booking-search-empty" id="booking-search-empty" hidden>
-                <p data-t="noResults">No encontramos ese tratamiento. Prueba otro nombre o mira todos los servicios.</p>
-                <button type="button" id="booking-search-reset" data-t="viewAll">Ver todos los servicios</button>
-              </div>
-            </div>
-            <fieldset class="booking-zone-prices" id="booking-zone-prices" hidden>
-              <legend data-t="chooseArea">Selecciona la zona</legend>
-              <div class="booking-zone-options" id="booking-zone-options"></div>
-            </fieldset>
+            <div class="booking-cart" id="booking-selection-inline"></div>
+            <button class="booking-add" id="booking-add" type="button" aria-haspopup="dialog" data-t="addService">Agregar servicio</button>
+            <p class="booking-cart-note" data-t="perService">Depósito de US$40 por cada servicio. Verás el total antes de pagar.</p>
           </section>
 
           <section class="booking-step" data-step="2" aria-labelledby="booking-step-title-2" hidden>
@@ -132,7 +114,7 @@
         <aside class="booking-summary" aria-label="Resumen de la reserva">
           <p class="booking-summary__eyebrow" data-t="summaryEyebrow">TU SELECCIÓN</p>
           <h2 data-t="summaryTitle">Tu cita, a tu medida.</h2>
-          <div id="booking-summary-detail" aria-live="polite"></div>
+          <div id="booking-summary-detail" aria-live="polite"></div><button type="button" class="booking-add booking-add--summary" id="booking-add-summary" aria-haspopup="dialog" data-t="addService">Agregar servicio</button>
           <div class="booking-summary__foot">
             <span data-t="summaryFoot">Cuidado personal en Miami</span>
             <span>MARÍA HESED · ESTÉTICA AVANZADA</span>
@@ -153,6 +135,28 @@
       </section>
       <p class="booking-help"><span data-t="help">¿Tienes preguntas?</span> <a href="https://wa.me/17867095791" target="_blank" rel="noopener">WhatsApp · +1 (786) 709-5791</a></p>
     </main>
+    <dialog class="service-picker" id="service-picker" aria-labelledby="picker-title">
+      <div class="service-picker__head"><div><p class="booking-kicker">MARÍA HESED</p><h2 id="picker-title" data-t="addService">Agregar servicio</h2></div><button id="picker-close" type="button" autofocus data-t="close">Cerrar</button></div>
+      <div class="service-picker__scroll">
+            <div class="booking-picker" id="booking-picker">
+
+              <label class="booking-search-label" for="booking-search" data-t="searchService">Buscar un servicio</label>
+              <div class="booking-search">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+                <input id="booking-search" type="search" autocomplete="off" enterkeyhint="search" placeholder="Ej. facial, maderoterapia…" aria-controls="booking-services" />
+                <button id="booking-search-clear" type="button" aria-label="Borrar búsqueda" hidden>×</button>
+              </div>
+              <div class="booking-categories" id="booking-categories" role="group" aria-label="Categorías de servicios"></div>
+              <p class="booking-results-count" id="booking-results-count" role="status" aria-live="polite"></p>
+              <div class="booking-services" id="booking-services" role="group" aria-label="Tratamientos"></div>
+              <div class="booking-search-empty" id="booking-search-empty" hidden>
+                <p data-t="noResults">No encontramos ese tratamiento. Prueba otro nombre o mira todos los servicios.</p>
+                <button type="button" id="booking-search-reset" data-t="viewAll">Ver todos los servicios</button>
+              </div>
+            </div>
+      </div>
+      <div class="service-picker__foot"><p id="picker-count" role="status"></p><button class="booking-next" id="picker-done" type="button" data-t="done">Listo</button></div>
+    </dialog>
     <footer class="booking-footer">
       <span>© <span id="year"></span> María Hesed · Aesthetic Studio</span>
       <a href="https://www.merktop.com">Powered by <strong>Merktop</strong></a>

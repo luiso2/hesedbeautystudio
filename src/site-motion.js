@@ -63,7 +63,7 @@ export function initSiteMotion() {
       });
     }, { threshold: .08, rootMargin: "0px 0px -24px 0px" });
     document.querySelectorAll(
-      ".section-head, .category-choice, .about__media, .about__text, .step, .results-gallery, .gifts__intro, .gifts__purchase, .faq__head, .accordion, .book__inner",
+      ".section-head, .category-choice, .about__media, .about__text, .step, .results-gallery, .gifts__intro, .gifts__purchase, .faq__head, .accordion, .reviews-layout > div, .book__inner",
     ).forEach((element) => observer.observe(element));
   }
 

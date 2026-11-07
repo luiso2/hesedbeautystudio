@@ -1,7 +1,10 @@
-import catalog from "./booking-catalog.json";
+import catalog from "./booking-catalog.json" with { type: "json" };
 import { serveVideo } from "./video-assets.js";
-import videoSizes from "./video-sizes.json";
-import { eligibleForDeposit, findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent } from "./merktop.js";
+import videoSizes from "./video-sizes.json" with { type: "json" };
+import { findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent, signCartPayment } from "./merktop.js";
+
+import { resolveCart, cartTotals } from './booking-cart.js';
+import { reviewRoutes, reviewLink } from './reviews-api.js';
 
 const json = (data, status = 200) =>
   Response.json(data, {
@@ -86,10 +89,14 @@ async function createBooking(request, env) {
     return json({ error: "invalid_request" }, 400);
   if (body.website) return json({ error: "invalid_request" }, 400);
 
-  const service = catalog.find((entry) => entry.id === body.serviceId);
-  const option = service?.options?.find((entry) => entry.id === body.optionId);
-  if (!service || (service.options?.length && !option) || (!service.options && body.optionId))
-    return json({ error: "invalid_service" }, 400);
+  let items;
+  try { items = resolveCart(body.items ?? [{ serviceId: body.serviceId, optionId: body.optionId }]); }
+  catch { return json({ error: 'invalid_service' }, 400); }
+  const totals = cartTotals(items);
+  if (totals.policyPending) return json({ error: 'deposit_policy_pending' }, 409);
+  const first = items[0];
+  const service = catalog.find((entry) => entry.id === first.serviceId);
+  const option = service.options?.find((entry) => entry.id === first.optionId);
 
   const date = body.date;
   const time = body.time;
@@ -114,34 +121,34 @@ async function createBooking(request, env) {
   if (recent?.count >= 3) return json({ error: "rate_limited" }, 429);
 
   const id = crypto.randomUUID();
-  const selected = option || service;
-  let payment = null;
-  if (eligibleForDeposit(selected)) {
-    try {
-      const reservationMode = selected.price == null || !!selected.from;
-      payment = await findDepositLink(
-        env, paymentDescription(service, option), selected.price == null ? null : selected.price * 100,
-        reservationMode, paymentLinkKey(service, option),
-      );
-    } catch (error) {
-      console.error(JSON.stringify({ event: "merktop_link_error", message: String(error) }));
-      return json({ error: "payment_unavailable" }, 503);
-    }
+  let payment;
+  try {
+    // Use a known active link of the same checkout type as the entire cart.
+    const anchor = totals.estimated ? items.find((item) => item.price == null || item.from) : first;
+    const anchorService = catalog.find((entry) => entry.id === anchor.serviceId);
+    const anchorOption = anchorService.options?.find((entry) => entry.id === anchor.optionId);
+    const base = await findDepositLink(env, paymentDescription(anchorService, anchorOption),
+      anchor.price == null ? null : anchor.price * 100, totals.estimated, paymentLinkKey(anchorService, anchorOption));
+    const description = `${items.length} servicio(s): ` + items.map((item) => item.name.es + (item.optionName ? ` · ${item.optionName.es}` : '')).join(' + ');
+    payment = await signCartPayment(env, base, totals, description);
+  } catch (error) {
+    console.error(JSON.stringify({ event: 'merktop_link_error', message: String(error) }));
+    return json({ error: 'payment_unavailable' }, 503);
   }
   await env.BOOKINGS_DB.prepare(
     `INSERT INTO booking_requests
      (id, service_id, option_id, service_name, option_name, price_cents, price_from,
       requested_date, requested_time, customer_name, customer_phone, customer_email, customer_note,
-      merktop_link_id, payment_status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      merktop_link_id, payment_status, items_json, deposit_cents, payment_total_cents)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).bind(
     id,
     service.id,
     option?.id || null,
     service.name.es,
     option?.name.es || null,
-    selected.price == null ? null : selected.price * 100,
-    selected.from ? 1 : 0,
+    totals.hasUnknown ? null : totals.knownCents,
+    totals.estimated ? 1 : 0,
     date,
     time,
     name,
@@ -150,10 +157,11 @@ async function createBooking(request, env) {
     note || null,
     payment?.id || null,
     payment ? "awaiting_payment" : "not_started",
+    JSON.stringify(items), totals.depositCents, totals.paymentTotalCents,
   ).run();
   if (payment) {
     payment.url.searchParams.set("ref", id);
-    return json({ id, status: "pending", payment_url: payment.url.toString(), deposit_cents: 4000 }, 201);
+    return json({ id, status: "pending", payment_url: payment.url.toString(), deposit_cents: totals.depositCents }, 201);
   }
   return json({ id, status: "pending" }, 201);
 }
@@ -170,13 +178,13 @@ async function merktopWebhook(request, env) {
       typeof data.link_id !== "string" || typeof data.deposit_id !== "string")
     return json({ ok: true, ignored: true });
   const booking = await env.BOOKINGS_DB.prepare(
-    "SELECT merktop_link_id, merktop_deposit_id, price_cents, price_from FROM booking_requests WHERE id = ?",
+    "SELECT merktop_link_id, merktop_deposit_id, price_cents, price_from, deposit_cents, payment_total_cents FROM booking_requests WHERE id = ?",
   ).bind(data.ref).first();
   if (!booking || booking.merktop_link_id !== data.link_id)
     return json({ ok: true, ignored: true });
   if (event.type === "deposit.paid") {
-    const expectedTotal = booking.price_cents == null || booking.price_from ? 4000 : booking.price_cents;
-    if (data.currency !== "usd" || data.amount_paid !== 4000 ||
+    const expectedTotal = booking.payment_total_cents ?? (booking.price_cents == null || booking.price_from ? 4000 : booking.price_cents);
+    if (data.currency !== "usd" || data.amount_paid !== booking.deposit_cents ||
         data.amount_total !== expectedTotal) return json({ error: "payment_mismatch" }, 422);
     await env.BOOKINGS_DB.prepare(
       `UPDATE booking_requests SET payment_status = 'paid', merktop_deposit_id = ?,
@@ -209,6 +217,9 @@ async function adminBookings(request, env, url) {
       ? env.BOOKINGS_DB.prepare("SELECT * FROM booking_requests WHERE status = ? ORDER BY created_at DESC LIMIT 200").bind(status)
       : env.BOOKINGS_DB.prepare("SELECT * FROM booking_requests ORDER BY created_at DESC LIMIT 200");
     const { results } = await statement.all();
+    for (const row of results) {
+      if (row.completed_at) row.review_url = await reviewLink(row, env.BOOKING_ADMIN_TOKEN, url.origin);
+    }
     return json({ bookings: results });
   }
 
@@ -240,6 +251,8 @@ export default {
     if (!url.pathname.startsWith("/api/")) return json({ error: "not_found" }, 404);
     if (!env.BOOKINGS_DB) return json({ error: "not_configured" }, 503);
     try {
+      const reviewResponse = await reviewRoutes(request, env, url, { json, readBody, authorized, clean, miamiToday });
+      if (reviewResponse) return reviewResponse;
       if (url.pathname === "/api/bookings" && request.method === "POST")
         return await createBooking(request, env);
       if (url.pathname === "/api/merktop/webhook" && request.method === "POST")

@@ -1,3 +1,4 @@
+import { initReviews } from './reviews.js';
 import { EN } from "./i18n.js";
 import { initGiftCardForm } from "./gift-card-form.js";
 import { initSiteMotion } from "./site-motion.js";
@@ -509,3 +510,5 @@ try {
   /* Keep Spanish default. */
 }
 setLang(savedLang);
+
+initReviews();

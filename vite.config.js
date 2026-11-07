@@ -11,6 +11,7 @@ export default defineConfig({
 					input: {
 						main: resolve(import.meta.dirname, "index.html"),
 							booking: resolve(import.meta.dirname, "reservar.html"),
+review: resolve(import.meta.dirname, "resena.html"),
 						},
 				},
 			},

@@ -104,3 +104,19 @@ export async function verifyMerktopEvent(request, secret) {
       typeof event.type !== "string" || !event.data || typeof event.data !== "object") return null;
   return event;
 }
+
+// Merktop's authenticated v2 amount override; never accept money from the browser.
+export async function signCartPayment(env, payment, totals, description) {
+  if (!env.MERKTOP_WEBHOOK_SECRET || totals.depositCents > totals.paymentTotalCents)
+    throw new Error('merktop_cart_not_configured');
+  const label = description.slice(0, 200);
+  // No promotion may reduce the merchant's required per-service deposit.
+  const canonical = `v2.0.0.${payment.id}.${totals.depositCents}.${totals.paymentTotalCents}.${label}`;
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(env.MERKTOP_WEBHOOK_SECRET),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(canonical));
+  const sig = [...new Uint8Array(signature)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+  const url = new URL(payment.url);
+  for (const [key, value] of Object.entries({ dep: totals.depositCents, tot: totals.paymentTotalCents, desc: label, sig, pdep: 0, ptot: 0 })) url.searchParams.set(key, String(value));
+  return { id: payment.id, url };
+}

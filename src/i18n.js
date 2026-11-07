@@ -1,6 +1,14 @@
 // English dictionary. Keys mirror data-i18n attributes in index.html.
 // Spanish is the source of truth in the markup and is captured at runtime.
 export const EN = {
+  "reviews.nav": "Reviews",
+  "reviews.eyebrow": "SHARED EXPERIENCES",
+  "reviews.title": "Your experience matters.",
+  "reviews.lead": "After your visit, share how you felt. Every review helps us care for you better.",
+  "reviews.write": "Share my experience",
+  "reviews.verified": "Reviews from clients with a verified visit.",
+  "reviews.empty": "This space is ready to welcome our clients’ experiences.",
+
   "nav.services": "Treatments",
   "nav.ritual": "The Ritual",
   "nav.results": "Results",

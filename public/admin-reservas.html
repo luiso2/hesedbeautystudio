@@ -40,13 +40,13 @@
       <p id="count" class="muted"></p>
       <div class="cards" id="cards"></div>
     </section>
-    <p id="message" role="alert"></p>
+    <section class="panel hidden" id="review-dashboard"><h2>Opiniones de clientes</h2><p>Publica las opiniones auténticas de cualquier puntuación. Oculta únicamente spam, contenido ofensivo o datos privados; no por una valoración baja.</p><div class="cards" id="admin-reviews"></div></section><p id="message" role="alert"></p>
   </main>
   <script>
     const $ = (id) => document.getElementById(id);
     let token = sessionStorage.getItem('hesed-booking-admin') || '';
     const statuses = { pending:'Pendiente', confirmed:'Confirmada', declined:'Rechazada', cancelled:'Cancelada' };
-    const paymentStatuses = { not_started:'Sin depósito solicitado', awaiting_payment:'Depósito pendiente', paid:'Depósito de US$40 pagado', refunded:'Depósito reembolsado', expired:'Depósito vencido' };
+    const paymentStatuses = { not_started:'Sin depósito solicitado', awaiting_payment:'Depósito pendiente', paid:'Depósito pagado', refunded:'Depósito reembolsado', expired:'Depósito vencido' };
     const message = (value, error=false) => { $('message').textContent=value; $('message').className=error?'error':''; };
     async function api(path, options={}) {
       const response=await fetch(path,{...options,headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json',...(options.headers||{})}});
@@ -58,30 +58,53 @@
     function phoneLink(row) {
       const digits=row.customer_phone.replace(/\D/g,'');
       const recipient=digits.length===10?'1'+digits:digits;
-      const text=`Hola ${row.customer_name}, soy María Hesed. Te escribo sobre tu solicitud de ${row.service_name}${row.option_name?' · '+row.option_name:''} para el ${row.requested_date} a las ${row.requested_time}.`;
+      const services=row.items_json?JSON.parse(row.items_json).map(item=>item.name.es+(item.optionName?' · '+item.optionName.es:'')).join(', '):row.service_name+(row.option_name?' · '+row.option_name:'');
+      const text=`Hola ${row.customer_name}, soy María Hesed. Te escribo sobre tu solicitud de ${services} para el ${row.requested_date} a las ${row.requested_time}.`;
       const a=document.createElement('a');a.href=`https://wa.me/${recipient}?text=${encodeURIComponent(text)}`;a.target='_blank';a.rel='noopener';a.textContent='Responder por WhatsApp';return a;
     }
     function card(row) {
       const article=document.createElement('article');article.className='booking';
       const status=document.createElement('span');status.className='status';status.textContent=statuses[row.status]||row.status;article.append(status);
-      const heading=document.createElement('h2');heading.textContent=row.service_name+(row.option_name?' · '+row.option_name:'');article.append(heading);
+      const heading=document.createElement('h2');const items = row.items_json ? JSON.parse(row.items_json) : null; heading.textContent=items?.length > 1 ? `${items.length} servicios · Una cita` : row.service_name+(row.option_name?' · '+row.option_name:'');article.append(heading);
       article.append(line('Cliente',row.customer_name),line('Fecha preferida',`${row.requested_date} · ${row.requested_time} (Miami)`),line('Teléfono',row.customer_phone),line('Correo',row.customer_email),line('Precio',row.price_cents==null?'Consultar el precio':(row.price_from?'Desde ':'')+`US$${row.price_cents/100}`),line('Pago',paymentStatuses[row.payment_status]||'Sin depósito'));
+      if(items) for(const item of items) article.append(line(item.name.es+(item.optionName?' · '+item.optionName.es:''),item.price==null?'Consultar el precio':(item.from?'Desde ':'')+'US$'+item.price));
+      article.append(line('Depósito solicitado',`US$${row.deposit_cents/100}`));
       if(row.customer_note)article.append(line('Nota',row.customer_note));
       const ref=document.createElement('p');ref.className='ref';ref.textContent=`Referencia: ${row.id} · Recibida: ${row.created_at} UTC`;article.append(ref);
       article.append(phoneLink(row));
       const select=document.createElement('select');select.setAttribute('aria-label','Estado de la reserva');
       for(const [value,label] of Object.entries(statuses)){const option=document.createElement('option');option.value=value;option.textContent=label;select.append(option)}select.value=row.status;article.append(select);
       const save=document.createElement('button');save.type='button';save.textContent='Guardar estado';save.onclick=async()=>{save.disabled=true;try{await api(`/api/admin/bookings/${row.id}`,{method:'PATCH',body:JSON.stringify({status:select.value})});message('Estado actualizado. Contacta al cliente para avisarle.');await load()}catch(error){message(error.message==='slot_taken'?'Ya hay otra cita confirmada en esa fecha y hora.':`No se pudo actualizar: ${error.message}`,true)}finally{save.disabled=false}};article.append(save);
+      if(row.completed_at) {
+        article.append(line('Atención realizada',row.completed_at.slice(0,10)));
+        const review=document.createElement('a'); review.href=row.review_url;review.textContent='Abrir enlace personal de reseña';review.target='_blank';review.rel='noopener';article.append(review);
+        const copy=document.createElement('button');copy.type='button';copy.textContent='Copiar invitación';copy.onclick=async()=>{try{await navigator.clipboard.writeText(row.review_url);message('Enlace copiado. Compártelo con la clienta.')}catch{message('Abre el enlace de reseña y copia su dirección.',true)}};article.append(copy);
+        const invite=phoneLink(row);invite.textContent='Invitar a opinar por WhatsApp';const address=new URL(invite.href);address.searchParams.set('text',`Hola ${row.customer_name}, gracias por tu visita a María Hesed. Nos encantaría conocer tu experiencia: ${row.review_url}`);invite.href=address.toString();article.append(invite);
+      } else if(row.status==='confirmed') {
+        const complete=document.createElement('button');complete.type='button';complete.textContent='Marcar como atendida';complete.style.marginTop='14px';complete.onclick=async()=>{complete.disabled=true;try{await api(`/api/admin/bookings/${row.id}/complete`,{method:'POST'});message('Atención registrada. La invitación personal ya está disponible para compartir.');await load()}catch{message('Solo puedes marcar una cita confirmada cuya fecha y hora ya hayan pasado.',true)}finally{complete.disabled=false}};article.append(complete);
+      }
       return article;
     }
     async function load() {
       const filter=$('filter').value;const data=await api(`/api/admin/bookings${filter?'?status='+filter:''}`);
       $('cards').replaceChildren(...data.bookings.map(card));$('count').textContent=`${data.bookings.length} solicitud(es) mostrada(s)`;
-      $('login-panel').classList.add('hidden');$('dashboard').classList.remove('hidden');
+      $('login-panel').classList.add('hidden');$('dashboard').classList.remove('hidden');await loadReviews();
+    }
+    async function loadReviews() {
+      const data=await api('/api/admin/reviews');$('review-dashboard').classList.remove('hidden');
+      $('admin-reviews').replaceChildren(...data.reviews.map(row=>{
+        const card=document.createElement('article');card.className='booking';
+        card.append(line('Nombre',row.display_name),line('Valoración',`${row.rating}/5`),line('Opinión',row.comment),line('Estado',row.status));
+        for(const [status,label] of [['published','Publicar'],['hidden','Ocultar contenido'],['pending','Dejar pendiente']]) {
+          const button=document.createElement('button');button.type='button';button.textContent=label;button.style.margin='4px';button.disabled=row.status===status;
+          button.onclick=async()=>{try{await api(`/api/admin/reviews/${row.id}`,{method:'PATCH',body:JSON.stringify({status})});await loadReviews()}catch{message('No se pudo actualizar la opinión.',true)}};card.append(button);
+        } return card;
+      }));
+      if(!data.reviews.length)$('admin-reviews').textContent='Todavía no hay opiniones recibidas.';
     }
     $('login-form').onsubmit=async(event)=>{event.preventDefault();token=$('key').value.trim();try{await load();sessionStorage.setItem('hesed-booking-admin',token);$('key').value='';message('')}catch{message('Clave incorrecta o servicio no disponible.',true)}};
     $('filter').onchange=()=>load().catch(error=>message(error.message,true));
-    $('logout').onclick=()=>{token='';sessionStorage.removeItem('hesed-booking-admin');$('dashboard').classList.add('hidden');$('login-panel').classList.remove('hidden');message('Sesión cerrada.')};
+    $('logout').onclick=()=>{token='';sessionStorage.removeItem('hesed-booking-admin');$('dashboard').classList.add('hidden');$('review-dashboard').classList.add('hidden');$('login-panel').classList.remove('hidden');message('Sesión cerrada.')};
     if(token)load().catch(()=>{token='';sessionStorage.removeItem('hesed-booking-admin')});
   </script>
 </body>

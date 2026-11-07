@@ -1,4 +1,5 @@
 import catalog from "./booking-catalog.json";
+import { resolveCart, cartTotals, itemKey, MAX_ITEMS } from "./booking-cart.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -89,17 +90,33 @@ let step = 1;
 let activeCategory = "corporal";
 let serviceId = byId.has(new URLSearchParams(location.search).get("service"))
   ? new URLSearchParams(location.search).get("service") : "";
-let optionId = "";
-let pickerOpen = !serviceId;
+let selectedItems = [];
+let pickerOpen = false;
+let pickerReturnFocus = null;
 let searchQuery = "";
 const tr = (key) => translations[lang][key];
-const service = () => byId.get(serviceId);
-const option = () => service()?.options?.find((entry) => entry.id === optionId);
-const chosenPrice = () => service()?.options?.length ? option() : service();
-const depositRequired = () => !!chosenPrice() &&
-  (chosenPrice().price == null || chosenPrice().from || chosenPrice().price >= 40);
-const priceText = (entry) => entry?.price == null ? tr("askPrice")
-  : entry.from ? `${tr("from")} US$${entry.price}` : `US$${entry.price}`;
+const priceText = (entry) => entry?.price == null ? tr("askPrice") : entry.from ? `${tr("from")} US$${entry.price}` : `US$${entry.price}`;
+const money = (cents) => `US$${(cents / 100).toLocaleString(lang === 'en' ? 'en-US' : 'es-US', { maximumFractionDigits: 2 })}`;
+const totals = () => cartTotals(selectedItems);
+const depositRequired = () => selectedItems.length > 0 && !totals().policyPending;
+const fullName = (item) => item.name[lang] + (item.optionName ? ` · ${item.optionName[lang]}` : '');
+const totalText = () => totals().hasUnknown ? (totals().knownCents ? `${money(totals().knownCents)} + ${tr('askPrice')}` : tr('askPrice')) : `${totals().estimated ? tr('from') + ' ' : ''}${money(totals().knownCents)}`;
+Object.assign(translations.es, {
+  step1title: 'Tu selección de tratamientos', step1lead: 'Combina los servicios que quieras en una misma cita. Agrega o quita tratamientos aquí.',
+  addService: '+ Agregar servicio', remove: 'Quitar', added: 'Agregado', done: 'Listo', total: 'Total de tratamientos',
+  perService: 'Depósito de US$40 por cada servicio. Verás el total antes de pagar.',
+  depositLead: 'Revisa tu selección. Continuarás a Merktop para pagar el depósito de los servicios elegidos. María confirmará tu horario personalmente.',
+  lowPricePending: 'El depósito de los servicios con precio inferior a US$40 está pendiente de confirmación. Consulta con María por WhatsApp antes de reservarlos.',
+  maxItems: 'Puedes agregar hasta 12 servicios por solicitud.',
+});
+Object.assign(translations.en, {
+  step1title: 'Your treatment selection', step1lead: 'Combine services in one appointment. Add or remove treatments here.',
+  addService: '+ Add service', remove: 'Remove', added: 'Added', done: 'Done', total: 'Treatment total',
+  perService: 'US$40 deposit per service. You will see the total before paying.',
+  depositLead: 'Review your selection. Continue to Merktop to pay the deposit for your selected services. María will personally confirm your time.',
+  lowPricePending: 'The deposit for services priced below US$40 is awaiting confirmation. Please contact María on WhatsApp before booking these services.',
+  maxItems: 'You can add up to 12 services per request.',
+});
 
 function miamiToday() {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -136,31 +153,6 @@ function renderCategories(focusActive = false) {
   if (focusActive) $(".is-active", root)?.focus({ preventScroll: true });
 }
 
-function renderOptions() {
-  const options = service()?.options || [];
-  const zonePrices = $("#booking-zone-prices");
-  const zoneOptions = $("#booking-zone-options");
-  zonePrices.hidden = pickerOpen || !options.length;
-  zoneOptions.replaceChildren();
-  options.forEach((item) => {
-    const label = document.createElement("label");
-    label.className = "booking-zone-choice";
-    const radio = document.createElement("input");
-    radio.type = "radio";
-    radio.name = "bookingArea";
-    radio.value = item.id;
-    radio.checked = item.id === optionId;
-    const name = document.createElement("span");
-    name.className = "booking-zone-choice__name";
-    name.textContent = item.name[lang];
-    const price = document.createElement("span");
-    price.className = "booking-zone-choice__price";
-    price.textContent = priceText(item);
-    label.append(radio, name, price);
-    zoneOptions.append(label);
-  });
-}
-
 const normalizeSearch = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 function renderServices() {
   const root = $("#booking-services");
@@ -176,110 +168,88 @@ function renderServices() {
   $("#booking-search-clear").hidden = !searchQuery;
   $("#booking-search-empty").hidden = matches.length > 0;
   $("#booking-results-count").textContent = `${matches.length} ${tr(matches.length === 1 ? "oneService" : "serviceCount")}`;
-  matches
-    .forEach((item) => {
-      const selected = item.id === serviceId;
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = `booking-service${selected ? " is-selected" : ""}`;
-      button.setAttribute("aria-pressed", String(selected));
-      button.dataset.id = item.id;
-      const mark = document.createElement("span");
-      mark.className = "booking-service__mark";
-      mark.setAttribute("aria-hidden", "true");
-      mark.textContent = selected ? "✓" : "";
-      const name = document.createElement("span");
-      name.className = "booking-service__name";
-      name.textContent = item.name[lang];
-      const price = document.createElement("span");
-      price.className = "booking-service__price";
-      price.textContent = item.options?.length ? tr("areas") : priceText(item);
-      button.append(mark, name, price);
-      button.addEventListener("click", () => {
-        if (serviceId !== item.id) optionId = "";
-        serviceId = item.id;
-        history.replaceState(null, "", `/reservar?service=${encodeURIComponent(serviceId)}`);
-        clearError();
-        setPickerOpen(false, true);
-      });
-      root.append(button);
-    });
+  matches.forEach((item) => {
+    if (item.options?.length) {
+      const group = document.createElement('details');
+      group.className = 'picker-areas';
+      group.open = item.id === serviceId || !!searchQuery;
+      const summary = document.createElement('summary');
+      summary.textContent = `${item.name[lang]} · ${tr('areas')}`;
+      group.append(summary);
+      item.options.forEach((option) => group.append(serviceButton(item, option)));
+      root.append(group);
+    } else root.append(serviceButton(item));
+  });
 }
-
-function setPickerOpen(open, focus = false) {
+function serviceButton(item, option) {
+  const key = itemKey({ serviceId: item.id, optionId: option?.id });
+  const selected = selectedItems.some((entry) => itemKey(entry) === key);
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = `booking-service${selected ? ' is-selected' : ''}`;
+  button.dataset.id = key;
+  button.setAttribute('aria-pressed', String(selected));
+  const mark = document.createElement('span'); mark.className = 'booking-service__mark'; mark.textContent = selected ? '✓' : '+'; mark.setAttribute('aria-hidden', 'true');
+  const name = document.createElement('span'); name.className = 'booking-service__name'; name.textContent = (option || item).name[lang];
+  const price = document.createElement('span'); price.className = 'booking-service__price'; price.textContent = priceText(option || item);
+  button.append(mark, name, price);
+  button.setAttribute('aria-label', `${selected ? tr('remove') : tr('addService')} ${item.name[lang]}${option ? ' · ' + option.name[lang] : ''}, ${price.textContent}`);
+  button.addEventListener('click', () => {
+    if (selected) selectedItems = selectedItems.filter((entry) => itemKey(entry) !== key);
+    else {
+      if (selectedItems.length >= MAX_ITEMS) { $('#picker-count').textContent = tr('maxItems'); return; }
+      selectedItems.push(resolveCart([{ serviceId: item.id, optionId: option?.id }])[0]);
+    }
+    clearError();
+    // Replace only this row, preserving scroll and expanded groups.
+    const replacement = serviceButton(item, option);
+    button.replaceWith(replacement); replacement.focus({ preventScroll: true });
+    updateSummary();
+  });
+  return button;
+}
+function setPickerOpen(open, opener = null) {
   pickerOpen = open;
-  if (open && service()) activeCategory = service().category;
-  searchQuery = "";
-  $("#booking-search").value = "";
-  $("#booking-picker").hidden = !open;
-  $("#booking-picker-return").hidden = !service();
-  $("#booking-next").hidden = step === 4 || (step === 1 && open);
-  renderCategories();
-  renderServices();
-  renderOptions();
-  updateSummary();
-  if (focus) {
-    const target = open ? $("#booking-categories .is-active") : $(".booking-selection-inline__name");
-    target?.focus({ preventScroll: true });
-    (open ? $("#booking-picker") : $("#booking-selection-inline"))
-      .scrollIntoView({ block: "start", behavior: "auto" });
-  }
+  const dialog = $('#service-picker');
+  if (open) {
+    pickerReturnFocus = opener || $('#booking-add');
+    renderCategories(); renderServices();
+    dialog.showModal();
+    document.documentElement.classList.add('picker-is-open');
+    $('#picker-close').focus({ preventScroll: true });
+  } else if (dialog.open) dialog.close();
 }
-
 function updateSummary() {
-  const root = $("#booking-summary-detail");
-  const inline = $("#booking-selection-inline");
-  $("[data-t='step1lead']").textContent = tr(pickerOpen ? "step1lead" : "selectionLead");
-  root.replaceChildren();
-  inline.replaceChildren();
-  inline.hidden = !service() || pickerOpen;
-  if (!service()) {
-    const empty = document.createElement("p");
-    empty.className = "booking-summary__empty";
-    empty.textContent = tr("summaryEmpty");
-    root.append(empty);
-    return;
+  const root = $('#booking-summary-detail');
+  const inline = $('#booking-selection-inline');
+  root.replaceChildren(); inline.replaceChildren();
+  $('#picker-count').textContent = `${selectedItems.length} ${tr(selectedItems.length === 1 ? 'oneService' : 'serviceCount')} · ${tr('depositLabel')}: ${money(totals().depositCents)}`;
+  if (!selectedItems.length) {
+    const empty = document.createElement('p'); empty.className = 'booking-summary__empty'; empty.textContent = tr('summaryEmpty');
+    root.append(empty); inline.append(empty.cloneNode(true)); return;
   }
-  const name = document.createElement("p");
-  name.className = "booking-summary__service";
-  name.textContent = service().name[lang];
-  root.append(name);
-  if (option()) {
-    const zone = document.createElement("p");
-    zone.className = "booking-summary__zone";
-    zone.textContent = option().name[lang];
-    root.append(zone);
+  selectedItems.forEach((item) => {
+    const row = document.createElement('article'); row.className = 'booking-cart-item';
+    const text = document.createElement('div');
+    const name = document.createElement('h3'); name.textContent = fullName(item);
+    const price = document.createElement('p'); price.textContent = priceText(item);
+    text.append(name, price);
+    const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = tr('remove');
+    remove.setAttribute('aria-label', `${tr('remove')} ${fullName(item)}`);
+    remove.addEventListener('click', () => {
+      selectedItems = selectedItems.filter((entry) => itemKey(entry) !== itemKey(item)); updateSummary();
+      $('#booking-add').focus({ preventScroll: true });
+    });
+    row.append(text, remove); inline.append(row);
+    const summary = document.createElement('p'); summary.className = 'booking-summary__item'; summary.textContent = `${fullName(item)} · ${priceText(item)}`; root.append(summary);
+  });
+  const total = document.createElement('p'); total.className = 'booking-summary__price'; total.textContent = `${tr('total')}: ${totalText()}`; root.append(total);
+  const deposit = document.createElement('p'); deposit.className = 'booking-summary__deposit'; deposit.textContent = `${tr('depositLabel')}: ${money(totals().depositCents)} (${selectedItems.length} × US$40)`; root.append(deposit);
+  const pending = document.createElement('p'); pending.className = 'booking-summary__pending'; pending.textContent = tr(totals().policyPending ? 'lowPricePending' : 'depositPending'); root.append(pending);
+  if ($('#booking-date').value && $('#booking-time').value) {
+    const when = document.createElement('p'); when.className = 'booking-summary__when'; when.textContent = `${$('#booking-date').value} · ${$('#booking-time').value} (Miami)`; root.append(when);
   }
-  const price = document.createElement("p");
-  price.className = "booking-summary__price";
-  price.textContent = service().options?.length && !option() ? tr("areas") : priceText(chosenPrice());
-  root.append(price);
-  const inlineLabel = document.createElement("span");
-  inlineLabel.className = "booking-selection-inline__label";
-  inlineLabel.textContent = tr("selectedService");
-  const inlineName = document.createElement("h3");
-  inlineName.className = "booking-selection-inline__name";
-  inlineName.tabIndex = -1;
-  inlineName.textContent = service().name[lang] + (option() ? ` · ${option().name[lang]}` : "");
-  const inlinePrice = document.createElement("span");
-  inlinePrice.className = "booking-selection-inline__price";
-  inlinePrice.textContent = price.textContent;
-  const change = document.createElement("button");
-  change.type = "button";
-  change.className = "booking-selection-inline__change";
-  change.textContent = tr("changeService");
-  change.addEventListener("click", () => { clearError(); setPickerOpen(true, true); });
-  inline.append(inlineLabel, inlineName, inlinePrice, change);
-  if ($("#booking-date").value && $("#booking-time").value) {
-    const when = document.createElement("p");
-    when.className = "booking-summary__when";
-    when.textContent = `${$("#booking-date").value} · ${$("#booking-time").value} (Miami)`;
-    root.append(when);
-  }
-  const pending = document.createElement("p");
-  pending.className = "booking-summary__pending";
-  pending.textContent = tr(depositRequired() ? "depositPending" : "pending");
-  root.append(pending);
+  if (step === 4) renderReview();
 }
 
 function clearError() {
@@ -304,7 +274,7 @@ function showStep(next, focus = true) {
     else item.removeAttribute("aria-current");
   });
   $("#booking-back").hidden = step === 1;
-  $("#booking-next").hidden = step === 4 || (step === 1 && pickerOpen);
+  $("#booking-next").hidden = step === 4;
   $("#booking-submit").hidden = step !== 4;
   if (step === 4) renderReview();
   if (focus) {
@@ -318,14 +288,8 @@ function showStep(next, focus = true) {
 }
 
 function validStep() {
-  if (step === 1) {
-    if (!service()) return showError("selectServiceError"), false;
-    if (service().options?.length && !option()) {
-      showError("selectAreaError");
-      $("#booking-zone-options input")?.focus();
-      return false;
-    }
-  }
+  if (step === 1 && !selectedItems.length) { showError('selectServiceError'); $('#booking-add').focus(); return false; }
+  if (step === 1 && totals().policyPending) { showError('lowPricePending'); return false; }
   if (step === 2) {
     const date = $("#booking-date");
     const time = $("#booking-time");
@@ -351,10 +315,9 @@ function renderReview() {
   $("[data-step='4'] [data-t='pending']").textContent = tr(deposit ? "depositPending" : "pending");
   $("#booking-submit").innerHTML = `${tr(deposit ? "depositSubmit" : "submit")} <span aria-hidden="true">→</span>`;
   const rows = [
-    [tr("service"), service().name[lang]],
-    ...(option() ? [[tr("area"), option().name[lang]]] : []),
-    [tr("price"), priceText(chosenPrice())],
-    ...(deposit ? [[tr("depositLabel"), tr("depositValue")]] : []),
+    ...selectedItems.map((item) => [fullName(item), priceText(item)]),
+    [tr('total'), totalText()],
+    [tr('depositLabel'), `${money(totals().depositCents)} (${selectedItems.length} × US$40)`],
     [tr("preferred"), `${$("#booking-date").value} · ${$("#booking-time").value} (Miami)`],
     [tr("contact"), `${$("#booking-name").value.trim()} · ${$("#booking-phone").value.trim()}`],
   ];
@@ -399,7 +362,6 @@ function setLang(next, save = false) {
   $("#booking-search-clear").setAttribute("aria-label", tr("clearSearch"));
   renderCategories();
   renderServices();
-  renderOptions();
   updateSummary();
   if (step === 4) renderReview();
   if (save) try { localStorage.setItem("hesed-lang", lang); } catch {}
@@ -422,13 +384,15 @@ function resetSearch() {
 }
 $("#booking-search-clear").addEventListener("click", resetSearch);
 $("#booking-search-reset").addEventListener("click", resetSearch);
-$("#booking-picker-return").addEventListener("click", () => setPickerOpen(false, true));
-$("#booking-zone-options").addEventListener("change", (event) => {
-  if (!event.target.matches('input[type="radio"]') || !event.target.checked) return;
-  optionId = event.target.value;
-  clearError();
-  updateSummary();
+$('#booking-add').addEventListener('click', (event) => setPickerOpen(true, event.currentTarget));
+$('#booking-add-summary').addEventListener('click', (event) => setPickerOpen(true, event.currentTarget));
+$('#picker-close').addEventListener('click', () => setPickerOpen(false));
+$('#picker-done').addEventListener('click', () => setPickerOpen(false));
+$('#service-picker').addEventListener('close', () => {
+  pickerOpen = false; document.documentElement.classList.remove('picker-is-open');
+  (pickerReturnFocus?.isConnected ? pickerReturnFocus : $('#booking-add')).focus({ preventScroll: true });
 });
+$('#service-picker').addEventListener('keydown', (event) => { if (event.key === 'Escape') { event.preventDefault(); setPickerOpen(false); } });
 ["#booking-date", "#booking-time"].forEach((selector) =>
   $(selector).addEventListener("change", updateSummary));
 $("#booking-back").addEventListener("click", () => showStep(step - 1));
@@ -436,12 +400,14 @@ $("#booking-next").addEventListener("click", () => { if (validStep()) showStep(s
 $("#booking-wizard").addEventListener("submit", async (event) => {
   event.preventDefault();
   if (step !== 4) return;
+  if (!selectedItems.length) { showStep(1); showError('selectServiceError'); return; }
+  if (totals().policyPending) { showError('lowPricePending'); return; }
   const button = $("#booking-submit");
   button.disabled = true;
   button.textContent = tr("sending");
   clearError();
   const payload = {
-    serviceId, optionId, date: $("#booking-date").value, time: $("#booking-time").value,
+    items: selectedItems.map(({serviceId, optionId}) => ({serviceId, optionId})), date: $("#booking-date").value, time: $("#booking-time").value,
     name: $("#booking-name").value.trim(), phone: $("#booking-phone").value.trim(),
     email: $("#booking-email").value.trim(), note: $("#booking-note").value.trim(),
     consent: $("#booking-consent").checked ? "on" : "", website: $('[name="website"]').value,
@@ -463,7 +429,7 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
     $("#booking-reference").textContent = `${tr("reference")}: ${result.id}`;
     const message = [
       lang === "en" ? "Hello María, I submitted an appointment request." : "Hola María, envié una solicitud de cita.",
-      `${tr("service")}: ${service().name[lang]}${option() ? ` · ${option().name[lang]}` : ""}`,
+      `${tr("service")}: ${selectedItems.map(fullName).join(", ")}`,
       `${tr("preferred")}: ${payload.date} ${payload.time} (Miami)`,
       `${tr("reference")}: ${result.id}`,
     ].join("\n");
@@ -479,7 +445,10 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
 });
 
 // A service link from the home page arrives with its selection and price ready.
-if (service()) activeCategory = service().category;
+if (serviceId) {
+  const initial = byId.get(serviceId); activeCategory = initial.category;
+  if (!initial.options?.length) selectedItems = resolveCart([{serviceId}]);
+}
 setLang(lang);
-setPickerOpen(pickerOpen);
+if (serviceId && byId.get(serviceId).options?.length) setPickerOpen(true);
 showStep(1, false);
