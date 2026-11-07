@@ -10,7 +10,7 @@ import catalog from '../src/booking-catalog.json' with {type:'json'};
 
 function setup() {
   const db = new DatabaseSync(':memory:');
-  for (const file of ['0001_booking_requests','0002_merktop_deposits','0003_multi_service_reviews']) db.exec(readFileSync(new URL(`../migrations/${file}.sql`, import.meta.url),'utf8'));
+  for (const file of ['0001_booking_requests','0002_merktop_deposits','0003_multi_service_reviews','0004_google_review_link']) db.exec(readFileSync(new URL(`../migrations/${file}.sql`, import.meta.url),'utf8'));
   const env = { BOOKING_ADMIN_TOKEN:'test-admin', MERKTOP_SITE_READ_KEY:'test-read', MERKTOP_WEBHOOK_SECRET:'test-secret',
     BOOKINGS_DB:{prepare(sql){const stmt=db.prepare(sql);let args=[];const api={bind(...values){args=values;return api},async first(){return stmt.get(...args)||null},async all(){return {results:stmt.all(...args)}},async run(){return {meta:{changes:Number(stmt.run(...args).changes)}}}};return api}} };
   return {db,env};
@@ -49,16 +49,27 @@ test('mixed quoted/from-price services collect per-service deposits without asse
 test('low-price deposit decisions cannot silently overcharge',async()=>{
   const {db,env}=setup();const r=await worker.fetch(req('/api/bookings',{...fields,items:[{serviceId:'depilacion-cera',optionId:'area-2'}]}),env);assert.equal(r.status,409);assert.equal(db.prepare('SELECT COUNT(*) n FROM booking_requests').get().n,0);db.close();
 });
-test('reviews require a completed visit, a valid private invitation and consent; publish all ratings without exposing booking details',async()=>{
-  const {db,env}=setup();const id=crypto.randomUUID();db.prepare("INSERT INTO booking_requests(id,service_id,service_name,requested_date,requested_time,customer_name,customer_phone,status) VALUES(?,?,?,'2020-01-01','10:00','Private Name','2025550999','confirmed')").run(id,'facial-detox','Facial Detox');
-  assert.equal((await worker.fetch(req(`/api/admin/bookings/${id}/complete`,{}),env)).status,401);
-  const completion=await worker.fetch(req(`/api/admin/bookings/${id}/complete`,{},true),env);assert.equal(completion.status,200);const {review_url}=await completion.json();const token=new URL(review_url).hash.slice(1);
-  const review={token,name:'First name',rating:1,comment:'This is a critical but genuine review.',consent:true};
-  assert.equal((await worker.fetch(req('/api/reviews',{...review,token:token+'a'}),env)).status,403);
-  assert.equal((await worker.fetch(req('/api/reviews',{...review,consent:false}),env)).status,400);
-  assert.equal((await worker.fetch(req('/api/reviews',review),env)).status,201);
-  assert.equal((await worker.fetch(req('/api/reviews',review),env)).status,409);
-  assert.deepEqual((await (await worker.fetch(req('/api/reviews',undefined,false,'GET'),env)).json()).reviews,[]);
-  const row=db.prepare('SELECT * FROM customer_reviews').get();assert.equal((await worker.fetch(req('/api/admin/reviews/'+row.id,{status:'published'},true,'PATCH'),env)).status,200);
-  const publicResponse=await (await worker.fetch(req('/api/reviews',undefined,false,'GET'),env)).json();assert.equal(publicResponse.reviews[0].rating,1);assert.equal('booking_id' in publicResponse.reviews[0],false);assert.equal('customer_phone' in publicResponse.reviews[0],false);db.close();
+test('only the admin can enable a Google composer, which replaces local reviews and personal invitations', async () => {
+  const { db, env } = setup();
+  const settingsPath = '/api/admin/reviews';
+  const publicSettings = async () => (await worker.fetch(req('/api/reviews', undefined, false, 'GET'), env)).json();
+  const save = (review_url, admin = true) => worker.fetch(req(settingsPath, { review_url }, admin, 'PUT'), env);
+  assert.equal((await publicSettings()).review_url, null);
+  const link = 'https://g.page/r/test-fixture/review';
+  assert.equal((await save(link, false)).status, 401);
+  for (const invalid of ['https://example.com/review','https://g.page.example.org/r/test/review','https://g.page/r/test','https://g.page/r/test/../redirect']) {
+    assert.equal((await save(invalid)).status, 400);
+  }
+  assert.equal((await save(link)).status, 200);
+  assert.equal((await publicSettings()).review_url, link);
+  assert.equal((await worker.fetch(req('/api/reviews', { rating: 5 }), env)).status, 410);
+  const id = crypto.randomUUID();
+  db.prepare("INSERT INTO booking_requests(id,service_id,service_name,requested_date,requested_time,customer_name,customer_phone,status) VALUES(?,?,?,'2020-01-01','10:00','Private Name','2025550999','confirmed')").run(id, 'facial-detox', 'Facial Detox');
+  const complete = `/api/admin/bookings/${id}/complete`;
+  assert.equal((await worker.fetch(req(complete, {}), env)).status, 401);
+  const result = await worker.fetch(req(complete, {}, true), env);
+  assert.equal((await result.json()).review_url, link);
+  assert.equal((await save('')).status, 200);
+  assert.equal((await publicSettings()).review_url, null);
+  db.close();
 });

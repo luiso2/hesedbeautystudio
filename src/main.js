@@ -193,7 +193,11 @@ categoryButtons.forEach((button) => {
   button.id = `category-${button.dataset.categoryOpen}`;
   button.closest(".category-choice").querySelector("h3").id =
     `category-title-${button.dataset.categoryOpen}`;
-  button.addEventListener("click", () => selectCategory(button.dataset.categoryOpen));
+  button.addEventListener("click", (event) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    selectCategory(button.dataset.categoryOpen);
+  });
 });
 panels.forEach((panel) => {
   panel.id = `panel-${panel.dataset.panel}`;

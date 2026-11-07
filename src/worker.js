@@ -4,7 +4,7 @@ import videoSizes from "./video-sizes.json" with { type: "json" };
 import { findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent, signCartPayment } from "./merktop.js";
 
 import { resolveCart, cartTotals } from './booking-cart.js';
-import { reviewRoutes, reviewLink } from './reviews-api.js';
+import { reviewRoutes, googleReviewUrl } from './reviews-api.js';
 
 const json = (data, status = 200) =>
   Response.json(data, {
@@ -217,8 +217,9 @@ async function adminBookings(request, env, url) {
       ? env.BOOKINGS_DB.prepare("SELECT * FROM booking_requests WHERE status = ? ORDER BY created_at DESC LIMIT 200").bind(status)
       : env.BOOKINGS_DB.prepare("SELECT * FROM booking_requests ORDER BY created_at DESC LIMIT 200");
     const { results } = await statement.all();
+    const reviewUrl = await googleReviewUrl(env);
     for (const row of results) {
-      if (row.completed_at) row.review_url = await reviewLink(row, env.BOOKING_ADMIN_TOKEN, url.origin);
+      if (row.completed_at) row.review_url = reviewUrl;
     }
     return json({ bookings: results });
   }

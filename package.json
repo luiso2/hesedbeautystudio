@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/build-video-manifest.mjs",
+    "predev": "node scripts/build-video-manifest.mjs && node scripts/build-search-pages.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/build-video-manifest.mjs",
+    "prebuild": "node scripts/build-video-manifest.mjs && node scripts/build-search-pages.mjs",
     "build": "vite build",
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy"

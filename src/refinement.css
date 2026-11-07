@@ -354,3 +354,4 @@ body { background: var(--paper); }
 @media(prefers-reduced-motion:reduce) {
   :where(.btn,.booking-next,.booking-back,.booking-add,.card__book,.card__info,.category-choice__button) { transition: none; transform: none!important; }
 }
+[data-google-review][hidden] { display: none; }

@@ -1,13 +1,7 @@
 // English dictionary. Keys mirror data-i18n attributes in index.html.
 // Spanish is the source of truth in the markup and is captured at runtime.
 export const EN = {
-  "reviews.nav": "Reviews",
-  "reviews.eyebrow": "SHARED EXPERIENCES",
-  "reviews.title": "Your experience matters.",
-  "reviews.lead": "After your visit, share how you felt. Every review helps us care for you better.",
-  "reviews.write": "Share my experience",
-  "reviews.verified": "Reviews from clients with a verified visit.",
-  "reviews.empty": "This space is ready to welcome our clients’ experiences.",
+  "reviews.google": "Write a Google review",
 
   "nav.services": "Treatments",
   "nav.ritual": "The Ritual",
@@ -319,7 +313,7 @@ Object.assign(EN, {
   "hero.t1": "The art of",
   "hero.t2": "self-care.",
   "hero.lead":
-    "A moment for yourself. Care tailored to you. Discover treatments that bring together technique, wellbeing and natural beauty.",
+    "At my Miami studio, you can book facials, wood therapy and manual lymphatic drainage. Explore each treatment and check the price before requesting your appointment.",
   "hero.cta1": "Explore treatments",
   "hero.cta2": "Book my assessment",
   "hero.care": "In the hands of María Hesed",

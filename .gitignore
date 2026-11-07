@@ -9,3 +9,7 @@ dist
 !.env.example
 .secrets/
 worker-configuration.d.ts
+
+# Catalog landing pages and sitemap generated before dev/build.
+/public/tratamientos/
+/public/sitemap.xml
