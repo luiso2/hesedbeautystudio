@@ -28,8 +28,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Italiana&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/src/style.css" />
-    <link rel="stylesheet" href="/src/reservar.css" />
     <link rel="stylesheet" href="/src/refinement.css" />
+    <link rel="stylesheet" href="/src/reservar.css" />
   </head>
   <body class="booking-page">
     <a class="skip-link" href="#booking-main" data-t="skip">Saltar a la reserva</a>
@@ -64,18 +64,28 @@
           <section class="booking-step" data-step="1" aria-labelledby="booking-step-title-1">
             <p class="booking-step__count" data-t="step1count">PASO 01 / 04</p>
             <h2 id="booking-step-title-1" data-t="step1title">Elige tu tratamiento</h2>
-            <p class="booking-step__lead" data-t="step1lead">Selecciona un servicio para ver su precio. Si tiene zonas, elige la tuya después.</p>
+            <p class="booking-step__lead" data-t="step1lead">Busca tu tratamiento o elige una categoría. Toca el servicio que prefieras para continuar.</p>
             <div class="booking-selection-inline" id="booking-selection-inline" hidden aria-live="polite"></div>
+            <div class="booking-picker" id="booking-picker">
+              <button class="booking-picker__return" id="booking-picker-return" type="button" hidden data-t="returnSelection">Volver a mi selección</button>
+              <label class="booking-search-label" for="booking-search" data-t="searchService">Buscar un servicio</label>
+              <div class="booking-search">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+                <input id="booking-search" type="search" autocomplete="off" enterkeyhint="search" placeholder="Ej. facial, maderoterapia…" aria-controls="booking-services" />
+                <button id="booking-search-clear" type="button" aria-label="Borrar búsqueda" hidden>×</button>
+              </div>
+              <div class="booking-categories" id="booking-categories" role="group" aria-label="Categorías de servicios"></div>
+              <p class="booking-results-count" id="booking-results-count" role="status" aria-live="polite"></p>
+              <div class="booking-services" id="booking-services" role="group" aria-label="Tratamientos"></div>
+              <div class="booking-search-empty" id="booking-search-empty" hidden>
+                <p data-t="noResults">No encontramos ese tratamiento. Prueba otro nombre o mira todos los servicios.</p>
+                <button type="button" id="booking-search-reset" data-t="viewAll">Ver todos los servicios</button>
+              </div>
+            </div>
             <fieldset class="booking-zone-prices" id="booking-zone-prices" hidden>
               <legend data-t="chooseArea">Selecciona la zona</legend>
               <div class="booking-zone-options" id="booking-zone-options"></div>
             </fieldset>
-            <div class="booking-categories" id="booking-categories" role="group" aria-label="Categorías de servicios"></div>
-            <div class="booking-services" id="booking-services" role="group" aria-label="Tratamientos"></div>
-            <div class="booking-option" id="booking-option-wrap" hidden>
-              <label for="booking-option" data-t="chooseArea">Selecciona la zona</label>
-              <select id="booking-option" name="optionId"><option value="">Seleccionar zona</option></select>
-            </div>
           </section>
 
           <section class="booking-step" data-step="2" aria-labelledby="booking-step-title-2" hidden>

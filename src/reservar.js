@@ -15,8 +15,12 @@ const translations = {
     skip: "Saltar a la reserva", close: "Cerrar", eyebrow: "MARÍA HESED · RESERVAS",
     title: "Reserva tu momento.", intro: "Elige tu tratamiento, consulta el precio y dinos cuándo prefieres venir. María confirmará tu cita personalmente.",
     progressService: "Servicio", progressDate: "Fecha", progressDetails: "Tus datos", progressReview: "Revisión",
-    step1count: "PASO 01 / 04", step1title: "Elige tu tratamiento", step1lead: "Selecciona un servicio para ver su precio. Si tiene zonas, elige la tuya después.",
-    chooseArea: "Selecciona la zona", selectArea: "Seleccionar zona", areas: "Precios por zona",
+    step1count: "PASO 01 / 04", step1title: "Elige tu tratamiento", step1lead: "Busca tu tratamiento o elige una categoría. Toca el servicio que prefieras para continuar.",
+    searchService: "Buscar un servicio", searchPlaceholder: "Ej. facial, maderoterapia…", clearSearch: "Borrar búsqueda",
+    noResults: "No encontramos ese tratamiento. Prueba otro nombre o mira todos los servicios.", viewAll: "Ver todos los servicios",
+    selectedService: "Servicio seleccionado", changeService: "Cambiar servicio", returnSelection: "Volver a mi selección",
+    selectionLead: "Comprueba tu elección. Puedes cambiar el servicio antes de continuar.",
+    serviceCount: "servicios", oneService: "servicio", chooseArea: "Selecciona la zona", areas: "Precios por zona",
     step2count: "PASO 02 / 04", step2title: "¿Cuándo te gustaría venir?", step2lead: "Indica una fecha y hora preferidas en Miami. Te confirmaremos la disponibilidad antes de fijar la cita.",
     date: "Fecha preferida", time: "Hora preferida · Miami", noLiveAvailability: "Todavía no mostramos horarios disponibles en tiempo real. Esta fecha y hora son una solicitud, no una cita confirmada.",
     step3count: "PASO 03 / 04", step3title: "Tus datos de contacto", step3lead: "María usará estos datos para confirmar la disponibilidad y los detalles de tu tratamiento.",
@@ -46,8 +50,12 @@ const translations = {
     skip: "Skip to booking", close: "Close", eyebrow: "MARÍA HESED · BOOKINGS",
     title: "Book your moment.", intro: "Choose your treatment, see its price and tell us when you would like to visit. María will confirm your appointment personally.",
     progressService: "Service", progressDate: "Date", progressDetails: "Your details", progressReview: "Review",
-    step1count: "STEP 01 / 04", step1title: "Choose your treatment", step1lead: "Select a service to see its price. If it has treatment areas, choose yours next.",
-    chooseArea: "Choose an area", selectArea: "Select an area", areas: "Prices by area",
+    step1count: "STEP 01 / 04", step1title: "Choose your treatment", step1lead: "Search for a treatment or choose a category. Tap the service you would like to continue.",
+    searchService: "Search for a service", searchPlaceholder: "E.g. facial, wood therapy…", clearSearch: "Clear search",
+    noResults: "We couldn't find that treatment. Try another name or view all services.", viewAll: "View all services",
+    selectedService: "Selected service", changeService: "Change service", returnSelection: "Back to my selection",
+    selectionLead: "Check your selection. You can change your service before continuing.",
+    serviceCount: "services", oneService: "service", chooseArea: "Choose an area", areas: "Prices by area",
     step2count: "STEP 02 / 04", step2title: "When would you like to visit?", step2lead: "Choose your preferred date and time in Miami. We will confirm availability before setting the appointment.",
     date: "Preferred date", time: "Preferred time · Miami", noLiveAvailability: "Live availability is not shown yet. Your date and time are a request, not a confirmed appointment.",
     step3count: "STEP 03 / 04", step3title: "Your contact details", step3lead: "María will use these details to confirm availability and your treatment.",
@@ -78,10 +86,12 @@ const translations = {
 let lang = "es";
 try { lang = localStorage.getItem("hesed-lang") === "en" ? "en" : "es"; } catch {}
 let step = 1;
-let activeCategory = "all";
+let activeCategory = "corporal";
 let serviceId = byId.has(new URLSearchParams(location.search).get("service"))
   ? new URLSearchParams(location.search).get("service") : "";
 let optionId = "";
+let pickerOpen = !serviceId;
+let searchQuery = "";
 const tr = (key) => translations[lang][key];
 const service = () => byId.get(serviceId);
 const option = () => service()?.options?.find((entry) => entry.id === optionId);
@@ -116,6 +126,8 @@ function renderCategories(focusActive = false) {
     button.setAttribute("aria-pressed", String(key === activeCategory));
     button.addEventListener("click", () => {
       activeCategory = key;
+      searchQuery = "";
+      $("#booking-search").value = "";
       renderCategories(true);
       renderServices();
     });
@@ -125,43 +137,46 @@ function renderCategories(focusActive = false) {
 }
 
 function renderOptions() {
-  const wrap = $("#booking-option-wrap");
-  const select = $("#booking-option");
   const options = service()?.options || [];
-  const showZonePrices = service()?.category === "fibroblast" && options.length > 0;
   const zonePrices = $("#booking-zone-prices");
   const zoneOptions = $("#booking-zone-options");
-  wrap.hidden = !options.length || showZonePrices;
-  zonePrices.hidden = !showZonePrices;
+  zonePrices.hidden = pickerOpen || !options.length;
   zoneOptions.replaceChildren();
-  select.replaceChildren(new Option(tr("selectArea"), ""));
   options.forEach((item) => {
-    select.add(new Option(`${item.name[lang]} · ${priceText(item)}`, item.id));
-    if (showZonePrices) {
-      const label = document.createElement("label");
-      label.className = "booking-zone-choice";
-      const radio = document.createElement("input");
-      radio.type = "radio";
-      radio.name = "bookingArea";
-      radio.value = item.id;
-      radio.checked = item.id === optionId;
-      const name = document.createElement("span");
-      name.className = "booking-zone-choice__name";
-      name.textContent = item.name[lang];
-      const price = document.createElement("span");
-      price.className = "booking-zone-choice__price";
-      price.textContent = priceText(item);
-      label.append(radio, name, price);
-      zoneOptions.append(label);
-    }
+    const label = document.createElement("label");
+    label.className = "booking-zone-choice";
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "bookingArea";
+    radio.value = item.id;
+    radio.checked = item.id === optionId;
+    const name = document.createElement("span");
+    name.className = "booking-zone-choice__name";
+    name.textContent = item.name[lang];
+    const price = document.createElement("span");
+    price.className = "booking-zone-choice__price";
+    price.textContent = priceText(item);
+    label.append(radio, name, price);
+    zoneOptions.append(label);
   });
-  select.value = options.some((item) => item.id === optionId) ? optionId : "";
 }
 
-function renderServices(focusSelected = false) {
+const normalizeSearch = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+function renderServices() {
   const root = $("#booking-services");
   root.replaceChildren();
-  catalog.filter((item) => activeCategory === "all" || item.category === activeCategory)
+  const words = normalizeSearch(searchQuery.trim()).split(/\s+/).filter(Boolean);
+  const matches = catalog.filter((item) => {
+    if (activeCategory !== "all" && item.category !== activeCategory) return false;
+    const category = categories.find(([key]) => key === item.category);
+    const text = normalizeSearch([item.name.es, item.name.en, ...category.slice(1),
+      ...(item.options || []).flatMap((entry) => [entry.name.es, entry.name.en])].join(" "));
+    return words.every((word) => text.includes(word));
+  });
+  $("#booking-search-clear").hidden = !searchQuery;
+  $("#booking-search-empty").hidden = matches.length > 0;
+  $("#booking-results-count").textContent = `${matches.length} ${tr(matches.length === 1 ? "oneService" : "serviceCount")}`;
+  matches
     .forEach((item) => {
       const selected = item.id === serviceId;
       const button = document.createElement("button");
@@ -172,7 +187,7 @@ function renderServices(focusSelected = false) {
       const mark = document.createElement("span");
       mark.className = "booking-service__mark";
       mark.setAttribute("aria-hidden", "true");
-      mark.textContent = selected ? "✓" : "+";
+      mark.textContent = selected ? "✓" : "";
       const name = document.createElement("span");
       name.className = "booking-service__name";
       name.textContent = item.name[lang];
@@ -181,35 +196,43 @@ function renderServices(focusSelected = false) {
       price.textContent = item.options?.length ? tr("areas") : priceText(item);
       button.append(mark, name, price);
       button.addEventListener("click", () => {
+        if (serviceId !== item.id) optionId = "";
         serviceId = item.id;
-        optionId = "";
         history.replaceState(null, "", `/reservar?service=${encodeURIComponent(serviceId)}`);
         clearError();
-        renderServices(true);
-        renderOptions();
-        updateSummary();
-        const zones = $("#booking-zone-prices");
-        if (!zones.hidden) {
-          zones.scrollIntoView({ block: "nearest" });
-          $("input", zones)?.focus({ preventScroll: true });
-        }
+        setPickerOpen(false, true);
       });
       root.append(button);
     });
-  const selected = $(".booking-service.is-selected", root);
-  if (selected) {
-    root.scrollTop = Math.max(0,
-      selected.offsetTop - root.offsetTop - (root.clientHeight - selected.offsetHeight) / 2);
-    if (focusSelected) selected.focus({ preventScroll: true });
+}
+
+function setPickerOpen(open, focus = false) {
+  pickerOpen = open;
+  if (open && service()) activeCategory = service().category;
+  searchQuery = "";
+  $("#booking-search").value = "";
+  $("#booking-picker").hidden = !open;
+  $("#booking-picker-return").hidden = !service();
+  $("#booking-next").hidden = step === 4 || (step === 1 && open);
+  renderCategories();
+  renderServices();
+  renderOptions();
+  updateSummary();
+  if (focus) {
+    const target = open ? $("#booking-categories .is-active") : $(".booking-selection-inline__name");
+    target?.focus({ preventScroll: true });
+    (open ? $("#booking-picker") : $("#booking-selection-inline"))
+      .scrollIntoView({ block: "start", behavior: "auto" });
   }
 }
 
 function updateSummary() {
   const root = $("#booking-summary-detail");
   const inline = $("#booking-selection-inline");
+  $("[data-t='step1lead']").textContent = tr(pickerOpen ? "step1lead" : "selectionLead");
   root.replaceChildren();
   inline.replaceChildren();
-  inline.hidden = !service();
+  inline.hidden = !service() || pickerOpen;
   if (!service()) {
     const empty = document.createElement("p");
     empty.className = "booking-summary__empty";
@@ -231,11 +254,22 @@ function updateSummary() {
   price.className = "booking-summary__price";
   price.textContent = service().options?.length && !option() ? tr("areas") : priceText(chosenPrice());
   root.append(price);
-  const inlineName = document.createElement("strong");
+  const inlineLabel = document.createElement("span");
+  inlineLabel.className = "booking-selection-inline__label";
+  inlineLabel.textContent = tr("selectedService");
+  const inlineName = document.createElement("h3");
+  inlineName.className = "booking-selection-inline__name";
+  inlineName.tabIndex = -1;
   inlineName.textContent = service().name[lang] + (option() ? ` · ${option().name[lang]}` : "");
   const inlinePrice = document.createElement("span");
+  inlinePrice.className = "booking-selection-inline__price";
   inlinePrice.textContent = price.textContent;
-  inline.append(inlineName, inlinePrice);
+  const change = document.createElement("button");
+  change.type = "button";
+  change.className = "booking-selection-inline__change";
+  change.textContent = tr("changeService");
+  change.addEventListener("click", () => { clearError(); setPickerOpen(true, true); });
+  inline.append(inlineLabel, inlineName, inlinePrice, change);
   if ($("#booking-date").value && $("#booking-time").value) {
     const when = document.createElement("p");
     when.className = "booking-summary__when";
@@ -270,7 +304,7 @@ function showStep(next, focus = true) {
     else item.removeAttribute("aria-current");
   });
   $("#booking-back").hidden = step === 1;
-  $("#booking-next").hidden = step === 4;
+  $("#booking-next").hidden = step === 4 || (step === 1 && pickerOpen);
   $("#booking-submit").hidden = step !== 4;
   if (step === 4) renderReview();
   if (focus) {
@@ -288,8 +322,7 @@ function validStep() {
     if (!service()) return showError("selectServiceError"), false;
     if (service().options?.length && !option()) {
       showError("selectAreaError");
-      const firstZone = $("#booking-zone-prices").hidden ? null : $("#booking-zone-options input");
-      (firstZone || $("#booking-option")).focus();
+      $("#booking-zone-options input")?.focus();
       return false;
     }
   }
@@ -362,6 +395,8 @@ function setLang(next, save = false) {
     lang === "en" ? "Treatments" : "Tratamientos");
   $(".booking-summary").setAttribute("aria-label",
     lang === "en" ? "Booking summary" : "Resumen de la reserva");
+  $("#booking-search").placeholder = tr("searchPlaceholder");
+  $("#booking-search-clear").setAttribute("aria-label", tr("clearSearch"));
   renderCategories();
   renderServices();
   renderOptions();
@@ -371,15 +406,26 @@ function setLang(next, save = false) {
 }
 $$("[data-lang]").forEach((button) =>
   button.addEventListener("click", () => setLang(button.dataset.lang, true)));
-$("#booking-option").addEventListener("change", (event) => {
-  optionId = event.target.value;
-  clearError();
-  updateSummary();
+$("#booking-search").addEventListener("input", (event) => {
+  searchQuery = event.target.value;
+  activeCategory = "all";
+  renderCategories();
+  renderServices();
 });
+function resetSearch() {
+  searchQuery = "";
+  activeCategory = "all";
+  $("#booking-search").value = "";
+  renderCategories();
+  renderServices();
+  $("#booking-search").focus({ preventScroll: true });
+}
+$("#booking-search-clear").addEventListener("click", resetSearch);
+$("#booking-search-reset").addEventListener("click", resetSearch);
+$("#booking-picker-return").addEventListener("click", () => setPickerOpen(false, true));
 $("#booking-zone-options").addEventListener("change", (event) => {
   if (!event.target.matches('input[type="radio"]') || !event.target.checked) return;
   optionId = event.target.value;
-  $("#booking-option").value = optionId;
   clearError();
   updateSummary();
 });
@@ -435,4 +481,5 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
 // A service link from the home page arrives with its selection and price ready.
 if (service()) activeCategory = service().category;
 setLang(lang);
+setPickerOpen(pickerOpen);
 showStep(1, false);
