@@ -131,8 +131,6 @@ function categoryPage(category) {
         url: domain + "/",
         telephone: "+1-786-709-5791",
         areaServed: "Miami, Florida",
-        address: { "@type": "PostalAddress", streetAddress: "950 SW 57th Ave", addressLocality: "West Miami", addressRegion: "FL", postalCode: "33144", addressCountry: "US" },
-        hasMap: "https://www.google.com/maps/search/?api=1&query=950+SW+57th+Ave%2C+West+Miami%2C+FL+33144",
         sameAs: ["https://www.instagram.com/mariahesed.esthetics/"],
       },
     ],
@@ -142,7 +140,7 @@ function categoryPage(category) {
 <meta property="og:type" content="website"><meta property="og:locale" content="es_US"><meta property="og:title" content="${escape(pageTitle)}"><meta property="og:description" content="${escape(category.description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${domain}/img/${category.image}"><meta property="og:image:alt" content="${escape(category.alt)}"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/maria-hesed-icon.png" type="image/png"><link rel="stylesheet" href="/marca.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Montserrat:wght@400;500;600&display=swap"><link rel="stylesheet" href="/catalogo.css"><script type="application/ld+json">${JSON.stringify(graph).replaceAll("<", "\\u003c")}</script></head>
 <body class="studio-page"><header><a class="brand" href="/"><img class="studio-logo" src="/maria-hesed-mark.webp" alt="María Hesed · Aesthetic Studio" width="990" height="571"></a><a href="/#servicios">Ver tratamientos</a></header><main><div class="intro"><div><h1>${escape(category.heading)}</h1><p>${escape(category.description)}</p></div><img src="/img/${category.image}" alt="${escape(category.alt)}" width="480" height="360"></div>
-<div class="services">${services.map(serviceRow).join("\n")}</div></main><footer><a href="/">María Hesed · Miami, Florida</a><a href="/#contacto">950 SW 57th Ave · West Miami, FL 33144</a><a href="https://www.merktop.com">Powered by Merktop</a></footer></body></html>`;
+<div class="services">${services.map(serviceRow).join("\n")}</div></main><footer><a href="/">María Hesed · Miami, Florida</a><a href="/#contacto">Contacto</a><a href="https://www.merktop.com">Powered by Merktop</a></footer></body></html>`;
 }
 await mkdir(new URL("tratamientos/", output), { recursive: true });
 for (const category of categories) {
