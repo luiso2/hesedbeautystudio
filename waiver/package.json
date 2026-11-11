@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node build.mjs",
     "dev": "npm run build && wrangler dev",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "npm run build && wrangler deploy --config ./wrangler.jsonc",
     "test": "node --test checks/waiver.mjs",
     "pretest": "npm run build"
   },
