@@ -1,17 +1,39 @@
-/* Official studio artwork. The header keeps the complete lockup at its native ratio. */
+/* A single plane of studio light runs behind the masthead and opening content. */
+body.studio-page {
+  --studio-paper: #fffbf5;
+  --studio-depth: clamp(660px, 66vw, 960px);
+  --studio-light-size: max(100%, calc(var(--studio-depth) * 2)) var(--studio-depth);
+  min-height: 100vh;
+  background-color: var(--studio-paper);
+  background-image:
+    linear-gradient(to bottom, transparent 40%, var(--studio-paper) 100%),
+    url("/studio-light.webp");
+  background-position: center top;
+  background-size: 100% var(--studio-depth), var(--studio-light-size);
+  background-repeat: no-repeat;
+}
+.studio-page > header { background: transparent; }
+.studio-page > .nav.is-scrolled {
+  background: var(--studio-paper) url("/studio-light.webp") center top / var(--studio-light-size) no-repeat;
+}
+.studio-page > .footer {
+  background: linear-gradient(to bottom, var(--studio-paper), transparent 65%),
+    var(--studio-paper) url("/studio-light.webp") center bottom / cover no-repeat;
+}
 .studio-logo {
   display: block;
-  width: clamp(148px, 18vw, 172px);
+  width: auto;
+  height: 76px;
   max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  mask-image: linear-gradient(to right, transparent, black 14%, black 86%, transparent),
-    linear-gradient(to bottom, transparent, black 9%, black 90%, transparent);
-  mask-composite: intersect;
+  object-fit: contain;
 }
-.footer__brand .studio-logo { width: min(248px, 100%); }
-.gift-card-preview__top .studio-logo { width: min(174px, 100%); mask-image: none; }
-.studio-seal { display: block; width: 48px; height: 48px; border-radius: 50%; flex: none; }
+.footer__brand .studio-logo { height: auto; width: min(202px, 100%); }
+.gift-card-preview__top .studio-logo {
+  width: min(150px, 100%);
+  height: auto;
+  filter: brightness(0) saturate(100%) invert(91%) sepia(25%) saturate(535%) hue-rotate(334deg);
+}
+.studio-seal { display: block; width: 53px; height: auto; flex: none; }
 @media (max-width: 950px) {
-  .nav__logo .studio-logo { width: 148px; }
+  .studio-logo { height: 63px; }
 }

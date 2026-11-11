@@ -32,7 +32,7 @@ export async function studio(port = 0) {
         ASSETS: async (req) => {
           let p = new URL(req.url).pathname;
           if (p === "/") p = "/index.html";
-          if (p === "/panel") p = "/panel.html";
+          if (p === "/panel" || p === "/estudio") p += ".html";
           if (!/^\/[\w.-]+$/.test(p)) return new Response("", { status: 404 });
           try {
             return new Response(await readFile("build/public" + p), {
@@ -43,6 +43,7 @@ export async function studio(port = 0) {
                     js: "text/javascript",
                     css: "text/css",
                     png: "image/png",
+                    webp: "image/webp",
                     svg: "image/svg+xml",
                     webmanifest: "application/manifest+json",
                   }[p.split(".").at(-1)] || "text/plain",
@@ -64,7 +65,7 @@ export async function studio(port = 0) {
   const db = await runtime.getD1Database("DB");
   for (const file of (await readdir("migrations")).filter(name => name.endsWith(".sql")).sort()) {
     const schema = await readFile("migrations/" + file, "utf8");
-    const parts = schema.split(/;\s*(?=CREATE|$)/).filter(s => s.trim());
+    const parts = schema.split(/;\s*(?=CREATE|ALTER|$)/).filter(s => s.trim());
     for (const part of parts) await db.prepare(part).run();
   }
   return { runtime, db, mail };

@@ -81,7 +81,6 @@ function home() {
       enterTablet,
       "btn primary",
     ),
-    button(["Panel de María", "Studio dashboard"], () => go("#admin"), "text"),
   );
 }
 function enterTablet() {
@@ -123,9 +122,6 @@ async function tablet() {
         "María can prepare more forms in the studio dashboard while online.",
       ),
     );
-  c.append(
-    button(["Panel de María", "Studio dashboard"], () => go("#admin"), "text"),
-  );
 }
 async function dashboard() {
   const session = localStorage.getItem(deviceKey);
@@ -377,35 +373,26 @@ async function dashboard() {
 }
 function login() {
   intro(["Panel de María", "Studio dashboard"], [
-    "Recibe un enlace en el correo de María para abrir el panel en este dispositivo.",
-    "Get a link in María’s email to open the dashboard on this device.",
+    "Abre el acceso privado de María para entrar al panel.",
+    "Open María’s private studio link to access the dashboard.",
   ]);
-  const p = panel(null);
-  p.append(button(["Enviarme el enlace de acceso", "Email my sign-in link"], async () => {
-    await accessPost("request", { lang });
-    status([
-      "Revisa el correo de María y abre el enlace en el navegador que usarás para el panel. Vence en 15 minutos.",
-      "Check María’s email and open the link in the browser you’ll use for the dashboard. It expires in 15 minutes.",
-    ]);
-  }, "btn primary"));
 }
-function activate(token) {
-  // Keep the one-use token out of the address bar, history, and browser storage.
-  history.replaceState(null, "", "/panel");
-  intro(["Acceso de María", "María’s sign-in"], [
-    "Abre el panel para recordar este navegador durante 30 días. El modo presencial cierra la sesión antes de entregar la tablet.",
-    "Open the dashboard to remember this browser for 30 days. Tablet mode signs you out before you hand over the device.",
-  ]);
-  panel(null).append(button(["Abrir mi panel", "Open my dashboard"], async () => {
-    try {
-      const { device } = await (await accessPost("redeem", { token })).json();
-      localStorage.setItem(deviceKey, device);
-      await dashboard();
-    } catch (error) {
-      if (error.message === "access_expired") login();
-      throw error;
-    }
-  }, "btn primary"));
+async function enterFromLink(token, endpoint) {
+  history.replaceState(null, "", "/estudio");
+  try {
+    const response = await accessPost(endpoint, { token }, {
+      headers: { "X-Waiver-Device": localStorage.getItem(deviceKey) || "" },
+    });
+    const { device } = await response.json();
+    localStorage.setItem(deviceKey, device);
+  } catch (error) {
+    login();
+    status(errorText(error));
+    if (error.message !== "access_expired")
+      panel(null).append(button(["Volver a intentar", "Try again"], () => enterFromLink(token, endpoint)));
+    return;
+  }
+  await openStudio();
 }
 async function openStudio() {
   if (!localStorage.getItem(deviceKey)) return login();
@@ -423,9 +410,10 @@ async function openStudio() {
 }
 async function start() {
   const args = new URLSearchParams(location.hash.slice(1));
-  if (args.has("access")) {
+  if (args.has("entrada") || args.has("access")) {
+    const studioEntry = args.has("entrada");
     sessionStorage.removeItem("active-waiver");
-    activate(args.get("access"));
+    await enterFromLink(args.get(studioEntry ? "entrada" : "access"), studioEntry ? "studio" : "redeem");
     return;
   }
   if (args.has("sign") || args.has("tablet")) {
@@ -449,7 +437,7 @@ async function start() {
     signForm(t, false);
     return;
   }
-  if (args.has("admin") || (location.pathname === "/panel" && !location.hash)) {
+  if (args.has("admin") || (["/panel", "/estudio"].includes(location.pathname) && !location.hash)) {
     sessionStorage.removeItem("active-waiver");
     await openStudio();
     return;

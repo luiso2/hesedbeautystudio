@@ -58,20 +58,12 @@ export function status(pair) {
 }
 export const errors = {
   unauthorized: [
-    "Tu sesión ha terminado. Solicita un enlace de acceso.",
-    "Your session has ended. Request a sign-in link.",
+    "Tu sesión ha terminado. Vuelve a abrir tu acceso privado.",
+    "Your session has ended. Reopen your private studio link.",
   ],
   access_expired: [
-    "Este enlace ha vencido o ya se utilizó. Puedes pedir otro.",
-    "This link has expired or has already been used. You can request another.",
-  ],
-  access_wait: [
-    "Revisa primero el correo de María. Si acabas de pedir un enlace, espera un momento antes de solicitar otro.",
-    "Check María’s inbox first. If you just requested a link, wait a little before requesting another.",
-  ],
-  access_mail: [
-    "No se pudo enviar el enlace. Vuelve a intentarlo.",
-    "The sign-in email could not be sent. Please try again.",
+    "Este acceso no es válido. Usa el enlace privado vigente del estudio.",
+    "This access link is invalid. Use the studio’s current private link.",
   ],
   invalid_link: [
     "Este enlace no es válido. Pide uno nuevo al estudio.",

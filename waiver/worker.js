@@ -100,55 +100,35 @@ async function deviceSession(request) {
   const device = request.headers.get("X-Waiver-Device") || "";
   return cookie && secretFormat.test(device) ? hash(cookie[1] + "." + device) : null;
 }
-async function requestAccess(env, lang) {
-  const token = randomToken();
-  const digest = await hash(token);
-  const issued = now();
-  // Concurrent requests share a cooldown without invalidating an emailed link.
-  const created = await sql(env, `INSERT INTO studio_access(link_hash,issued)
-    SELECT ?,? WHERE NOT EXISTS (
-      SELECT 1 FROM studio_access WHERE issued > ? AND session_hash IS NULL
-    ) AND (SELECT count(*) FROM studio_access WHERE issued > ?) < 12`,
-    digest, issued, issued - 60, issued - 3600).run();
-  if (!created.meta.changes) throw new Invalid("access_wait", 429);
-  const en = lang === "en";
-  const url = env.PUBLIC_ORIGIN + "/panel#access=" + token + "&lang=" + (en ? "en" : "es");
-  try {
-    const sent = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + env.MAIL_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: env.MAIL_FROM, to: [env.STUDIO_EMAIL],
-        subject: en ? "Open your studio dashboard · María Hesed" : "Accede a tu panel de consentimientos · María Hesed",
-        text: (en
-          ? "María, open this private link on the device you use for your studio dashboard. It works once and expires in 15 minutes."
-          : "María, abre este enlace privado en el dispositivo que usarás para tu panel. Es de un solo uso y vence en 15 minutos.") +
-          "\n\n" + url + "\n\n" + (en
-          ? "Keep this link private. If you did not request it, you can ignore this email."
-          : "Guarda este enlace para ti. Si no lo solicitaste, puedes ignorar este correo."),
-      }),
-      signal: AbortSignal.timeout(12000),
-    });
-    if (!sent.ok) throw new Error("mail");
-  } catch {
-    await sql(env, "DELETE FROM studio_access WHERE link_hash=? AND session_hash IS NULL", digest).run();
-    throw new Invalid("access_mail", 503);
-  }
-  return json({ sent: true });
-}
 async function accessRoute(path, request, env) {
   const origin = request.headers.get("Origin");
   if ((origin && origin !== new URL(request.url).origin) || request.headers.get("Sec-Fetch-Site") === "cross-site")
     throw new Invalid("invalid_origin", 403);
   const body = await read(request);
-  if (path === "/api/access/request") return requestAccess(env, body?.lang);
-  if (path === "/api/access/redeem") {
+  const studioEntry = path === "/api/access/studio";
+  if (studioEntry || path === "/api/access/redeem") {
     if (typeof body?.token !== "string" || !secretFormat.test(body.token)) throw new Invalid("access_expired", 403);
+    const tokenHash = await hash(body.token);
+    if (studioEntry) {
+      const current = await deviceSession(request);
+      if (current && await sql(env, `SELECT 1 FROM studio_access
+          WHERE session_hash=? AND entrance_hash=? AND session_expires>?`, current, tokenHash, now()).first())
+        return json({ device: request.headers.get("X-Waiver-Device") });
+    }
     const cookie = randomToken();
     const device = randomToken();
-    const changed = await sql(env, `UPDATE studio_access SET session_hash=?,session_expires=?
-      WHERE link_hash=? AND issued>? AND session_hash IS NULL`,
-      await hash(cookie + "." + device), now() + SESSION_SECONDS, await hash(body.token), now() - LINK_SECONDS).run();
+    const sessionHash = await hash(cookie + "." + device);
+    const issued = now();
+    const expires = issued + SESSION_SECONDS;
+    // A private entrance creates a device session. Client signing tickets are separate.
+    // Honor previously issued single-use admin emails until their original expiry.
+    const changed = studioEntry
+      ? await sql(env, `INSERT INTO studio_access(link_hash,issued,session_hash,session_expires,entrance_hash)
+          SELECT ?,?,?,?,token_hash FROM studio_entrance WHERE slot=1 AND token_hash=?`,
+          randomToken(), issued, sessionHash, expires, tokenHash).run()
+      : await sql(env, `UPDATE studio_access SET session_hash=?,session_expires=?
+          WHERE link_hash=? AND issued>? AND session_hash IS NULL`,
+          sessionHash, expires, tokenHash, issued - LINK_SECONDS).run();
     if (!changed.meta.changes) throw new Invalid("access_expired", 403);
     const response = json({ device });
     response.headers.set("Set-Cookie", sessionCookie(cookie, SESSION_SECONDS));

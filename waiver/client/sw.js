@@ -29,7 +29,7 @@ self.addEventListener("fetch", (event) => {
     url.pathname.startsWith("/api/")
   )
     return;
-  const key = url.pathname === "/index.html" ? "/" : url.pathname === "/panel.html" ? "/panel" : url.pathname;
+  const key = url.pathname === "/index.html" ? "/" : url.pathname.replace(/\.html$/, "");
   if (paths.includes(key))
     event.respondWith(
       caches
