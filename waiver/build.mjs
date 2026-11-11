@@ -26,13 +26,13 @@ await build({
 const files = [
   "index.html",
   "waiver.css",
-  "favicon.svg",
-  "icon.png",
   "manifest.webmanifest",
 ];
 for (const file of files) await copyFile("client/" + file, dir + "/" + file);
+const brandFiles = ["maria-hesed-logo.jpg", "maria-hesed-icon.png", "marca.css"];
+for (const file of brandFiles) await copyFile("../public/" + file, dir + "/" + file);
 await copyFile(dir + "/index.html", dir + "/panel.html");
-const paths = [...files, "waiver.js", "panel.html"].map((p) => "/" + p);
+const paths = [...files, ...brandFiles, "waiver.js", "panel.html"].map((p) => "/" + p);
 const hash = createHash("sha256");
 for (const path of paths) hash.update(await readFile(dir + path));
 const cache = "mh-waiver-" + hash.digest("hex").slice(0, 16);

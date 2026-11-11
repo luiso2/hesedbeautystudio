@@ -31,33 +31,6 @@ footer {
   justify-content: space-between;
   gap: 12px;
 }
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.91rem;
-  letter-spacing: 0.18em;
-}
-.brand small {
-  display: block;
-  font-size: 0.55rem;
-  font-weight: 600;
-  letter-spacing: 0.25em;
-}
-.mh {
-  display: inline-flex;
-  align-items: center;
-  letter-spacing: -0.06em;
-  font:
-    2.45rem Georgia,
-    serif;
-}
-.mh i {
-  width: 1px;
-  background: #9a7951;
-  height: 43px;
-  margin: 0 1px;
-}
 nav {
   display: flex;
   gap: 3px;

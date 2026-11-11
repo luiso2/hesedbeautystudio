@@ -127,6 +127,7 @@ function categoryPage(category) {
         "@type": "BeautySalon",
         "@id": brandId,
         name: "María Hesed · Aesthetic Studio",
+        logo: domain + "/maria-hesed-logo.jpg",
         url: domain + "/",
         telephone: "+1-786-709-5791",
         areaServed: "Miami, Florida",
@@ -139,8 +140,8 @@ function categoryPage(category) {
   return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escape(pageTitle)}</title><meta name="description" content="${escape(category.description)}"><link rel="canonical" href="${url}"><meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="website"><meta property="og:locale" content="es_US"><meta property="og:title" content="${escape(pageTitle)}"><meta property="og:description" content="${escape(category.description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${domain}/img/${category.image}"><meta property="og:image:alt" content="${escape(category.alt)}"><meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Montserrat:wght@400;500;600&display=swap"><link rel="stylesheet" href="/catalogo.css"><script type="application/ld+json">${JSON.stringify(graph).replaceAll("<", "\\u003c")}</script></head>
-<body><header><a class="brand" href="/">MARÍA HESED</a><a href="/#servicios">Ver tratamientos</a></header><main><div class="intro"><div><h1>${escape(category.heading)}</h1><p>${escape(category.description)}</p></div><img src="/img/${category.image}" alt="${escape(category.alt)}" width="480" height="360"></div>
+<link rel="icon" href="/maria-hesed-icon.png" type="image/png"><link rel="stylesheet" href="/marca.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Montserrat:wght@400;500;600&display=swap"><link rel="stylesheet" href="/catalogo.css"><script type="application/ld+json">${JSON.stringify(graph).replaceAll("<", "\\u003c")}</script></head>
+<body><header><a class="brand" href="/"><img class="studio-logo" src="/maria-hesed-logo.jpg" alt="María Hesed · Aesthetic Studio" width="1280" height="640"></a><a href="/#servicios">Ver tratamientos</a></header><main><div class="intro"><div><h1>${escape(category.heading)}</h1><p>${escape(category.description)}</p></div><img src="/img/${category.image}" alt="${escape(category.alt)}" width="480" height="360"></div>
 <div class="services">${services.map(serviceRow).join("\n")}</div></main><footer><a href="/">María Hesed · Miami, Florida</a><a href="/#contacto">950 SW 57th Ave · West Miami, FL 33144</a><a href="https://www.merktop.com">Powered by Merktop</a></footer></body></html>`;
 }
 await mkdir(new URL("tratamientos/", output), { recursive: true });
