@@ -6,7 +6,7 @@ export function initSiteMotion() {
   let observer;
   let disposed = false;
   const nav = document.querySelector("#nav");
-  const sections = [...document.querySelectorAll("#servicios, #maria, #resultados, #gift-cards, #faq")];
+  const sections = [...document.querySelectorAll("#servicios, #maria, #resultados, #ubicacion, #gift-cards, #faq")];
   const links = [...document.querySelectorAll(".nav__links a, .menu__links a")];
   let frame = 0;
   function updateNavigation() {

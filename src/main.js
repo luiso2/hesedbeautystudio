@@ -14,6 +14,33 @@ const giftCards = initGiftCardForm(() => lang);
 const motion = initSiteMotion();
 const copy = (es, en) => (lang === "en" ? en : es);
 
+const studioMap = $("#studio-map");
+const mapViews = $(".studio-location__views");
+const satelliteUrl = studioMap.src;
+const streetUrl = "https://www.google.com/maps?layer=c&cbll=25.7617395,-80.2879625&cbp=12,265,0,0,0&output=svembed";
+let mapView = "satellite";
+
+function renderMap() {
+  const street = mapView === "street";
+  const url = new URL(street ? streetUrl : satelliteUrl);
+  url.searchParams.set("hl", lang);
+  studioMap.title = street
+    ? copy("Vista de la calle frente al estudio en West Miami", "Street view facing the studio in West Miami")
+    : copy("Vista satelital del estudio en 950 SW 57th Ave, West Miami", "Satellite view of the studio at 950 SW 57th Ave, West Miami");
+  if (studioMap.src !== url.href) studioMap.src = url.href;
+  mapViews.setAttribute("aria-label", copy("Vista del mapa", "Map view"));
+  for (const button of mapViews.children) {
+    button.setAttribute("aria-pressed", String(button.dataset.mapView === mapView));
+  }
+}
+mapViews.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-map-view]");
+  if (!button) return;
+  mapView = button.dataset.mapView;
+  renderMap();
+});
+mapViews.hidden = false;
+
 function setLang(next) {
   lang = next === "en" ? "en" : "es";
   document.documentElement.lang = lang;
@@ -34,6 +61,7 @@ function setLang(next) {
     "aria-label",
     copy("Categorías de tratamientos", "Treatment categories"),
   );
+  renderMap();
   $(".lang").setAttribute("aria-label", copy("Idioma", "Language"));
   $(".hero__video").setAttribute(
     "aria-label",

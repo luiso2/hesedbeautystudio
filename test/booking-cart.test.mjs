@@ -5,20 +5,37 @@ import { readFileSync } from 'node:fs';
 import { createHmac } from 'node:crypto';
 import worker from '../src/worker.js';
 import { resolveCart, cartTotals } from '../src/booking-cart.js';
+import { TERMS_VERSION, bookingTerms } from '../src/booking-terms.js';
 import links from '../src/payment-links.json' with {type:'json'};
 import catalog from '../src/booking-catalog.json' with {type:'json'};
 
 function setup() {
   const db = new DatabaseSync(':memory:');
-  for (const file of ['0001_booking_requests','0002_merktop_deposits','0003_multi_service_reviews','0004_google_review_link']) db.exec(readFileSync(new URL(`../migrations/${file}.sql`, import.meta.url),'utf8'));
+  for (const file of ['0001_booking_requests','0002_merktop_deposits','0003_multi_service_reviews','0004_google_review_link','0005_booking_terms']) db.exec(readFileSync(new URL(`../migrations/${file}.sql`, import.meta.url),'utf8'));
   const env = { BOOKING_ADMIN_TOKEN:'test-admin', MERKTOP_SITE_READ_KEY:'test-read', MERKTOP_WEBHOOK_SECRET:'test-secret',
     BOOKINGS_DB:{prepare(sql){const stmt=db.prepare(sql);let args=[];const api={bind(...values){args=values;return api},async first(){return stmt.get(...args)||null},async all(){return {results:stmt.all(...args)}},async run(){return {meta:{changes:Number(stmt.run(...args).changes)}}}};return api}} };
   return {db,env};
 }
 const base='https://mariahesed.com';
 const req=(path,body,admin=false,method='POST')=>new Request(base+path,{method,headers:{'Content-Type':'application/json',Origin:base,...(admin?{Authorization:'Bearer test-admin'}:{})},body:body===undefined?undefined:JSON.stringify(body)});
-const fields={date:new Date(Date.now()+86400000).toISOString().slice(0,10),time:'10:00',name:'Test Client',phone:'2025550123',consent:'on'};
-function mockConfig(){return Response.json({business:{id:'aaeee082-a486-4bee-a1f2-c736d45e6a10',merchant_ready:true,bookings_paused:false},catalog:{services:catalog.flatMap(s=>(s.options||[s]).flatMap(o=>{const id=links[s.options?`${s.id}/${o.id}`:s.id];return id?[{link_id:id,description:s.name.es,deposit_amount:4000,total_amount:o.price==null||o.from?4000:o.price*100,currency:'usd',reservation_mode:o.price==null||!!o.from,pay_url:`https://payments.merktop.com/pay/d/${id}`}]:[]}))}})}
+const fields={date:new Date(Date.now()+86400000).toISOString().slice(0,10),time:'10:00',name:'Test Client',phone:'2025550123',consent:'on',terms:{version:TERMS_VERSION,language:'es',general:true}};
+function mockConfig() {
+  const link = (id, description, price, reservationMode) => ({
+    link_id: id, description, deposit_amount: 4000, total_amount: reservationMode ? 4000 : price * 100,
+    currency: 'usd', reservation_mode: reservationMode, pay_url: `https://payments.merktop.com/pay/d/${id}`,
+  });
+  const services = [link(links['massage-package'], 'Paquete de masajes (6 sesiones o más)', null, true)];
+  for (const service of catalog) {
+    for (const entry of service.options || [service]) {
+      const id = links[service.options ? `${service.id}/${entry.id}` : service.id];
+      if (id) services.push(link(id, service.name.es, entry.price, entry.price == null || !!entry.from));
+    }
+  }
+  return Response.json({
+    business: { id: 'aaeee082-a486-4bee-a1f2-c736d45e6a10', merchant_ready: true, bookings_paused: false },
+    catalog: { services },
+  });
+}
 async function eventRequest(id,link,paid,total){const timestamp=Math.floor(Date.now()/1000);const event={id:'evt_'+'b'.repeat(32),type:'deposit.paid',created:timestamp,data:{ref:id,link_id:link,deposit_id:'dep-test',currency:'usd',amount_paid:paid,amount_total:total}};const body=JSON.stringify(event);const sig=createHmac('sha256','test-secret').update(`${timestamp}.${body}`).digest('hex');return new Request(base+'/api/merktop/webhook',{method:'POST',headers:{'merktop-event-id':event.id,'merktop-signature':`t=${timestamp},v1=${sig}`},body})}
 
 test('cart rejects forged IDs, missing zones, duplicates and oversized requests; ignores client prices',()=>{
@@ -72,4 +89,69 @@ test('only the admin can enable a Google composer, which replaces local reviews 
   assert.equal((await save('')).status, 200);
   assert.equal((await publicSettings()).review_url, null);
   db.close();
+});
+
+test('payment terms are required before creating a link or storing a booking', async () => {
+  const { env, db } = setup();
+  const cases = [
+    ['facial-detox', undefined, 'terms_required'],
+    ['facial-detox', { ...fields.terms, general: false }, 'terms_required'],
+    ['facial-detox', { ...fields.terms, version: 'old' }, 'terms_version'],
+    ['facial-detox', { ...fields.terms, language: 'unknown' }, 'terms_required'],
+    ['brazilian-slim', fields.terms, 'terms_required'],
+  ];
+  try {
+    for (const [serviceId, terms, error] of cases) {
+      const items = [{ serviceId, massagePackage: serviceId === 'brazilian-slim' }];
+      const result = await worker.fetch(req('/api/bookings', { ...fields, terms, items }), env);
+      assert.equal(result.status, 400);
+      assert.equal((await result.json()).error, error);
+    }
+    assert.equal(db.prepare('SELECT count(*) AS n FROM booking_requests').get().n, 0);
+  } finally { db.close(); }
+});
+
+test('a single massage accepts general terms only, and only eligible services offer massage packages', () => {
+  const offered = catalog.filter(service => service.offersMassagePackage).map(service => service.id);
+  assert.deepEqual(offered, ['drenaje-linfatico-manual', 'brazilian-slim', 'maderoterapia-corporal',
+    'metalterapia-sculpt', 'hesed-body-sculpt']);
+  for (const serviceId of ['yoga-facial', 'radiofrecuencia-corporal', 'kinesio-body'])
+    assert.throws(() => resolveCart([{ serviceId, massagePackage: true }]));
+  assert.throws(() => resolveCart([{ serviceId: 'brazilian-slim', massagePackage: 'false' }]));
+  assert.equal(resolveCart([{ serviceId: 'brazilian-slim' }])[0].price, 95);
+});
+
+test('quoted massage packages use the package deposit and store the exact terms in the accepted language', async () => {
+  const { db, env } = setup();
+  const original = globalThis.fetch;
+  globalThis.fetch = async () => mockConfig();
+  try {
+    for (const language of ['es', 'en']) {
+      const items = [{ serviceId: 'facial-detox' }, { serviceId: 'brazilian-slim', massagePackage: true }];
+      const terms = { ...fields.terms, language, massagePackage: true };
+      const response = await worker.fetch(req('/api/bookings', { ...fields, items, terms }), env);
+      assert.equal(response.status, 201);
+      const booking = await response.json();
+      const url = new URL(booking.payment_url);
+      assert.equal(url.pathname, '/pay/d/' + links['massage-package']);
+      assert.equal(url.searchParams.get('dep'), '8000');
+      assert.equal(url.searchParams.get('tot'), '8000');
+      assert.match(url.searchParams.get('desc'), /Brazilian Slim · Paquete/);
+      const row = db.prepare('SELECT * FROM booking_requests WHERE id=?').get(booking.id);
+      assert.equal(row.price_cents, null);
+      const saved = JSON.parse(row.terms_json);
+      assert.equal(saved.version, TERMS_VERSION);
+      assert.equal(saved.language, language);
+      assert.equal(saved.refund, bookingTerms[language].refund);
+      assert.equal(saved.customerName, fields.name);
+      assert.ok(Date.parse(saved.acceptedAt));
+      assert.deepEqual(saved.massagePackage.services, ['brazilian-slim']);
+      assert.equal(saved.massagePackage.terms, bookingTerms[language].package);
+    }
+    const response = await worker.fetch(req('/api/bookings', { ...fields, items: [{serviceId: 'brazilian-slim'}] }), env);
+    assert.equal(response.status, 201);
+    const booking = await response.json();
+    const row = db.prepare('SELECT terms_json FROM booking_requests WHERE id=?').get(booking.id);
+    assert.equal(JSON.parse(row.terms_json).massagePackage, undefined);
+  } finally { globalThis.fetch = original; db.close(); }
 });

@@ -1,3 +1,4 @@
+import { bookingTerms, TERMS_VERSION } from "./booking-terms.js";
 import catalog from "./booking-catalog.json";
 import { resolveCart, cartTotals, itemKey, MAX_ITEMS } from "./booking-cart.js";
 
@@ -91,11 +92,12 @@ let activeCategory = "corporal";
 let serviceId = byId.has(new URLSearchParams(location.search).get("service"))
   ? new URLSearchParams(location.search).get("service") : "";
 let selectedItems = [];
+let lastReviewSelection = null;
 let pickerOpen = false;
 let pickerReturnFocus = null;
 let searchQuery = "";
 const tr = (key) => translations[lang][key];
-const priceText = (entry) => entry?.price == null ? tr("askPrice") : entry.from ? `${tr("from")} US$${entry.price}` : `US$${entry.price}`;
+const priceText = (entry) => entry?.massagePackage ? bookingTerms[lang].packagePrice : entry?.price == null ? tr("askPrice") : entry.from ? `${tr("from")} US$${entry.price}` : `US$${entry.price}`;
 const money = (cents) => `US$${(cents / 100).toLocaleString(lang === 'en' ? 'en-US' : 'es-US', { maximumFractionDigits: 2 })}`;
 const totals = () => cartTotals(selectedItems);
 const depositRequired = () => selectedItems.length > 0 && !totals().policyPending;
@@ -181,17 +183,39 @@ function renderServices() {
     } else root.append(serviceButton(item));
   });
 }
+function packageChoice(item, inPicker = false) {
+  const label = document.createElement('label');
+  label.className = 'booking-package-choice';
+  const input = document.createElement('input');
+  input.type = 'checkbox';
+  input.checked = !!item.massagePackage;
+  input.dataset.packageFor = item.serviceId;
+  input.setAttribute('aria-label', item.name[lang] + ' · ' + bookingTerms[lang].choosePackage);
+  label.append(input, document.createTextNode(bookingTerms[lang].choosePackage));
+  input.addEventListener('change', () => {
+    const index = selectedItems.findIndex(entry => itemKey(entry) === itemKey(item));
+    if (index < 0) return;
+    selectedItems[index] = resolveCart([{ serviceId: item.serviceId, massagePackage: input.checked }])[0];
+    updateSummary();
+    if (inPicker) renderServices();
+    const scope = inPicker ? $('#booking-services') : $('#booking-selection-inline');
+    scope.querySelector(`[data-package-for="${item.serviceId}"]`)?.focus({ preventScroll: true });
+  });
+  return label;
+}
+
 function serviceButton(item, option) {
   const key = itemKey({ serviceId: item.id, optionId: option?.id });
-  const selected = selectedItems.some((entry) => itemKey(entry) === key);
+  const selected = selectedItems.find((entry) => itemKey(entry) === key);
+  const row = document.createElement('div');
   const button = document.createElement('button');
   button.type = 'button';
   button.className = `booking-service${selected ? ' is-selected' : ''}`;
   button.dataset.id = key;
-  button.setAttribute('aria-pressed', String(selected));
+  button.setAttribute('aria-pressed', String(!!selected));
   const mark = document.createElement('span'); mark.className = 'booking-service__mark'; mark.textContent = selected ? '✓' : '+'; mark.setAttribute('aria-hidden', 'true');
   const name = document.createElement('span'); name.className = 'booking-service__name'; name.textContent = (option || item).name[lang];
-  const price = document.createElement('span'); price.className = 'booking-service__price'; price.textContent = priceText(option || item);
+  const price = document.createElement('span'); price.className = 'booking-service__price'; price.textContent = priceText(selected || option || item);
   button.append(mark, name, price);
   button.setAttribute('aria-label', `${selected ? tr('remove') : tr('addService')} ${item.name[lang]}${option ? ' · ' + option.name[lang] : ''}, ${price.textContent}`);
   button.addEventListener('click', () => {
@@ -203,10 +227,12 @@ function serviceButton(item, option) {
     clearError();
     // Replace only this row, preserving scroll and expanded groups.
     const replacement = serviceButton(item, option);
-    button.replaceWith(replacement); replacement.focus({ preventScroll: true });
+    row.replaceWith(replacement); replacement.querySelector('button').focus({ preventScroll: true });
     updateSummary();
   });
-  return button;
+  row.append(button);
+  if (selected && item.offersMassagePackage) row.append(packageChoice(selected, true));
+  return row;
 }
 function setPickerOpen(open, opener = null) {
   pickerOpen = open;
@@ -226,7 +252,9 @@ function updateSummary() {
   $('#picker-count').textContent = `${selectedItems.length} ${tr(selectedItems.length === 1 ? 'oneService' : 'serviceCount')} · ${tr('depositLabel')}: ${money(totals().depositCents)}`;
   if (!selectedItems.length) {
     const empty = document.createElement('p'); empty.className = 'booking-summary__empty'; empty.textContent = tr('summaryEmpty');
-    root.append(empty); inline.append(empty.cloneNode(true)); return;
+    root.append(empty); inline.append(empty.cloneNode(true));
+    if (step === 4) renderReview();
+    return;
   }
   selectedItems.forEach((item) => {
     const row = document.createElement('article'); row.className = 'booking-cart-item';
@@ -234,6 +262,7 @@ function updateSummary() {
     const name = document.createElement('h3'); name.textContent = fullName(item);
     const price = document.createElement('p'); price.textContent = priceText(item);
     text.append(name, price);
+    if (byId.get(item.serviceId).offersMassagePackage) text.append(packageChoice(item));
     const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = tr('remove');
     remove.setAttribute('aria-label', `${tr('remove')} ${fullName(item)}`);
     remove.addEventListener('click', () => {
@@ -258,7 +287,7 @@ function clearError() {
 }
 function showError(key) {
   const node = $("#booking-error");
-  node.textContent = tr(key);
+  node.textContent = tr(key) ?? bookingTerms[lang][key];
   node.hidden = false;
   node.scrollIntoView({ block: "nearest" });
 }
@@ -310,6 +339,18 @@ function validStep() {
 }
 
 function renderReview() {
+  const packages = selectedItems.filter(item => item.massagePackage);
+  const signature = JSON.stringify([lang, $("#booking-name").value.trim(),
+    selectedItems.map(item => [itemKey(item), !!item.massagePackage])]);
+  if (lastReviewSelection !== signature) {
+    $("#terms-general").checked = false;
+    $("#terms-package").checked = false;
+    lastReviewSelection = signature;
+  }
+  $("#terms-package-section").hidden = packages.length === 0;
+  $("#terms-package").disabled = packages.length === 0;
+  $("#terms-package").required = packages.length > 0;
+  $("#terms-package-services").textContent = packages.map(item => item.name[lang]).join(" · ");
   const deposit = depositRequired();
   $("[data-t='step4lead']").textContent = tr(deposit ? "depositLead" : "step4lead");
   $("[data-step='4'] [data-t='pending']").textContent = tr(deposit ? "depositPending" : "pending");
@@ -345,6 +386,7 @@ function setLang(next, save = false) {
       item.textContent = tr(item.dataset.t);
     }
   });
+  $$("[data-terms]").forEach(node => { node.textContent = bookingTerms[lang][node.dataset.terms]; });
   $$("[data-lang]").forEach((button) => {
     const selected = button.dataset.lang === lang;
     button.classList.toggle("is-active", selected);
@@ -402,14 +444,21 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
   if (step !== 4) return;
   if (!selectedItems.length) { showStep(1); showError('selectServiceError'); return; }
   if (totals().policyPending) { showError('lowPricePending'); return; }
+  const missing = $(".booking-terms input:required:not(:checked)");
+  if (missing) {
+    showError("required");
+    missing.focus();
+    return;
+  }
   const button = $("#booking-submit");
   button.disabled = true;
   button.textContent = tr("sending");
   clearError();
   const payload = {
-    items: selectedItems.map(({serviceId, optionId}) => ({serviceId, optionId})), date: $("#booking-date").value, time: $("#booking-time").value,
+    items: selectedItems.map(({serviceId, optionId, massagePackage}) => ({serviceId, optionId, massagePackage})), date: $("#booking-date").value, time: $("#booking-time").value,
     name: $("#booking-name").value.trim(), phone: $("#booking-phone").value.trim(),
     email: $("#booking-email").value.trim(), note: $("#booking-note").value.trim(),
+    terms: { version: TERMS_VERSION, language: lang, general: $("#terms-general").checked, massagePackage: $("#terms-package").checked },
     consent: $("#booking-consent").checked ? "on" : "", website: $('[name="website"]').value,
   };
   try {
@@ -418,7 +467,8 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
     });
     const result = await response.json();
     if (!response.ok) throw new Error(result.error === "rate_limited" ? "rateLimited" :
-      result.error === "payment_unavailable" ? "paymentUnavailable" : "serverError");
+      result.error === "payment_unavailable" ? "paymentUnavailable" :
+      result.error === "terms_version" ? "updated" : result.error === "terms_required" ? "required" : "serverError");
     if (result.payment_url) {
       window.location.assign(result.payment_url);
       return;
@@ -437,7 +487,7 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
     success.scrollIntoView({ behavior: "smooth", block: "start" });
     success.focus({ preventScroll: true });
   } catch (error) {
-    showError(["rateLimited", "paymentUnavailable"].includes(error.message) ? error.message : "serverError");
+    showError(["rateLimited", "paymentUnavailable", "required", "updated"].includes(error.message) ? error.message : "serverError");
   } finally {
     button.disabled = false;
     button.innerHTML = `${tr(depositRequired() ? "depositSubmit" : "submit")} <span aria-hidden="true">→</span>`;

@@ -1,6 +1,7 @@
 [
   {
     "id": "drenaje-linfatico-manual",
+    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Drenaje Linfático Manual",
@@ -10,6 +11,7 @@
   },
   {
     "id": "brazilian-slim",
+    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Brazilian Slim",
@@ -19,6 +21,7 @@
   },
   {
     "id": "maderoterapia-corporal",
+    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Maderoterapia Corporal",
@@ -28,6 +31,7 @@
   },
   {
     "id": "metalterapia-sculpt",
+    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Metalterapia Sculpt",
@@ -55,6 +59,7 @@
   },
   {
     "id": "hesed-body-sculpt",
+    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Hesed Body Sculpt",

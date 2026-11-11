@@ -101,6 +101,20 @@
             <p class="booking-step__lead" data-t="step4lead">Comprueba los detalles antes de enviarlos. No se realizará ningún cobro ahora.</p>
             <dl class="booking-review" id="booking-review"></dl>
             <p class="booking-note" data-t="pending">Tu cita quedará pendiente hasta que María confirme la disponibilidad. Los tratamientos sin precio publicado se cotizarán personalmente.</p>
+            <fieldset class="booking-terms">
+              <legend data-terms="title">Condiciones de la reserva</legend>
+              <h3 data-terms="refundTitle">Reembolsos</h3>
+              <p data-terms="refund"></p>
+              <p data-terms="rights"></p>
+              <a class="booking-terms__contact" data-terms="contact" href="https://wa.me/17867095791" target="_blank" rel="noopener noreferrer">Contactar con María por WhatsApp</a>
+              <label class="booking-consent"><input type="checkbox" id="terms-general" required /><span data-terms="accept"></span></label>
+              <div class="booking-terms__package" id="terms-package-section" hidden>
+                <h3 data-terms="packageTitle"></h3>
+                <p class="booking-terms__services" id="terms-package-services"></p>
+                <p data-terms="package"></p>
+                <label class="booking-consent"><input type="checkbox" id="terms-package" disabled /><span data-terms="packageAccept"></span></label>
+              </div>
+            </fieldset>
           </section>
 
           <p class="booking-error" id="booking-error" role="alert" hidden></p>

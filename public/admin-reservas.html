@@ -78,6 +78,20 @@
       article.append(line('Cliente',row.customer_name),line('Fecha preferida',`${row.requested_date} · ${row.requested_time} (Miami)`),line('Teléfono',row.customer_phone),line('Correo',row.customer_email),line('Precio',row.price_cents==null?'Consultar el precio':(row.price_from?'Desde ':'')+`US$${row.price_cents/100}`),line('Pago',paymentStatuses[row.payment_status]||'Sin depósito'));
       if(items) for(const item of items) article.append(line(item.name.es+(item.optionName?' · '+item.optionName.es:''),item.price==null?'Consultar el precio':(item.from?'Desde ':'')+'US$'+item.price));
       article.append(line('Depósito solicitado',`US$${row.deposit_cents/100}`));
+      if (row.terms_json) {
+        const terms = JSON.parse(row.terms_json);
+        const details = document.createElement('details');
+        const title = document.createElement('summary');
+        title.textContent = 'Ver condiciones aceptadas';
+        details.append(title, line('Aceptación', terms.customerName), line('Fecha y hora', terms.acceptedAt),
+          line('Versión e idioma', terms.version + ' · ' + terms.language.toUpperCase()),
+          line('Reembolsos', terms.refund), line('Derechos', terms.rights), line('Casilla aceptada', terms.acceptance));
+        if (terms.massagePackage) {
+          details.append(line('Paquetes', items.filter(item => item.massagePackage).map(item => item.name.es).join(', ')),
+            line('Vigencia', terms.massagePackage.terms), line('Casilla aceptada', terms.massagePackage.acceptance));
+        }
+        article.append(details);
+      }
       if(row.customer_note)article.append(line('Nota',row.customer_note));
       const ref=document.createElement('p');ref.className='ref';ref.textContent=`Referencia: ${row.id} · Recibida: ${row.created_at} UTC`;article.append(ref);
       article.append(phoneLink(row));

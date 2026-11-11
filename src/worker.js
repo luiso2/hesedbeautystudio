@@ -3,6 +3,7 @@ import { serveVideo } from "./video-assets.js";
 import videoSizes from "./video-sizes.json" with { type: "json" };
 import { findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent, signCartPayment } from "./merktop.js";
 
+import { recordTerms } from './booking-terms.js';
 import { resolveCart, cartTotals } from './booking-cart.js';
 import { reviewRoutes, googleReviewUrl } from './reviews-api.js';
 
@@ -90,7 +91,7 @@ async function createBooking(request, env) {
   if (body.website) return json({ error: "invalid_request" }, 400);
 
   let items;
-  try { items = resolveCart(body.items ?? [{ serviceId: body.serviceId, optionId: body.optionId }]); }
+  try { items = resolveCart(body.items ?? [{ serviceId: body.serviceId, optionId: body.optionId, massagePackage: body.massagePackage }]); }
   catch { return json({ error: 'invalid_service' }, 400); }
   const totals = cartTotals(items);
   if (totals.policyPending) return json({ error: 'deposit_policy_pending' }, 409);
@@ -115,6 +116,12 @@ async function createBooking(request, env) {
     (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
   ) return json({ error: "invalid_fields" }, 400);
 
+  let acceptedTerms;
+  try {
+    acceptedTerms = recordTerms(body.terms, items, name);
+  } catch (error) {
+    return json({ error: error.message }, 400);
+  }
   const recent = await env.BOOKINGS_DB.prepare(
     "SELECT COUNT(*) AS count FROM booking_requests WHERE customer_phone = ? AND created_at > datetime('now', '-1 hour')",
   ).bind(phone).first();
@@ -127,8 +134,10 @@ async function createBooking(request, env) {
     const anchor = totals.estimated ? items.find((item) => item.price == null || item.from) : first;
     const anchorService = catalog.find((entry) => entry.id === anchor.serviceId);
     const anchorOption = anchorService.options?.find((entry) => entry.id === anchor.optionId);
-    const base = await findDepositLink(env, paymentDescription(anchorService, anchorOption),
-      anchor.price == null ? null : anchor.price * 100, totals.estimated, paymentLinkKey(anchorService, anchorOption));
+    const linkKey = anchor.massagePackage ? 'massage-package' : paymentLinkKey(anchorService, anchorOption);
+    const linkDescription = anchor.massagePackage ? 'Paquete de masajes (6 sesiones o más)' : paymentDescription(anchorService, anchorOption);
+    const base = await findDepositLink(env, linkDescription,
+      anchor.price == null ? null : anchor.price * 100, totals.estimated, linkKey);
     const description = `${items.length} servicio(s): ` + items.map((item) => item.name.es + (item.optionName ? ` · ${item.optionName.es}` : '')).join(' + ');
     payment = await signCartPayment(env, base, totals, description);
   } catch (error) {
@@ -139,14 +148,14 @@ async function createBooking(request, env) {
     `INSERT INTO booking_requests
      (id, service_id, option_id, service_name, option_name, price_cents, price_from,
       requested_date, requested_time, customer_name, customer_phone, customer_email, customer_note,
-      merktop_link_id, payment_status, items_json, deposit_cents, payment_total_cents)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      merktop_link_id, payment_status, items_json, deposit_cents, payment_total_cents, terms_json)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).bind(
     id,
     service.id,
     option?.id || null,
     service.name.es,
-    option?.name.es || null,
+    first.optionName?.es || null,
     totals.hasUnknown ? null : totals.knownCents,
     totals.estimated ? 1 : 0,
     date,
@@ -157,7 +166,7 @@ async function createBooking(request, env) {
     note || null,
     payment?.id || null,
     payment ? "awaiting_payment" : "not_started",
-    JSON.stringify(items), totals.depositCents, totals.paymentTotalCents,
+    JSON.stringify(items), totals.depositCents, totals.paymentTotalCents, JSON.stringify(acceptedTerms),
   ).run();
   if (payment) {
     payment.url.searchParams.set("ref", id);
