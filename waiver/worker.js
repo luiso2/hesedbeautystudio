@@ -403,6 +403,16 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url),
       path = url.pathname;
+    // A link preview gets only the public shell. The browser redeems the private
+    // key separately, under the same authorization checks as older studio links.
+    if (/^\/acceso\/[a-f0-9]{64}\/?$/.test(path) && ["GET", "HEAD"].includes(request.method)) {
+      const shell = await env.ASSETS.fetch(new URL("/estudio", url).href);
+      const headers = new Headers(shell.headers);
+      headers.set("Cache-Control", "private, no-store");
+      headers.set("Referrer-Policy", "no-referrer");
+      headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+      return new Response(request.method === "HEAD" ? null : shell.body, { status: shell.status, headers });
+    }
     if (!path.startsWith("/api/")) return env.ASSETS.fetch(request);
     try {
       if (path.startsWith("/api/access/") && request.method === "POST")

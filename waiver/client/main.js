@@ -32,7 +32,13 @@ const accessPost = (path, data, options = {}) => api("access/" + path, {
   method: "POST", headers: { "Content-Type": "application/json", ...options.headers },
   body: JSON.stringify(data), keepalive: true, signal: AbortSignal.timeout(15000),
 });
+const privatePath = /^\/acceso\/([a-f0-9]{64})\/?$/;
+function clearStudioAddress() {
+  if (privatePath.test(location.pathname) || new URLSearchParams(location.hash.slice(1)).has("entrada"))
+    history.replaceState(null, "", "/estudio");
+}
 function forgetStudio() {
+  clearStudioAddress();
   const device = localStorage.getItem(deviceKey);
   localStorage.removeItem(deviceKey);
   if (device && navigator.onLine) {
@@ -42,7 +48,10 @@ function forgetStudio() {
 }
 window.addEventListener("storage", (event) => {
   if ((event.key === deviceKey || event.key === null) && !localStorage.getItem(deviceKey)
-      && document.querySelector("[data-studio-dashboard]")) location.reload();
+      && (document.querySelector("[data-studio-dashboard]") || privatePath.test(location.pathname))) {
+    clearStudioAddress();
+    location.reload();
+  }
 });
 const swReady =
   "serviceWorker" in navigator
@@ -373,19 +382,22 @@ async function dashboard() {
 }
 function login() {
   intro(["Panel de María", "Studio dashboard"], [
-    "Abre el acceso privado de María para entrar al panel.",
-    "Open María’s private studio link to access the dashboard.",
+    "Esta dirección por sí sola no abre el panel. Abre el enlace privado completo que recibiste para María.",
+    "This address alone cannot open the dashboard. Open the complete private link you received for María.",
   ]);
 }
 async function enterFromLink(token, endpoint) {
-  history.replaceState(null, "", "/estudio");
+  if (endpoint === "redeem") history.replaceState(null, "", "/estudio");
   try {
     const response = await accessPost(endpoint, { token }, {
       headers: { "X-Waiver-Device": localStorage.getItem(deviceKey) || "" },
     });
     const { device } = await response.json();
     localStorage.setItem(deviceKey, device);
+    if (endpoint === "studio") history.replaceState(null, "", "/acceso/" + token);
   } catch (error) {
+    if (!navigator.onLine && localStorage.getItem(deviceKey)) return openStudio();
+    if (error.message === "access_expired") clearStudioAddress();
     login();
     status(errorText(error));
     if (error.message !== "access_expired")
@@ -410,10 +422,16 @@ async function openStudio() {
 }
 async function start() {
   const args = new URLSearchParams(location.hash.slice(1));
-  if (args.has("entrada") || args.has("access")) {
-    const studioEntry = args.has("entrada");
+  const entryToken = location.pathname.match(privatePath)?.[1] || args.get("entrada");
+  // Browser history on a shared tablet must not reopen a signed-out session.
+  if (entryToken && !localStorage.getItem(deviceKey) &&
+      performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
+    clearStudioAddress();
+    return login();
+  }
+  if (entryToken || args.has("access")) {
     sessionStorage.removeItem("active-waiver");
-    await enterFromLink(args.get(studioEntry ? "entrada" : "access"), studioEntry ? "studio" : "redeem");
+    await enterFromLink(entryToken || args.get("access"), entryToken ? "studio" : "redeem");
     return;
   }
   if (args.has("sign") || args.has("tablet")) {
@@ -470,5 +488,8 @@ setInterval(resync, 60000);
 
 window.addEventListener("hashchange", () => location.reload());
 window.addEventListener("pageshow", (e) => {
-  if (e.persisted) location.reload();
+  if (e.persisted) {
+    if (!localStorage.getItem(deviceKey)) clearStudioAddress();
+    location.reload();
+  }
 });

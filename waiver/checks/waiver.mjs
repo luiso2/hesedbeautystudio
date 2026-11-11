@@ -110,6 +110,16 @@ test("María’s private entrance opens on multiple devices, locks for signing a
   const token = "f".repeat(64);
   const digest = createHash("sha256").update(token).digest("hex");
   await db.prepare("INSERT INTO studio_entrance(slot,token_hash) VALUES(1,?)").bind(digest).run();
+  const entry = "http://localhost/acceso/" + token;
+  const preview = await runtime.dispatchFetch(entry);
+  assert.equal(preview.status, 200);
+  assert.equal(preview.headers.get("Set-Cookie"), null);
+  assert.match(preview.headers.get("Cache-Control"), /no-store/);
+  assert.equal(preview.headers.get("Referrer-Policy"), "no-referrer");
+  const shell = await preview.text();
+  assert.match(shell, /waiver-[A-Z0-9]+\.js/);
+  assert.ok(!shell.includes(token));
+  assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM studio_access").first()).n, 0);
   assert.equal((await post("request", { lang: "es" })).status, 404);
   assert.equal((await post("studio", { token }, { Origin: "https://other.example" })).status, 403);
   assert.equal((await post("studio", { token: "a".repeat(64) })).status, 403);

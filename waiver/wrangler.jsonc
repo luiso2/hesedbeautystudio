@@ -8,7 +8,7 @@
   "assets": {
     "directory": "./build/public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"],
+    "run_worker_first": ["/api/*", "/acceso/*"],
   },
   "routes": [{ "pattern": "waiver.mariahesed.com", "custom_domain": true }],
   "services": [{ "binding": "STUDIO", "service": "hesedbeautystudio" }],

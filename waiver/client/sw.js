@@ -29,6 +29,11 @@ self.addEventListener("fetch", (event) => {
     url.pathname.startsWith("/api/")
   )
     return;
+  // Offline tablets reuse the public shell. Never cache an owner-specific URL.
+  if (req.mode === "navigate" && /^\/acceso\/[a-f0-9]{64}\/?$/.test(url.pathname)) {
+    event.respondWith(fetch(req).catch(() => caches.open(cacheName).then(cache => cache.match("/estudio"))));
+    return;
+  }
   const key = url.pathname === "/index.html" ? "/" : url.pathname.replace(/\.html$/, "");
   if (paths.includes(key))
     event.respondWith(
