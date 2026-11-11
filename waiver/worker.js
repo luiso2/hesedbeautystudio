@@ -1,3 +1,4 @@
+import { alternateOrigin, studioOrigins } from "./shared/origins.js";
 import {
   validForm,
   validEmail,
@@ -185,7 +186,7 @@ async function job(env, id, kind, meta) {
     now(),
   );
 }
-async function issue(body, env, ctx) {
+async function issue(body, env, ctx, inviteOrigin) {
   if (
     !["tablet", "link", "email"].includes(body?.mode) ||
     (body.mode === "email" && !validEmail(body.email))
@@ -218,7 +219,7 @@ async function issue(body, env, ctx) {
           to: mail,
           lang,
           url:
-            env.PUBLIC_ORIGIN + "/#sign=" + token + "." + id + "&lang=" + lang,
+            inviteOrigin + "/#sign=" + token + "." + id + "&lang=" + lang,
         }),
       );
   }
@@ -414,6 +415,12 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url),
       path = url.pathname;
+    if (url.protocol === "http:" && studioOrigins.includes("https://" + url.host)) {
+      url.protocol = "https:";
+      return new Response(null, { status: 308, headers: {
+        Location: url.href, "Cache-Control": "no-store", "Referrer-Policy": "no-referrer",
+      } });
+    }
     // A link preview gets only the public shell. The browser redeems the private
     // key separately, under the same authorization checks as older studio links.
     if (/^\/acceso\/[a-f0-9]{64}\/?$/.test(path) && ["GET", "HEAD"].includes(request.method)) {
@@ -438,8 +445,10 @@ export default {
             ? sessionCookies(response, sessionValue(request), request.headers.get("X-Waiver-Device"), age)
             : response;
         }
-        if (path === "/api/admin/invite" && request.method === "POST")
-          return await issue(await read(request), env, ctx);
+        if (path === "/api/admin/invite" && request.method === "POST") {
+          const inviteOrigin = url.origin === alternateOrigin ? alternateOrigin : env.PUBLIC_ORIGIN;
+          return await issue(await read(request), env, ctx, inviteOrigin);
+        }
         const id = path.split("/").pop();
         if (
           path.startsWith("/api/admin/invitation/") &&

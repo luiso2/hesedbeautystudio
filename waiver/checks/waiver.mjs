@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { PDFDocument } from "pdf-lib";
+import { alternateOrigin, studioOrigins } from "../shared/origins.js";
 import { studio } from "./runtime.mjs";
 import { version } from "../shared/form.js";
 test("Private invitations, consent, encrypted archive, PDF copies and idempotent replay", async (t) => {
@@ -197,4 +198,28 @@ test("previously issued email links still work once during their original lifeti
   });
   const responses = await Promise.all([redeem(), redeem()]);
   assert.deepEqual(responses.map(r => r.status).sort(), [200, 403]);
+});
+
+test("the alternate address serves the panel and issues signing links on its own host", async t => {
+  const { runtime, mail } = await studio();
+  t.after(() => runtime.dispose());
+  const path = "/acceso/" + "4".repeat(64);
+  for (const origin of studioOrigins) {
+    const preview = await runtime.dispatchFetch(origin + path);
+    assert.equal(preview.status, 200);
+    assert.match(await preview.text(), /waiver-[A-Z0-9]+\.js/);
+    assert.equal(preview.headers.get("Set-Cookie"), null);
+    const insecure = await runtime.dispatchFetch(origin.replace("https:", "http:") + path, { redirect: "manual" });
+    assert.equal(insecure.status, 308);
+    assert.equal(insecure.headers.get("Location"), origin + path);
+    assert.equal((await runtime.dispatchFetch(origin + "/api/admin/archive")).status, 401);
+  }
+  const response = await runtime.dispatchFetch(alternateOrigin + "/api/admin/invite", {
+    method: "POST", headers: { authorization: "Bearer test-access", "Content-Type": "application/json" },
+    body: JSON.stringify({ mode: "email", email: "client@example.org", lang: "es" }),
+  });
+  assert.equal(response.status, 201);
+  const {tickets: [ticket]} = await response.json();
+  for (let i = 0; i < 40 && !mail.length; i++) await new Promise(resolve => setTimeout(resolve, 50));
+  assert.ok(mail[0]?.text.includes(alternateOrigin + "/#sign=" + ticket.token + "." + ticket.id));
 });

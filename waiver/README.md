@@ -4,6 +4,8 @@ María abre su enlace privado para entrar directamente al panel desde su teléfo
 
 Para usar la tablet sin conexión, abre el panel en la app o el navegador que se usará para las firmas y pulsa **Preparar 10 formularios**. Después abre **Modo presencial**. Cada formulario puede generar su PDF sin internet. Tras firmar, descarga la copia y pulsa **Terminar** antes de entregar la tablet a otra persona. Vuelve a abrir la página con conexión para sincronizar las firmas pendientes. Conserva los datos del navegador hasta que el panel indique que se sincronizaron.
 
+El dominio principal es `waiver.mariahesed.com`. Si una red no puede abrirlo, el mismo enlace privado funciona en `mariahesed-waiver.odd-forest-9504.workers.dev` conservando la ruta completa. Las dos direcciones usan el mismo archivo del estudio. Cada origen mantiene su propia sesión y sus formularios pendientes sin conexión.
+
 ## Operación
 
 Instala las dependencias desde este directorio con `npm ci`. Ejecuta `npm test` para compilar y probar el Worker con una base D1 local y un transporte de correo simulado. Aplica las migraciones necesarias con `npx wrangler d1 migrations apply mariahesed-waivers --remote` y publica con `npm run deploy`.

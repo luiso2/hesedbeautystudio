@@ -15,6 +15,7 @@ import {
   saveFile,
   errorText,
 } from "./ui.js";
+import { studioOrigins } from "../shared/origins.js";
 import { signForm } from "./sign.js";
 import { makePdf } from "../shared/pdf.js";
 import {
@@ -124,7 +125,7 @@ function connectStudio() {
     let token;
     try {
       const url = new URL(link.input.value.trim());
-      if (url.origin === origin) {
+      if (url.origin === origin || (studioOrigins.includes(origin) && studioOrigins.includes(url.origin))) {
         token = url.pathname.match(privatePath)?.[1] ||
           new URLSearchParams(url.hash.slice(1)).get("entrada");
       }
