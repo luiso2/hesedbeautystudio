@@ -89,8 +89,87 @@ const pack = (env, aad, v) => seal(env, aad, enc.encode(JSON.stringify(v)));
 const unpack = async (env, aad, v) =>
   JSON.parse(dec.decode(await open(env, aad, v)));
 const sql = (env, query, ...args) => env.DB.prepare(query).bind(...args);
+const LINK_SECONDS = 15 * 60;
+const SESSION_SECONDS = 30 * 86400;
+const secretFormat = /^[a-f0-9]{64}$/;
+const sessionCookie = (value, age) =>
+  `__Host-waiver-session=${value}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${age}`;
+
+async function deviceSession(request) {
+  const cookie = (request.headers.get("Cookie") || "").match(/(?:^|; *)__Host-waiver-session=([0-9a-f]{64})(?:;|$)/);
+  const device = request.headers.get("X-Waiver-Device") || "";
+  return cookie && secretFormat.test(device) ? hash(cookie[1] + "." + device) : null;
+}
+async function requestAccess(env, lang) {
+  const token = randomToken();
+  const digest = await hash(token);
+  const issued = now();
+  // Concurrent requests share a cooldown without invalidating an emailed link.
+  const created = await sql(env, `INSERT INTO studio_access(link_hash,issued)
+    SELECT ?,? WHERE NOT EXISTS (
+      SELECT 1 FROM studio_access WHERE issued > ? AND session_hash IS NULL
+    ) AND (SELECT count(*) FROM studio_access WHERE issued > ?) < 12`,
+    digest, issued, issued - 60, issued - 3600).run();
+  if (!created.meta.changes) throw new Invalid("access_wait", 429);
+  const en = lang === "en";
+  const url = env.PUBLIC_ORIGIN + "/panel#access=" + token + "&lang=" + (en ? "en" : "es");
+  try {
+    const sent = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + env.MAIL_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: env.MAIL_FROM, to: [env.STUDIO_EMAIL],
+        subject: en ? "Open your studio dashboard · María Hesed" : "Accede a tu panel de consentimientos · María Hesed",
+        text: (en
+          ? "María, open this private link on the device you use for your studio dashboard. It works once and expires in 15 minutes."
+          : "María, abre este enlace privado en el dispositivo que usarás para tu panel. Es de un solo uso y vence en 15 minutos.") +
+          "\n\n" + url + "\n\n" + (en
+          ? "Keep this link private. If you did not request it, you can ignore this email."
+          : "Guarda este enlace para ti. Si no lo solicitaste, puedes ignorar este correo."),
+      }),
+      signal: AbortSignal.timeout(12000),
+    });
+    if (!sent.ok) throw new Error("mail");
+  } catch {
+    await sql(env, "DELETE FROM studio_access WHERE link_hash=? AND session_hash IS NULL", digest).run();
+    throw new Invalid("access_mail", 503);
+  }
+  return json({ sent: true });
+}
+async function accessRoute(path, request, env) {
+  const origin = request.headers.get("Origin");
+  if ((origin && origin !== new URL(request.url).origin) || request.headers.get("Sec-Fetch-Site") === "cross-site")
+    throw new Invalid("invalid_origin", 403);
+  const body = await read(request);
+  if (path === "/api/access/request") return requestAccess(env, body?.lang);
+  if (path === "/api/access/redeem") {
+    if (typeof body?.token !== "string" || !secretFormat.test(body.token)) throw new Invalid("access_expired", 403);
+    const cookie = randomToken();
+    const device = randomToken();
+    const changed = await sql(env, `UPDATE studio_access SET session_hash=?,session_expires=?
+      WHERE link_hash=? AND issued>? AND session_hash IS NULL`,
+      await hash(cookie + "." + device), now() + SESSION_SECONDS, await hash(body.token), now() - LINK_SECONDS).run();
+    if (!changed.meta.changes) throw new Invalid("access_expired", 403);
+    const response = json({ device });
+    response.headers.set("Set-Cookie", sessionCookie(cookie, SESSION_SECONDS));
+    return response;
+  }
+  if (path === "/api/access/logout") {
+    const digest = await deviceSession(request);
+    if (digest) await sql(env, "UPDATE studio_access SET session_expires=0 WHERE session_hash=?", digest).run();
+    const response = json({ signedOut: true });
+    response.headers.set("Set-Cookie", sessionCookie("", 0));
+    return response;
+  }
+  throw new Invalid("not_found", 404);
+}
 async function admin(request, env) {
   const authorization = request.headers.get("Authorization") || "";
+  if (!authorization) {
+    const digest = await deviceSession(request);
+    if (digest && await sql(env, "SELECT 1 FROM studio_access WHERE session_hash=? AND session_expires>?", digest, now()).first()) return;
+    throw new Invalid("unauthorized", 401);
+  }
   if (!/^Bearer \S{1,512}$/.test(authorization))
     throw new Invalid("unauthorized", 401);
   const r = await env.STUDIO.fetch("https://mariahesed.com/api/admin/session", {
@@ -339,12 +418,15 @@ async function archive(url, env) {
 export default {
   async scheduled(_, env, ctx) {
     ctx.waitUntil(deliver(env));
+    ctx.waitUntil(sql(env, "DELETE FROM studio_access WHERE issued<? AND (session_expires IS NULL OR session_expires<=?)", now() - 3600, now()).run());
   },
   async fetch(request, env, ctx) {
     const url = new URL(request.url),
       path = url.pathname;
     if (!path.startsWith("/api/")) return env.ASSETS.fetch(request);
     try {
+      if (path.startsWith("/api/access/") && request.method === "POST")
+        return await accessRoute(path, request, env);
       if (path.startsWith("/api/admin/")) {
         await admin(request, env);
         if (path === "/api/admin/archive" && request.method === "GET")

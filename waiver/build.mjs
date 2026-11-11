@@ -20,7 +20,7 @@ await build({
 await build({
   ...base,
   entryPoints: ["client/main.js"],
-  outfile: dir + "/app.js",
+  outfile: dir + "/waiver.js",
   platform: "browser",
 });
 const files = [
@@ -31,7 +31,8 @@ const files = [
   "manifest.webmanifest",
 ];
 for (const file of files) await copyFile("client/" + file, dir + "/" + file);
-const paths = [...files, "app.js"].map((p) => "/" + p);
+await copyFile(dir + "/index.html", dir + "/panel.html");
+const paths = [...files, "waiver.js", "panel.html"].map((p) => "/" + p);
 const hash = createHash("sha256");
 for (const path of paths) hash.update(await readFile(dir + path));
 const cache = "mh-waiver-" + hash.digest("hex").slice(0, 16);
@@ -42,7 +43,7 @@ await writeFile(
     .replace('"BUILD_CACHE"', JSON.stringify(cache))
     .replace(
       '"BUILD_PATHS"',
-      JSON.stringify(paths.map((p) => (p === "/index.html" ? "/" : p))),
+      JSON.stringify(paths.map((p) => (p === "/index.html" ? "/" : p === "/panel.html" ? "/panel" : p))),
     ),
 );
 await writeFile(dir + "/robots.txt", "User-agent: *\nDisallow: /\n");
@@ -57,7 +58,7 @@ await writeFile(
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob:; connect-src 'self'; font-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'
 /sw.js
   Cache-Control: no-cache
-/app.js
+/waiver.js
   Cache-Control: no-cache
 `,
 );

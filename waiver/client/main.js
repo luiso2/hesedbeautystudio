@@ -27,6 +27,23 @@ import {
 } from "./store.js";
 
 const origin = location.origin;
+const deviceKey = "waiver-studio-device";
+const accessPost = (path, data, options = {}) => api("access/" + path, {
+  method: "POST", headers: { "Content-Type": "application/json", ...options.headers },
+  body: JSON.stringify(data), keepalive: true, signal: AbortSignal.timeout(15000),
+});
+function forgetStudio() {
+  const device = localStorage.getItem(deviceKey);
+  localStorage.removeItem(deviceKey);
+  if (device && navigator.onLine) {
+    // Losing the local half also locks this browser immediately while offline.
+    return accessPost("logout", {}, { headers: { "X-Waiver-Device": device } }).catch(() => {});
+  }
+}
+window.addEventListener("storage", (event) => {
+  if ((event.key === deviceKey || event.key === null) && !localStorage.getItem(deviceKey)
+      && document.querySelector("[data-studio-dashboard]")) location.reload();
+});
 const swReady =
   "serviceWorker" in navigator
     ? navigator.serviceWorker
@@ -61,11 +78,16 @@ function home() {
   p.append(
     button(
       ["Firma en la tablet", "Sign on the tablet"],
-      () => go("#tablet"),
+      enterTablet,
       "btn primary",
     ),
     button(["Panel de María", "Studio dashboard"], () => go("#admin"), "text"),
   );
+}
+function enterTablet() {
+  forgetStudio();
+  app.replaceChildren();
+  go("#tablet");
 }
 async function tablet() {
   intro(
@@ -105,13 +127,26 @@ async function tablet() {
     button(["Panel de María", "Studio dashboard"], () => go("#admin"), "text"),
   );
 }
-async function dashboard(key) {
-  const headers = { Authorization: "Bearer " + key };
-  const admin = (path, opts = {}) =>
-    api("admin/" + path, { ...opts, headers: { ...headers, ...opts.headers } });
+async function dashboard() {
+  const session = localStorage.getItem(deviceKey);
+  const admin = async (path, opts = {}) => {
+    const device = localStorage.getItem(deviceKey);
+    try {
+      return await api("admin/" + path, {
+        ...opts, headers: { ...opts.headers, "X-Waiver-Device": device || "" },
+      });
+    } catch (error) {
+      if (error.message === "unauthorized") {
+        localStorage.removeItem(deviceKey);
+        login();
+      }
+      throw error;
+    }
+  };
   const archivePage = async (cursor) =>
     (await admin("archive" + (cursor ? "?before=" + cursor : ""))).json();
   const first = await archivePage();
+  if (!session || session !== localStorage.getItem(deviceKey)) return login();
   intro(
     ["Panel del estudio", "Studio dashboard"],
     [
@@ -119,6 +154,7 @@ async function dashboard(key) {
       "Send a consent form, prepare a tablet or download a signed document.",
     ],
   );
+  app.querySelector("h1").dataset.studioDashboard = "";
   const invite = panel(["Invitar a firmar", "Invite a client"]);
   const mail = field(["Correo del cliente", "Client email"], "email", true);
   const inviteLang = field(["Idioma de la invitación", "Invitation language"]);
@@ -220,8 +256,8 @@ async function dashboard(key) {
   kiosk.append(
     copy(
       "p",
-      "Prepara esta tablet con internet. Después podrás abrir el modo presencial, firmar y descargar el PDF incluso sin señal.",
-      "Prepare this tablet while online. Then open tablet mode to sign and download the PDF, even without a connection.",
+      "Prepara esta tablet con internet. El modo presencial cierra tu panel y permite firmar y descargar el PDF incluso sin señal.",
+      "Prepare this tablet while online. Tablet mode signs you out of the dashboard and lets clients sign and download their PDF, even without a connection.",
     ),
   );
   const stock = labelText(node("p", "muted"), await summary());
@@ -240,7 +276,7 @@ async function dashboard(key) {
         "Tablet ready. Open tablet mode before handing it over.",
       ]);
     }),
-    button(["Modo presencial", "Tablet mode"], () => go("#tablet"), "text"),
+    button(["Modo presencial", "Tablet mode"], enterTablet, "text"),
   );
   const waiting = await pendingRows();
   if (waiting.length) {
@@ -249,7 +285,7 @@ async function dashboard(key) {
         ["Sincronizar firmas pendientes", "Sync pending signatures"],
         async () => {
           await sync();
-          await dashboard(key);
+          await dashboard();
         },
       ),
     );
@@ -312,7 +348,7 @@ async function dashboard(key) {
             )
               return;
             await admin("record/" + item.id, { method: "DELETE" });
-            await dashboard(key);
+            await dashboard();
           },
           "text",
         ),
@@ -332,36 +368,69 @@ async function dashboard(key) {
         "Signed forms appear here once they sync.",
       ),
     );
-  app.append(button(["Salir del panel", "Sign out"], () => go(""), "text"));
+  app.append(button(["Cerrar sesión en este dispositivo", "Sign out on this device"], async () => {
+    const closing = forgetStudio();
+    home();
+    await closing;
+    go("");
+  }, "text"));
 }
 function login() {
-  intro(
-    ["Panel de María", "Studio dashboard"],
-    [
-      "Accede con la misma clave que utilizas en el panel de reservas.",
-      "Use the same access key as your booking dashboard.",
-    ],
-  );
-  const p = panel(null),
-    f = node("form"),
-    key = field(["Clave del panel", "Studio access key"], "password", true);
-  key.input.autocomplete = "current-password";
-  p.append(f);
-  const submit = button(
-    ["Entrar", "Sign in"],
-    async () => {
-      if (key.input.reportValidity()) await dashboard(key.input.value.trim());
-    },
-    "btn primary",
-  );
-  f.append(key.label, submit);
-  f.onsubmit = (e) => {
-    e.preventDefault();
-    submit.click();
-  };
+  intro(["Panel de María", "Studio dashboard"], [
+    "Recibe un enlace en el correo de María para abrir el panel en este dispositivo.",
+    "Get a link in María’s email to open the dashboard on this device.",
+  ]);
+  const p = panel(null);
+  p.append(button(["Enviarme el enlace de acceso", "Email my sign-in link"], async () => {
+    await accessPost("request", { lang });
+    status([
+      "Revisa el correo de María y abre el enlace en el navegador que usarás para el panel. Vence en 15 minutos.",
+      "Check María’s email and open the link in the browser you’ll use for the dashboard. It expires in 15 minutes.",
+    ]);
+  }, "btn primary"));
+}
+function activate(token) {
+  // Keep the one-use token out of the address bar, history, and browser storage.
+  history.replaceState(null, "", "/panel");
+  intro(["Acceso de María", "María’s sign-in"], [
+    "Abre el panel para recordar este navegador durante 30 días. El modo presencial cierra la sesión antes de entregar la tablet.",
+    "Open the dashboard to remember this browser for 30 days. Tablet mode signs you out before you hand over the device.",
+  ]);
+  panel(null).append(button(["Abrir mi panel", "Open my dashboard"], async () => {
+    try {
+      const { device } = await (await accessPost("redeem", { token })).json();
+      localStorage.setItem(deviceKey, device);
+      await dashboard();
+    } catch (error) {
+      if (error.message === "access_expired") login();
+      throw error;
+    }
+  }, "btn primary"));
+}
+async function openStudio() {
+  if (!localStorage.getItem(deviceKey)) return login();
+  try {
+    await dashboard();
+  } catch (error) {
+    if (error.message === "unauthorized") return;
+    intro(["Panel de María", "Studio dashboard"], [
+      "Para consultar el archivo necesitas conexión a internet.",
+      "Connect to the internet to open the archive.",
+    ]);
+    const choices = panel(null);
+    choices.append(button(["Volver a intentar", "Try again"], openStudio), button(["Firma presencial", "Sign on the tablet"], enterTablet, "text"));
+  }
 }
 async function start() {
   const args = new URLSearchParams(location.hash.slice(1));
+  if (args.has("access")) {
+    sessionStorage.removeItem("active-waiver");
+    activate(args.get("access"));
+    return;
+  }
+  if (args.has("sign") || args.has("tablet")) {
+    forgetStudio();
+  }
   if (args.has("sign")) {
     const value = args.get("sign"),
       [token, id] = value.split(".");
@@ -380,9 +449,9 @@ async function start() {
     signForm(t, false);
     return;
   }
-  if (args.has("admin")) {
+  if (args.has("admin") || (location.pathname === "/panel" && !location.hash)) {
     sessionStorage.removeItem("active-waiver");
-    login();
+    await openStudio();
     return;
   }
   const active = JSON.parse(sessionStorage.getItem("active-waiver") || "null");
@@ -391,10 +460,12 @@ async function start() {
       sessionStorage.removeItem("active-waiver");
       throw new Error("expired");
     }
+    forgetStudio();
     signForm(active.t, active.tablet);
     return;
   }
   if (args.has("tablet")) await tablet();
+  else if (localStorage.getItem(deviceKey)) await openStudio();
   else home();
 }
 start().catch((e) => {

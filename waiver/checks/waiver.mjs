@@ -98,3 +98,42 @@ test("Private invitations, consent, encrypted archive, PDF copies and idempotent
     404,
   );
 });
+
+test("One-use studio email links, remembered devices and signed-out shared tablets", async t => {
+  const { runtime, db, mail } = await studio();
+  t.after(() => runtime.dispose());
+  const post = (path, body, headers = {}) => runtime.dispatchFetch("http://localhost/api/access/" + path, {
+    method: "POST", headers: { "Content-Type": "application/json", ...headers }, body: JSON.stringify(body),
+  });
+  const archive = (headers = {}) => runtime.dispatchFetch("http://localhost/api/admin/archive", { headers });
+  assert.equal((await post("request", {}, { Origin: "https://other.example" })).status, 403);
+  assert.equal((await post("request", { lang: "es", email: "other@example.org" })).status, 200);
+  assert.equal((await post("request", {})).status, 429);
+  assert.equal(mail.length, 1);
+  assert.deepEqual(mail[0].to, ["studio@example.org"]);
+  const token = mail[0].text.match(/#access=([a-f0-9]{64})/)[1];
+  assert.equal((await archive({ "X-Waiver-Key": token })).status, 401);
+  const responses = await Promise.all([post("redeem", { token }), post("redeem", { token })]);
+  assert.deepEqual(responses.map(r => r.status).sort(), [200, 403]);
+  const response = responses.find(r => r.ok);
+  const { device } = await response.json();
+  const setCookie = response.headers.get("Set-Cookie");
+  assert.match(setCookie, /HttpOnly; Secure; SameSite=Strict; Max-Age=2592000/);
+  const cookie = setCookie.split(";")[0];
+  const headers = { Cookie: cookie, "X-Waiver-Device": device };
+  assert.equal((await archive({ Cookie: cookie })).status, 401);
+  assert.equal((await archive({ "X-Waiver-Device": device })).status, 401);
+  assert.equal((await archive(headers)).status, 200);
+  const row = await db.prepare("SELECT link_hash,session_hash FROM studio_access").first();
+  assert.notEqual(row.link_hash, token);
+  assert.notEqual(row.session_hash, device);
+  assert.ok(!cookie.includes(row.session_hash));
+  const bye = await post("logout", {}, headers);
+  assert.match(bye.headers.get("Set-Cookie"), /Max-Age=0/);
+  assert.equal((await archive(headers)).status, 401);
+  assert.equal((await post("redeem", { token })).status, 403);
+  assert.equal((await post("request", { lang: "en" })).status, 200);
+  const expired = mail[1].text.match(/#access=([a-f0-9]{64})/)[1];
+  await db.prepare("UPDATE studio_access SET issued=issued-901 WHERE session_hash IS NULL").run();
+  assert.equal((await post("redeem", { token: expired })).status, 403);
+});

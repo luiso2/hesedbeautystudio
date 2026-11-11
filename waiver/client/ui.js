@@ -1,7 +1,7 @@
 const params = new URLSearchParams(location.hash.slice(1));
 export let lang =
-  params.get("lang") === "en"
-    ? "en"
+  params.has("lang")
+    ? (params.get("lang") === "en" ? "en" : "es")
     : sessionStorage.getItem("waiver-lang") === "en"
       ? "en"
       : "es";
@@ -58,8 +58,20 @@ export function status(pair) {
 }
 export const errors = {
   unauthorized: [
-    "Revisa la clave del panel de reservas.",
-    "Check your booking panel access key.",
+    "Tu sesión ha terminado. Solicita un enlace de acceso.",
+    "Your session has ended. Request a sign-in link.",
+  ],
+  access_expired: [
+    "Este enlace ha vencido o ya se utilizó. Puedes pedir otro.",
+    "This link has expired or has already been used. You can request another.",
+  ],
+  access_wait: [
+    "Revisa primero el correo de María. Si acabas de pedir un enlace, espera un momento antes de solicitar otro.",
+    "Check María’s inbox first. If you just requested a link, wait a little before requesting another.",
+  ],
+  access_mail: [
+    "No se pudo enviar el enlace. Vuelve a intentarlo.",
+    "The sign-in email could not be sent. Please try again.",
   ],
   invalid_link: [
     "Este enlace no es válido. Pide uno nuevo al estudio.",
@@ -143,6 +155,7 @@ export function saveFile(bytes, id) {
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 export function go(hash) {
-  location.replace(location.pathname + hash);
-  location.reload();
+  const target = location.origin + "/" + hash;
+  if (location.href === target) location.reload();
+  else location.replace(target);
 }
