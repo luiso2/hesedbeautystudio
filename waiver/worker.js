@@ -92,13 +92,22 @@ const sql = (env, query, ...args) => env.DB.prepare(query).bind(...args);
 const LINK_SECONDS = 15 * 60;
 const SESSION_SECONDS = 30 * 86400;
 const secretFormat = /^[a-f0-9]{64}$/;
-const sessionCookie = (value, age) =>
-  `__Host-waiver-session=${value}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${age}`;
+function sessionValue(request) {
+  return (request.headers.get("Cookie") || "").match(/(?:^|; *)__Host-waiver-session=([0-9a-f]{64})(?:;|$)/)?.[1];
+}
+function sessionCookies(response, session, device, age) {
+  const flags = `Secure; SameSite=Strict; Max-Age=${age}`;
+  response.headers.append("Set-Cookie", `__Host-waiver-session=${session}; Path=/; HttpOnly; ${flags}`);
+  // Home Screen installs can transfer cookies without transferring browser localStorage.
+  // The client still has to present this device value in a custom header.
+  response.headers.append("Set-Cookie", `__Host-waiver-device=${device}; Path=/; ${flags}`);
+  return response;
+}
 
 async function deviceSession(request) {
-  const cookie = (request.headers.get("Cookie") || "").match(/(?:^|; *)__Host-waiver-session=([0-9a-f]{64})(?:;|$)/);
+  const cookie = sessionValue(request);
   const device = request.headers.get("X-Waiver-Device") || "";
-  return cookie && secretFormat.test(device) ? hash(cookie[1] + "." + device) : null;
+  return cookie && secretFormat.test(device) ? hash(cookie + "." + device) : null;
 }
 async function accessRoute(path, request, env) {
   const origin = request.headers.get("Origin");
@@ -130,25 +139,27 @@ async function accessRoute(path, request, env) {
           WHERE link_hash=? AND issued>? AND session_hash IS NULL`,
           sessionHash, expires, tokenHash, issued - LINK_SECONDS).run();
     if (!changed.meta.changes) throw new Invalid("access_expired", 403);
-    const response = json({ device });
-    response.headers.set("Set-Cookie", sessionCookie(cookie, SESSION_SECONDS));
-    return response;
+    return sessionCookies(json({ device }), cookie, device, SESSION_SECONDS);
   }
   if (path === "/api/access/logout") {
     const digest = await deviceSession(request);
     if (digest) await sql(env, "UPDATE studio_access SET session_expires=0 WHERE session_hash=?", digest).run();
-    const response = json({ signedOut: true });
-    response.headers.set("Set-Cookie", sessionCookie("", 0));
-    return response;
+    return sessionCookies(json({ signedOut: true }), "", "", 0);
   }
   throw new Invalid("not_found", 404);
 }
-async function admin(request, env) {
+async function admin(request, env, refresh = false) {
   const authorization = request.headers.get("Authorization") || "";
   if (!authorization) {
     const digest = await deviceSession(request);
-    if (digest && await sql(env, "SELECT 1 FROM studio_access WHERE session_hash=? AND session_expires>?", digest, now()).first()) return;
-    throw new Invalid("unauthorized", 401);
+    if (!digest) throw new Invalid("unauthorized", 401);
+    const time = now();
+    const session = refresh
+      ? await sql(env, `UPDATE studio_access SET session_expires=CASE WHEN entrance_hash IS NULL THEN session_expires ELSE ? END
+          WHERE session_hash=? AND session_expires>? RETURNING session_expires`, time + SESSION_SECONDS, digest, time).first()
+      : await sql(env, "SELECT session_expires FROM studio_access WHERE session_hash=? AND session_expires>?", digest, time).first();
+    if (!session) throw new Invalid("unauthorized", 401);
+    return session.session_expires - time;
   }
   if (!/^Bearer \S{1,512}$/.test(authorization))
     throw new Invalid("unauthorized", 401);
@@ -418,9 +429,15 @@ export default {
       if (path.startsWith("/api/access/") && request.method === "POST")
         return await accessRoute(path, request, env);
       if (path.startsWith("/api/admin/")) {
-        await admin(request, env);
-        if (path === "/api/admin/archive" && request.method === "GET")
-          return await archive(url, env);
+        const openingArchive = path === "/api/admin/archive" && request.method === "GET";
+        const refresh = openingArchive && !url.searchParams.has("before");
+        const age = await admin(request, env, refresh);
+        if (openingArchive) {
+          const response = await archive(url, env);
+          return refresh && age
+            ? sessionCookies(response, sessionValue(request), request.headers.get("X-Waiver-Device"), age)
+            : response;
+        }
         if (path === "/api/admin/invite" && request.method === "POST")
           return await issue(await read(request), env, ctx);
         const id = path.split("/").pop();

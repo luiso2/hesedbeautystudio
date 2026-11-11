@@ -35,7 +35,7 @@ for (const file of files) await copyFile("client/" + file, dir + "/" + file);
 const brandFiles = ["maria-hesed-mark.webp", "studio-light.webp", "maria-hesed-icon.png", "marca.css"];
 for (const file of brandFiles) await copyFile("../public/" + file, dir + "/" + file);
 const html = (await readFile("client/index.html", "utf8")).replace("/waiver.js", "/" + script);
-const pages = ["index.html", "panel.html", "estudio.html"];
+const pages = ["index.html", "panel.html", "estudio.html", "app.html"];
 for (const page of pages) await writeFile(dir + "/" + page, html);
 const paths = [...files, ...brandFiles, script, ...pages].map((p) => "/" + p);
 const hash = createHash("sha256");

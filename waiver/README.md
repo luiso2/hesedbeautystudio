@@ -1,8 +1,8 @@
 # Consentimientos de María Hesed
 
-María abre su enlace privado para entrar directamente al panel desde su teléfono, computadora o tablet. El navegador recuerda la sesión durante 30 días. Cerrar sesión o entrar al modo presencial bloquea ese dispositivo. Para volver a abrirlo, María usa el mismo enlace privado. Desde el panel puede enviar una invitación por correo, copiar un enlace de una sola firma y descargar o eliminar un documento archivado.
+María abre su enlace privado para entrar directamente al panel desde su teléfono, computadora o tablet. Puede agregar la app a la pantalla de inicio desde el panel abierto. El icono abre el panel y la sesión se renueva por 30 días al consultarlo. Si una instalación antigua abre la pantalla de bienvenida, puede vincularla pegando su enlace privado en «Panel de María». Cerrar sesión o entrar al modo presencial bloquea ese dispositivo. Para volver a abrirlo, María usa el mismo enlace privado. Desde el panel puede enviar una invitación por correo, copiar un enlace de una sola firma y descargar o eliminar un documento archivado.
 
-Para usar la tablet sin conexión, abre el panel en el navegador que se usará para las firmas y pulsa **Preparar 10 formularios**. Después abre **Modo presencial**. Cada formulario puede generar su PDF sin internet. Tras firmar, descarga la copia y pulsa **Terminar** antes de entregar la tablet a otra persona. Vuelve a abrir la página con conexión para sincronizar las firmas pendientes. Conserva los datos del navegador hasta que el panel indique que se sincronizaron.
+Para usar la tablet sin conexión, abre el panel en la app o el navegador que se usará para las firmas y pulsa **Preparar 10 formularios**. Después abre **Modo presencial**. Cada formulario puede generar su PDF sin internet. Tras firmar, descarga la copia y pulsa **Terminar** antes de entregar la tablet a otra persona. Vuelve a abrir la página con conexión para sincronizar las firmas pendientes. Conserva los datos del navegador hasta que el panel indique que se sincronizaron.
 
 ## Operación
 

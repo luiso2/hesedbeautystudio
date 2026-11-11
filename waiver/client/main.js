@@ -28,6 +28,21 @@ import {
 
 const origin = location.origin;
 const deviceKey = "waiver-studio-device";
+const lockedModeKey = "waiver-locked-mode";
+function currentDevice() {
+  if (localStorage.getItem(lockedModeKey)) return null;
+  const cookie = document.cookie.match(/(?:^|; *)__Host-waiver-device=([a-f0-9]{64})(?:;|$)/);
+  return cookie?.[1] || localStorage.getItem(deviceKey);
+}
+function lockDevice(mode) {
+  localStorage.setItem(lockedModeKey, mode);
+  localStorage.removeItem(deviceKey);
+  document.cookie = "__Host-waiver-device=; Path=/; Secure; SameSite=Strict; Max-Age=0";
+}
+function installedApp() {
+  return location.pathname === "/app" || navigator.standalone === true ||
+    matchMedia("(display-mode: standalone)").matches;
+}
 const accessPost = (path, data, options = {}) => api("access/" + path, {
   method: "POST", headers: { "Content-Type": "application/json", ...options.headers },
   body: JSON.stringify(data), keepalive: true, signal: AbortSignal.timeout(15000),
@@ -37,17 +52,17 @@ function clearStudioAddress() {
   if (privatePath.test(location.pathname) || new URLSearchParams(location.hash.slice(1)).has("entrada"))
     history.replaceState(null, "", "/estudio");
 }
-function forgetStudio() {
+function forgetStudio(mode = "signed-out") {
   clearStudioAddress();
-  const device = localStorage.getItem(deviceKey);
-  localStorage.removeItem(deviceKey);
+  const device = currentDevice();
+  lockDevice(mode);
   if (device && navigator.onLine) {
     // Losing the local half also locks this browser immediately while offline.
     return accessPost("logout", {}, { headers: { "X-Waiver-Device": device } }).catch(() => {});
   }
 }
 window.addEventListener("storage", (event) => {
-  if ((event.key === deviceKey || event.key === null) && !localStorage.getItem(deviceKey)
+  if ([deviceKey, lockedModeKey, null].includes(event.key) && !currentDevice()
       && (document.querySelector("[data-studio-dashboard]") || privatePath.test(location.pathname))) {
     clearStudioAddress();
     location.reload();
@@ -91,9 +106,39 @@ function home() {
       "btn primary",
     ),
   );
+  if (installedApp()) connectStudio();
+}
+function connectStudio() {
+  const section = panel(["Panel de María", "María’s dashboard"]);
+  section.append(copy("p", "Para vincular esta app, pega el enlace privado de María una sola vez.", "To connect this app, paste María’s private link once."));
+  const form = node("form");
+  const link = field(["Enlace privado de María", "María’s private link"], "url", true);
+  link.input.autocomplete = "off";
+  link.input.autocapitalize = "none";
+  link.input.spellcheck = false;
+  const submit = copy("button", "Abrir mi panel", "Open my dashboard");
+  submit.className = "btn primary";
+  form.append(link.label, submit);
+  form.onsubmit = (event) => {
+    event.preventDefault();
+    let token;
+    try {
+      const url = new URL(link.input.value.trim());
+      if (url.origin === origin) {
+        token = url.pathname.match(privatePath)?.[1] ||
+          new URLSearchParams(url.hash.slice(1)).get("entrada");
+      }
+    } catch { /* Show the same message for an incomplete or unrelated link. */ }
+    if (!/^[0-9a-f]{64}$/.test(token || "")) {
+      status(["Pega el enlace completo del panel de María.", "Paste the complete link to María’s dashboard."]);
+      return;
+    }
+    location.replace("/acceso/" + token);
+  };
+  section.append(form);
 }
 function enterTablet() {
-  forgetStudio();
+  forgetStudio("tablet");
   app.replaceChildren();
   go("#tablet");
 }
@@ -131,18 +176,22 @@ async function tablet() {
         "María can prepare more forms in the studio dashboard while online.",
       ),
     );
+  if (installedApp()) c.append(button(["Salir del modo presencial", "Leave tablet mode"], () => {
+    lockDevice("signed-out");
+    go("");
+  }, "text"));
 }
 async function dashboard() {
-  const session = localStorage.getItem(deviceKey);
+  const session = currentDevice();
   const admin = async (path, opts = {}) => {
-    const device = localStorage.getItem(deviceKey);
+    const device = currentDevice();
     try {
       return await api("admin/" + path, {
         ...opts, headers: { ...opts.headers, "X-Waiver-Device": device || "" },
       });
     } catch (error) {
       if (error.message === "unauthorized") {
-        localStorage.removeItem(deviceKey);
+        if (device === currentDevice()) lockDevice("signed-out");
         login();
       }
       throw error;
@@ -151,7 +200,8 @@ async function dashboard() {
   const archivePage = async (cursor) =>
     (await admin("archive" + (cursor ? "?before=" + cursor : ""))).json();
   const first = await archivePage();
-  if (!session || session !== localStorage.getItem(deviceKey)) return login();
+  if (!session || session !== currentDevice()) return login();
+  localStorage.setItem(deviceKey, session);
   intro(
     ["Panel del estudio", "Studio dashboard"],
     [
@@ -385,18 +435,20 @@ function login() {
     "Esta dirección por sí sola no abre el panel. Abre el enlace privado completo que recibiste para María.",
     "This address alone cannot open the dashboard. Open the complete private link you received for María.",
   ]);
+  if (installedApp()) connectStudio();
 }
 async function enterFromLink(token, endpoint) {
   if (endpoint === "redeem") history.replaceState(null, "", "/estudio");
   try {
     const response = await accessPost(endpoint, { token }, {
-      headers: { "X-Waiver-Device": localStorage.getItem(deviceKey) || "" },
+      headers: { "X-Waiver-Device": currentDevice() || "" },
     });
     const { device } = await response.json();
     localStorage.setItem(deviceKey, device);
+    localStorage.removeItem(lockedModeKey);
     if (endpoint === "studio") history.replaceState(null, "", "/acceso/" + token);
   } catch (error) {
-    if (!navigator.onLine && localStorage.getItem(deviceKey)) return openStudio();
+    if (!navigator.onLine && currentDevice()) return openStudio();
     if (error.message === "access_expired") clearStudioAddress();
     login();
     status(errorText(error));
@@ -407,7 +459,7 @@ async function enterFromLink(token, endpoint) {
   await openStudio();
 }
 async function openStudio() {
-  if (!localStorage.getItem(deviceKey)) return login();
+  if (!currentDevice()) return login();
   try {
     await dashboard();
   } catch (error) {
@@ -424,7 +476,7 @@ async function start() {
   const args = new URLSearchParams(location.hash.slice(1));
   const entryToken = location.pathname.match(privatePath)?.[1] || args.get("entrada");
   // Browser history on a shared tablet must not reopen a signed-out session.
-  if (entryToken && !localStorage.getItem(deviceKey) &&
+  if (entryToken && !currentDevice() &&
       performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
     clearStudioAddress();
     return login();
@@ -435,7 +487,7 @@ async function start() {
     return;
   }
   if (args.has("sign") || args.has("tablet")) {
-    forgetStudio();
+    forgetStudio(args.has("sign") ? "signed-out" : "tablet");
   }
   if (args.has("sign")) {
     const value = args.get("sign"),
@@ -466,12 +518,12 @@ async function start() {
       sessionStorage.removeItem("active-waiver");
       throw new Error("expired");
     }
-    forgetStudio();
+    forgetStudio(active.tablet ? "tablet" : "signed-out");
     signForm(active.t, active.tablet);
     return;
   }
-  if (args.has("tablet")) await tablet();
-  else if (localStorage.getItem(deviceKey)) await openStudio();
+  if (args.has("tablet") || localStorage.getItem(lockedModeKey) === "tablet") await tablet();
+  else if (currentDevice()) await openStudio();
   else home();
 }
 start().catch((e) => {
@@ -489,7 +541,7 @@ setInterval(resync, 60000);
 window.addEventListener("hashchange", () => location.reload());
 window.addEventListener("pageshow", (e) => {
   if (e.persisted) {
-    if (!localStorage.getItem(deviceKey)) clearStudioAddress();
+    if (!currentDevice()) clearStudioAddress();
     location.reload();
   }
 });

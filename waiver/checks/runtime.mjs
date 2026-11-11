@@ -32,7 +32,7 @@ export async function studio(port = 0) {
         ASSETS: async (req) => {
           let p = new URL(req.url).pathname;
           if (p === "/") p = "/index.html";
-          if (p === "/panel" || p === "/estudio") p += ".html";
+          if (["/panel", "/estudio", "/app"].includes(p)) p += ".html";
           if (!/^\/[\w.-]+$/.test(p)) return new Response("", { status: 404 });
           try {
             return new Response(await readFile("build/public" + p), {

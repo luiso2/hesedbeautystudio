@@ -155,6 +155,37 @@ test("María’s private entrance opens on multiple devices, locks for signing a
   assert.equal(mail.length, 0);
 });
 
+test("installed launches restore the copied device cookie and renew only a valid session", async t => {
+  const { runtime, db } = await studio();
+  t.after(() => runtime.dispose());
+  const get = (path, headers = {}) => runtime.dispatchFetch("http://localhost" + path, { headers });
+  const manifest = await (await get("/manifest.webmanifest")).json();
+  assert.equal(manifest.id, "/");
+  assert.equal(manifest.display, "standalone");
+  assert.match(await (await get(manifest.start_url)).text(), /waiver-[A-Z0-9]+\.js/);
+  const token = "3".repeat(64);
+  const hash = value => createHash("sha256").update(value).digest("hex");
+  await db.prepare("INSERT INTO studio_entrance(slot,token_hash) VALUES(1,?)").bind(hash(token)).run();
+  const post = (path, body, headers = {}) => runtime.dispatchFetch("http://localhost/api/access/" + path, {
+    method: "POST", headers: { "Content-Type": "application/json", ...headers }, body: JSON.stringify(body),
+  });
+  const link = await post("studio", { token });
+  const cookies = link.headers.getSetCookie();
+  const device = (await link.json()).device;
+  assert.ok(cookies.some(c => c.startsWith("__Host-waiver-device=" + device + ";") && !c.includes("HttpOnly")));
+  const installed = { Cookie: cookies.map(c => c.split(";")[0]).join("; "), "X-Waiver-Device": device };
+  assert.equal((await get("/api/admin/archive", { Cookie: installed.Cookie })).status, 401);
+  const time = Math.floor(Date.now() / 1000);
+  await db.prepare("UPDATE studio_access SET session_expires=?").bind(time + 60).run();
+  const launch = await get("/api/admin/archive", installed);
+  assert.equal(launch.status, 200);
+  assert.equal(launch.headers.getSetCookie().length, 2);
+  assert.ok((await db.prepare("SELECT session_expires FROM studio_access").first()).session_expires >= time + 30*86400);
+  const logout = await post("logout", {}, installed);
+  assert.ok(logout.headers.getSetCookie().every(c => c.includes("Max-Age=0")));
+  assert.equal((await get("/api/admin/archive", installed)).status, 401);
+});
+
 test("previously issued email links still work once during their original lifetime", async t => {
   const { runtime, db } = await studio();
   t.after(() => runtime.dispose());
