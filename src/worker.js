@@ -252,6 +252,11 @@ export default {
     if (!url.pathname.startsWith("/api/")) return json({ error: "not_found" }, 404);
     if (!env.BOOKINGS_DB) return json({ error: "not_configured" }, 503);
     try {
+      if (url.pathname === "/api/admin/session" && request.method === "GET") {
+        return authorized(request, env.BOOKING_ADMIN_TOKEN)
+          ? json({ authenticated: true })
+          : json({ error: "unauthorized" }, 401);
+      }
       const reviewResponse = await reviewRoutes(request, env, url, { json, readBody, authorized, clean, miamiToday });
       if (reviewResponse) return reviewResponse;
       if (url.pathname === "/api/bookings" && request.method === "POST")

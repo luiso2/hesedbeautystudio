@@ -1,0 +1,11 @@
+{
+  "name": "María Hesed · Consentimiento",
+  "short_name": "María Hesed",
+  "lang": "es",
+  "start_url": "/#tablet",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#f7f4ef",
+  "icons": [{ "src": "/icon.png", "sizes": "512x512", "type": "image/png" }]
+}

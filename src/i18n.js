@@ -301,7 +301,7 @@ export const EN = {
     "High-level facial & body aesthetics in Miami. Where technique becomes art.",
   "ft.nav": "Navigation",
   "ft.contact": "Contact",
-  "ft.loc": "Miami, Florida · USA",
+  "ft.directions": "Get directions with Google Maps",
   "ft.hours": "By appointment",
   "ft.ready": "Ready?",
   "ft.rights": "All rights reserved.",

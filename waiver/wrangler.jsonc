@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mariahesed-waiver",
+  "main": "build/worker.mjs",
+  "compatibility_date": "2026-11-10",
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./build/public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
+  },
+  "routes": [{ "pattern": "waiver.mariahesed.com", "custom_domain": true }],
+  "services": [{ "binding": "STUDIO", "service": "hesedbeautystudio" }],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mariahesed-waivers",
+      "database_id": "6ac07140-ebc2-4a0d-ac79-273571f5cb28",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "vars": {
+    "MAIL_FROM": "María Hesed <waivers@merktop.com>",
+    "PUBLIC_ORIGIN": "https://waiver.mariahesed.com",
+  },
+}

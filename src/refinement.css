@@ -355,3 +355,5 @@ body { background: var(--paper); }
   :where(.btn,.booking-next,.booking-back,.booking-add,.card__book,.card__info,.category-choice__button) { transition: none; transform: none!important; }
 }
 [data-google-review][hidden] { display: none; }
+
+.footer__col address { font: inherit; }
