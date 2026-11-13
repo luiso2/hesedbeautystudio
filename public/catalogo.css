@@ -152,3 +152,5 @@ footer {
     font-size: 18px;
   }
 }
+[data-service-price] del { font-size: .85em; color: #6a6057; }
+[data-service-price] b { white-space: nowrap; }

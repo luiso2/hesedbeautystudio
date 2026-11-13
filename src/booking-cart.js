@@ -1,8 +1,10 @@
 import catalog from './booking-catalog.json' with { type: 'json' };
 
+import { servicePricing } from './thanksgiving.js';
+
 export const MAX_ITEMS = 12;
 export const itemKey = (item) => `${item.serviceId}/${item.optionId || ''}`;
-export function resolveCart(input) {
+export function resolveCart(input, now = Date.now()) {
   if (!Array.isArray(input) || !input.length || input.length > MAX_ITEMS) throw new Error('invalid_service');
   const seen = new Set();
   return input.map((item) => {
@@ -22,7 +24,7 @@ export function resolveCart(input) {
     }
     const selected = option || service;
     return { serviceId: service.id, optionId: option?.id || '', name: service.name, optionName: option?.name || null,
-      price: selected.price, from: !!selected.from };
+      ...servicePricing(selected.price, now), from: !!selected.from };
   });
 }
 export function cartTotals(items) {

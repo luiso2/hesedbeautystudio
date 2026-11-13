@@ -1,3 +1,4 @@
+import { campaignId, offerEndLabel, thanksgivingActive } from './thanksgiving.js';
 import { initReviews } from './reviews.js';
 import { EN } from "./i18n.js";
 import { initGiftCardForm } from "./gift-card-form.js";
@@ -43,6 +44,9 @@ function setLang(next) {
     ),
   );
   $(".svc-modal__close").setAttribute("aria-label", copy("Cerrar", "Close"));
+  const holiday = $('#thanksgiving-offer');
+  holiday.querySelector('button').setAttribute('aria-label', copy('Cerrar', 'Close'));
+  holiday.querySelector('.holiday-offer__dates').textContent = copy('Hasta el ', 'Through ') + offerEndLabel(lang) + '.';
   updateMenuLabel();
   updateCategoryButtons();
   updateResultsGallery();
@@ -345,7 +349,7 @@ function openServiceModal(card) {
   priceHost.hidden = !price;
   const descHost = $(".svc-modal__desc", svcModal);
   descHost.innerHTML = "";
-  $$(".card__body > p:not(.card__price):not(.card__eyebrow), .card__body > .card__list", card).forEach((node) =>
+  $$(".card__body > p:not(.card__price):not(.card__eyebrow), .card__body > .card__list, .card__body > .wax-prices", card).forEach((node) =>
     descHost.append(node.cloneNode(true)),
   );
   const proof = $(".card__proof", card);
@@ -515,4 +519,18 @@ try {
 }
 setLang(savedLang);
 
+const holiday = $('#thanksgiving-offer');
+if (thanksgivingActive() && typeof holiday.showModal === 'function') {
+  let seen = false;
+  try { seen = sessionStorage.getItem(campaignId) === 'seen'; } catch {}
+  if (!seen) {
+    holiday.showModal();
+    try { sessionStorage.setItem(campaignId, 'seen'); } catch {}
+  }
+  holiday.addEventListener('click', event => {
+    if (event.target !== holiday) return;
+    const box = holiday.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) holiday.close();
+  });
+}
 initReviews();

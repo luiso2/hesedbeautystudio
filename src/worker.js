@@ -1,3 +1,4 @@
+import { serveCatalog } from './catalog-promotion.js';
 import catalog from "./booking-catalog.json" with { type: "json" };
 import { serveVideo } from "./video-assets.js";
 import videoSizes from "./video-sizes.json" with { type: "json" };
@@ -94,6 +95,8 @@ async function createBooking(request, env) {
   try { items = resolveCart(body.items ?? [{ serviceId: body.serviceId, optionId: body.optionId, massagePackage: body.massagePackage }]); }
   catch { return json({ error: 'invalid_service' }, 400); }
   const totals = cartTotals(items);
+  if (body.quotedTotalCents !== undefined && body.quotedTotalCents !== totals.knownCents)
+    return json({ error: 'price_changed' }, 409);
   if (totals.policyPending) return json({ error: 'deposit_policy_pending' }, 409);
   const first = items[0];
   const service = catalog.find((entry) => entry.id === first.serviceId);
@@ -137,8 +140,14 @@ async function createBooking(request, env) {
     const linkKey = anchor.massagePackage ? 'massage-package' : paymentLinkKey(anchorService, anchorOption);
     const linkDescription = anchor.massagePackage ? 'Paquete de masajes (6 sesiones o más)' : paymentDescription(anchorService, anchorOption);
     const base = await findDepositLink(env, linkDescription,
-      anchor.price == null ? null : anchor.price * 100, totals.estimated, linkKey);
-    const description = `${items.length} servicio(s): ` + items.map((item) => item.name.es + (item.optionName ? ` · ${item.optionName.es}` : '')).join(' + ');
+      anchor.price == null ? null : Math.round((anchor.basePrice ?? anchor.price) * 100), totals.estimated, linkKey);
+    const savings = items.reduce((sum, item) => sum + (item.basePrice ? Math.round((item.basePrice - item.price) * 100) : 0), 0);
+    let offerLabel = '';
+    if (savings) {
+      offerLabel = `Thanksgiving −20% · Ahorro US$${savings / 100} · `;
+      if (totals.estimated) offerLabel += `Desde US$${totals.knownCents / 100} en servicios con precio publicado · `;
+    }
+    const description = offerLabel + `${items.length} servicio(s): ` + items.map((item) => item.name.es + (item.optionName ? ` · ${item.optionName.es}` : '')).join(' + ');
     payment = await signCartPayment(env, base, totals, description);
   } catch (error) {
     console.error(JSON.stringify({ event: 'merktop_link_error', message: String(error) }));
@@ -256,6 +265,8 @@ async function adminBookings(request, env, url) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (["/", "/index", "/index.html"].includes(url.pathname) || url.pathname.startsWith("/tratamientos/"))
+      return serveCatalog(request, env.ASSETS);
     if (url.pathname.startsWith("/videos/"))
       return serveVideo(request, env.ASSETS, videoSizes[url.pathname]);
     if (!url.pathname.startsWith("/api/")) return json({ error: "not_found" }, 404);

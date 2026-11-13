@@ -9,7 +9,7 @@
   "assets": {
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*", "/videos/*"]
+    "run_worker_first": ["/", "/index", "/index.html", "/tratamientos/*", "/api/*", "/videos/*"]
   },
   "d1_databases": [
     {

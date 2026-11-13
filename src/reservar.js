@@ -1,3 +1,4 @@
+import { servicePricing } from './thanksgiving.js';
 import { bookingTerms, TERMS_VERSION } from "./booking-terms.js";
 import catalog from "./booking-catalog.json";
 import { resolveCart, cartTotals, itemKey, MAX_ITEMS } from "./booking-cart.js";
@@ -97,7 +98,14 @@ let pickerOpen = false;
 let pickerReturnFocus = null;
 let searchQuery = "";
 const tr = (key) => translations[lang][key];
-const priceText = (entry) => entry?.massagePackage ? bookingTerms[lang].packagePrice : entry?.price == null ? tr("askPrice") : entry.from ? `${tr("from")} US$${entry.price}` : `US$${entry.price}`;
+function priceText(entry) {
+  if (entry?.massagePackage) return bookingTerms[lang].packagePrice;
+  if (entry?.price == null) return tr('askPrice');
+  const quote = entry.serviceId ? entry : servicePricing(entry.price);
+  const prefix = entry.from ? tr('from') + ' ' : '';
+  return prefix + 'US$' + quote.price + (quote.promotion
+    ? ` (−20% · ${lang === 'en' ? 'was' : 'antes'} US$${quote.basePrice})` : '');
+}
 const money = (cents) => `US$${(cents / 100).toLocaleString(lang === 'en' ? 'en-US' : 'es-US', { maximumFractionDigits: 2 })}`;
 const totals = () => cartTotals(selectedItems);
 const depositRequired = () => selectedItems.length > 0 && !totals().policyPending;
@@ -109,6 +117,7 @@ Object.assign(translations.es, {
   perService: 'Depósito de US$40 por cada servicio. Verás el total antes de pagar.',
   depositLead: 'Revisa tu selección. Continuarás a Merktop para pagar el depósito de los servicios elegidos. María confirmará tu horario personalmente.',
   lowPricePending: 'El depósito de los servicios con precio inferior a US$40 está pendiente de confirmación. Consulta con María por WhatsApp antes de reservarlos.',
+  priceChanged: 'El precio cambió. Revisa el total y vuelve a aceptar las condiciones antes de pagar.',
   maxItems: 'Puedes agregar hasta 12 servicios por solicitud.',
 });
 Object.assign(translations.en, {
@@ -117,6 +126,7 @@ Object.assign(translations.en, {
   perService: 'US$40 deposit per service. You will see the total before paying.',
   depositLead: 'Review your selection. Continue to Merktop to pay the deposit for your selected services. María will personally confirm your time.',
   lowPricePending: 'The deposit for services priced below US$40 is awaiting confirmation. Please contact María on WhatsApp before booking these services.',
+  priceChanged: 'Pricing has changed. Review the total and accept the terms again before paying.',
   maxItems: 'You can add up to 12 services per request.',
 });
 
@@ -341,7 +351,7 @@ function validStep() {
 function renderReview() {
   const packages = selectedItems.filter(item => item.massagePackage);
   const signature = JSON.stringify([lang, $("#booking-name").value.trim(),
-    selectedItems.map(item => [itemKey(item), !!item.massagePackage])]);
+    selectedItems.map(item => [itemKey(item), !!item.massagePackage, item.price])]);
   if (lastReviewSelection !== signature) {
     $("#terms-general").checked = false;
     $("#terms-package").checked = false;
@@ -455,6 +465,7 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
   button.textContent = tr("sending");
   clearError();
   const payload = {
+    quotedTotalCents: totals().knownCents,
     items: selectedItems.map(({serviceId, optionId, massagePackage}) => ({serviceId, optionId, massagePackage})), date: $("#booking-date").value, time: $("#booking-time").value,
     name: $("#booking-name").value.trim(), phone: $("#booking-phone").value.trim(),
     email: $("#booking-email").value.trim(), note: $("#booking-note").value.trim(),
@@ -466,6 +477,12 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
     });
     const result = await response.json();
+    if (result.error === 'price_changed') {
+      selectedItems = resolveCart(selectedItems);
+      updateSummary();
+      showError('priceChanged');
+      return;
+    }
     if (!response.ok) throw new Error(result.error === "rate_limited" ? "rateLimited" :
       result.error === "payment_unavailable" ? "paymentUnavailable" :
       result.error === "terms_version" ? "updated" : result.error === "terms_required" ? "required" : "serverError");

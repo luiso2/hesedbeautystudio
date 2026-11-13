@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { createHmac } from 'node:crypto';
+import { PROMO_START, PROMO_END, servicePricing } from '../src/thanksgiving.js';
 import worker from '../src/worker.js';
 import { resolveCart, cartTotals } from '../src/booking-cart.js';
 import { TERMS_VERSION, bookingTerms } from '../src/booking-terms.js';
@@ -39,12 +40,13 @@ function mockConfig() {
 async function eventRequest(id,link,paid,total){const timestamp=Math.floor(Date.now()/1000);const event={id:'evt_'+'b'.repeat(32),type:'deposit.paid',created:timestamp,data:{ref:id,link_id:link,deposit_id:'dep-test',currency:'usd',amount_paid:paid,amount_total:total}};const body=JSON.stringify(event);const sig=createHmac('sha256','test-secret').update(`${timestamp}.${body}`).digest('hex');return new Request(base+'/api/merktop/webhook',{method:'POST',headers:{'merktop-event-id':event.id,'merktop-signature':`t=${timestamp},v1=${sig}`},body})}
 
 test('cart rejects forged IDs, missing zones, duplicates and oversized requests; ignores client prices',()=>{
-  const item={serviceId:'facial-detox',price:1};assert.equal(resolveCart([item])[0].price,125);
+  const item={serviceId:'facial-detox',price:1};assert.equal(resolveCart([item], PROMO_START - 1)[0].price,125);
   for(const invalid of [[],[null],[{serviceId:'fake'}],[{serviceId:'fibroblast-plasma'}],[item,item],Array(13).fill(item)]) assert.throws(()=>resolveCart(invalid));
   assert.equal(resolveCart([{serviceId:'fibroblast-plasma',optionId:'area-1'},{serviceId:'fibroblast-plasma',optionId:'area-3'}]).length,2);
   assert.equal(cartTotals(resolveCart([item,{serviceId:'salmon-dna'}])).depositCents,8000);
 });
-test('multi-service booking stores authoritative snapshot and signs exact combined payment; webhook requires combined amount',async()=>{
+test('multi-service booking stores authoritative snapshot and signs exact combined payment; webhook requires combined amount',async(t)=>{
+  t.mock.method(Date, 'now', () => PROMO_END);
   const {db,env}=setup();const original=globalThis.fetch;globalThis.fetch=async()=>mockConfig();
   try {
     const response=await worker.fetch(req('/api/bookings',{...fields,items:[{serviceId:'facial-detox',price:1},{serviceId:'salmon-dna'}]}),env);
@@ -118,7 +120,7 @@ test('a single massage accepts general terms only, and only eligible services of
   for (const serviceId of ['yoga-facial', 'radiofrecuencia-corporal', 'kinesio-body'])
     assert.throws(() => resolveCart([{ serviceId, massagePackage: true }]));
   assert.throws(() => resolveCart([{ serviceId: 'brazilian-slim', massagePackage: 'false' }]));
-  assert.equal(resolveCart([{ serviceId: 'brazilian-slim' }])[0].price, 95);
+  assert.equal(resolveCart([{ serviceId: 'brazilian-slim' }], PROMO_END)[0].price, 95);
 });
 
 test('quoted massage packages use the package deposit and store the exact terms in the accepted language', async () => {
@@ -154,4 +156,43 @@ test('quoted massage packages use the package deposit and store the exact terms 
     const row = db.prepare('SELECT terms_json FROM booking_requests WHERE id=?').get(booking.id);
     assert.equal(JSON.parse(row.terms_json).massagePackage, undefined);
   } finally { globalThis.fetch = original; db.close(); }
+});
+
+test('Thanksgiving prices count each service and zone independently and expire at Miami midnight', () => {
+  for (const when of [PROMO_START - 1, PROMO_END]) assert.deepEqual(servicePricing(55, when), { price: 55 });
+  for (const when of [PROMO_START, PROMO_END - 1]) {
+    for (const price of [null, 30, 50]) assert.deepEqual(servicePricing(price, when), { price });
+    const items = resolveCart([
+      { serviceId: 'depilacion-cera', optionId: 'area-10' },
+      { serviceId: 'depilacion-cera', optionId: 'area-12' },
+      { serviceId: 'fibroblast-plasma', optionId: 'area-4' },
+    ], when);
+    assert.deepEqual(items.map(item => item.price), [50, 44, 240]);
+    assert.equal(items[2].from, true);
+    assert.equal(cartTotals(items).knownCents, 33400);
+  }
+});
+
+test('Thanksgiving signed checkout charges the right deposit and records the discounted balance', async t => {
+  t.mock.method(Date, 'now', () => PROMO_START + 86400000);
+  const {db, env} = setup();
+  t.mock.method(globalThis, 'fetch', async () => mockConfig());
+  try {
+    const items = [{serviceId: 'facial-detox'}, {serviceId: 'fibroblast-plasma', optionId:'area-5'}];
+    const stale = await worker.fetch(req('/api/bookings', {...fields, items, quotedTotalCents: 17500}), env);
+    assert.equal(stale.status, 409);
+    const res = await worker.fetch(req('/api/bookings', {...fields, items, quotedTotalCents: 15000}), env);
+    assert.equal(res.status, 201);
+    const { id, payment_url, deposit_cents } = await res.json();
+    const url = new URL(payment_url), label = url.searchParams.get('desc');
+    assert.match(label, /Thanksgiving −20% · Ahorro US\$25/);
+    assert.equal(url.searchParams.get('tot'), '15000');
+    assert.equal(deposit_cents, 8000);
+    const canonical = `v2.0.0.${links['facial-detox']}.${deposit_cents}.15000.${label}`;
+    assert.equal(url.searchParams.get('sig'), createHmac('sha256', 'test-secret').update(canonical).digest('hex'));
+    const row = db.prepare('SELECT * FROM booking_requests WHERE id=?').get(id);
+    assert.equal(row.payment_total_cents, 15000);
+    assert.deepEqual(JSON.parse(row.items_json).map(item => item.price), [100, 50]);
+    assert.equal((await worker.fetch(await eventRequest(id, row.merktop_link_id, deposit_cents, 15000), env)).status, 200);
+  } finally { db.close(); }
 });

@@ -54,7 +54,7 @@ const brandId = `${domain}/#estudio`;
 const priceLabel = (entry) =>
   entry.price == null
     ? "Consultar el precio"
-    : `${entry.from ? "Desde " : ""}US$${entry.price}`;
+    : `${entry.from ? "Desde " : ""}<span data-service-price="${entry.price}">US$${entry.price}</span>`;
 
 function serviceRow(service) {
   const price = service.options ? "Precios por zona" : priceLabel(service);

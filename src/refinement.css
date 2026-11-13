@@ -360,3 +360,21 @@ body { background: var(--paper); }
   .nav { padding-inline: 20px; gap: 12px; }
   .nav__links { gap: 12px; white-space: nowrap; }
 }
+
+.holiday-offer {
+  margin: auto; box-sizing: border-box; width: min(430px, calc(100vw - 32px)); max-height: 90dvh;
+  padding: 42px clamp(22px, 5vw, 42px) 32px; text-align: center; color: #292016;
+  border: 1px solid #ba9f79; border-radius: 22px;
+  background: #faf4ea url('/studio-light.webp') center / cover; box-shadow: 0 18px 80px #201b1540;
+}
+.holiday-offer:not([open]) { display: none; }
+.holiday-offer::backdrop { background: rgb(32 26 21 / 55%); }
+.holiday-offer__close { position: absolute; top: 6px; right: 8px; width: 44px; height: 44px; font-size: 26px; color: inherit; }
+.holiday-offer__occasion { letter-spacing: .18em; font-size: .78rem; text-transform: uppercase; color: #704f2e; }
+.holiday-offer h2 { margin: 14px 0 18px; font-size: 2rem; font-weight: 400; line-height: 1.1; }
+.holiday-offer h2 strong { display: block; font-family: var(--font-display, Georgia), serif; font-weight: 400; font-size: clamp(62px, 13vw, 88px); }
+.holiday-offer #offer-detail { line-height: 1.55; }
+.holiday-offer__dates { margin: 10px 0 20px; color: #645341; font-size: .85rem; }
+.holiday-offer .btn { min-height: 46px; }
+[data-service-price] del { font-size: .85em; font-weight: 400; color: #6a6057; }
+[data-service-price] b { white-space: nowrap; }
