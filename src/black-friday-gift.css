@@ -76,7 +76,7 @@
   /* Let foil drift beyond the frame, up to the available viewport margin. */
   inset-inline: max(-64px, calc((100% - 100vw) / 2));
   inset-block: max(-42px, calc((100% - 100dvh) / 2));
-  z-index: 1;
+  z-index: 3;
   overflow: hidden;
   container-type: size;
   pointer-events: none;
@@ -143,4 +143,35 @@
   35% { transform: translate(calc(var(--lane) + var(--drift)), 32cqh) rotate(var(--spin)) rotateY(72deg); }
   68% { transform: translate(calc(var(--lane) - var(--drift)), 68cqh) rotate(calc(var(--spin) + 110deg)) rotateY(143deg); }
   100% { opacity: 0; transform: translate(var(--lane), 103cqh) rotate(calc(var(--spin) + 248deg)) rotateY(205deg); }
+}
+
+/* Contact foils sit in front of the ink and the close icon. Their bottom
+   center is the contact point, so they can tip over the edge before falling. */
+.foil-baseline { display: inline-block; vertical-align: baseline; width: 0; height: 0; }
+.holiday-offer__amount, .holiday-offer__percent {
+  text-shadow: 0 1px #c0aa8b, 0 2px #90785b, 0 3px 4px #60401e22;
+}
+.holiday-offer__occasion span { text-shadow: 0 1px #e1d0b4; }
+.foil--contact {
+  position: absolute;
+  translate: -50% -100%;
+  transform-origin: 50% 100%;
+  border-radius: 40% 12%;
+  opacity: 0;
+  background: linear-gradient(145deg, #916736, #f8e1ac 40%, #c39964 64%, #a16e37);
+  box-shadow: 0 1px 1px #61432145;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .holiday-offer[open] .foil--contact { animation: foil-catch var(--period) linear var(--delay) infinite; }
+}
+@keyframes foil-catch {
+  0% { opacity: 0; transform: translate(var(--swing), -24cqh) rotate(-70deg); }
+  9%, 84% { opacity: 1; }
+  20% { transform: translate(calc(-.6 * var(--swing)), -9cqh) rotate(72deg) rotateY(52deg); animation-timing-function: ease-in; }
+  34% { transform: translate(0, 0) rotate(var(--tilt)); animation-timing-function: ease-out; }
+  37% { transform: translate(0, -3px) rotate(calc(-1 * var(--tilt))); animation-timing-function: ease-in; }
+  40%, 63% { transform: translate(0, 0) rotate(var(--tilt)); }
+  69% { transform: translate(var(--slip), 1px) rotate(calc(3 * var(--tilt))); animation-timing-function: ease-in; }
+  78% { transform: translate(calc(2 * var(--slip)), 16px) rotate(86deg) rotateY(38deg); animation-timing-function: ease-in; }
+  98%, 100% { opacity: 0; transform: translate(var(--swing), var(--drop)) rotate(244deg) rotateY(148deg); }
 }

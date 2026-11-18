@@ -1,6 +1,6 @@
 import './black-friday-gift.css';
 import { startOfferConfetti } from './offer-confetti.js';
-import { campaignId, offerEndLabel, promotionActive } from './promotion.js';
+import { offerEndLabel, promotionActive } from './promotion.js';
 import { initReviews } from './reviews.js';
 import { EN } from "./i18n.js";
 import { initGiftCardForm } from "./gift-card-form.js";
@@ -523,13 +523,8 @@ setLang(savedLang);
 
 const holiday = $('#black-friday-offer');
 if (promotionActive() && typeof holiday.showModal === 'function') {
-  let seen = false;
-  try { seen = sessionStorage.getItem(campaignId) === 'seen'; } catch {}
-  if (!seen) {
-    holiday.showModal();
-    startOfferConfetti(holiday);
-    try { sessionStorage.setItem(campaignId, 'seen'); } catch {}
-  }
+  holiday.showModal();
+  startOfferConfetti(holiday);
   holiday.addEventListener('click', event => {
     if (event.target !== holiday) return;
     const box = holiday.getBoundingClientRect();
