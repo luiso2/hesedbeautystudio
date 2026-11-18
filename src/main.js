@@ -1,4 +1,4 @@
-import { campaignId, offerEndLabel, thanksgivingActive } from './thanksgiving.js';
+import { campaignId, offerEndLabel, promotionActive } from './promotion.js';
 import { initReviews } from './reviews.js';
 import { EN } from "./i18n.js";
 import { initGiftCardForm } from "./gift-card-form.js";
@@ -44,7 +44,7 @@ function setLang(next) {
     ),
   );
   $(".svc-modal__close").setAttribute("aria-label", copy("Cerrar", "Close"));
-  const holiday = $('#thanksgiving-offer');
+  const holiday = $('#black-friday-offer');
   holiday.querySelector('button').setAttribute('aria-label', copy('Cerrar', 'Close'));
   holiday.querySelector('.holiday-offer__dates').textContent = copy('Hasta el ', 'Through ') + offerEndLabel(lang) + '.';
   updateMenuLabel();
@@ -519,8 +519,8 @@ try {
 }
 setLang(savedLang);
 
-const holiday = $('#thanksgiving-offer');
-if (thanksgivingActive() && typeof holiday.showModal === 'function') {
+const holiday = $('#black-friday-offer');
+if (promotionActive() && typeof holiday.showModal === 'function') {
   let seen = false;
   try { seen = sessionStorage.getItem(campaignId) === 'seen'; } catch {}
   if (!seen) {

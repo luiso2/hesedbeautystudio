@@ -1,4 +1,4 @@
-import { servicePricing } from './thanksgiving.js';
+import { servicePricing, discountPercent } from './promotion.js';
 import { bookingTerms, TERMS_VERSION } from "./booking-terms.js";
 import catalog from "./booking-catalog.json";
 import { resolveCart, cartTotals, itemKey, MAX_ITEMS } from "./booking-cart.js";
@@ -104,7 +104,7 @@ function priceText(entry) {
   const quote = entry.serviceId ? entry : servicePricing(entry.price);
   const prefix = entry.from ? tr('from') + ' ' : '';
   return prefix + 'US$' + quote.price + (quote.promotion
-    ? ` (−20% · ${lang === 'en' ? 'was' : 'antes'} US$${quote.basePrice})` : '');
+    ? ` (−${discountPercent}% · ${lang === 'en' ? 'was' : 'antes'} US$${quote.basePrice})` : '');
 }
 const money = (cents) => `US$${(cents / 100).toLocaleString(lang === 'en' ? 'en-US' : 'es-US', { maximumFractionDigits: 2 })}`;
 const totals = () => cartTotals(selectedItems);

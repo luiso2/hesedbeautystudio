@@ -1,6 +1,6 @@
 import catalog from './booking-catalog.json' with { type: 'json' };
 
-import { servicePricing } from './thanksgiving.js';
+import { servicePricing } from './promotion.js';
 
 export const MAX_ITEMS = 12;
 export const itemKey = (item) => `${item.serviceId}/${item.optionId || ''}`;

@@ -1,3 +1,4 @@
+import { campaignLabel, discountPercent } from './promotion.js';
 import { serveCatalog } from './catalog-promotion.js';
 import catalog from "./booking-catalog.json" with { type: "json" };
 import { serveVideo } from "./video-assets.js";
@@ -144,7 +145,7 @@ async function createBooking(request, env) {
     const savings = items.reduce((sum, item) => sum + (item.basePrice ? Math.round((item.basePrice - item.price) * 100) : 0), 0);
     let offerLabel = '';
     if (savings) {
-      offerLabel = `Thanksgiving −20% · Ahorro US$${savings / 100} · `;
+      offerLabel = `${campaignLabel} −${discountPercent}% · Ahorro US$${savings / 100} · `;
       if (totals.estimated) offerLabel += `Desde US$${totals.knownCents / 100} en servicios con precio publicado · `;
     }
     const description = offerLabel + `${items.length} servicio(s): ` + items.map((item) => item.name.es + (item.optionName ? ` · ${item.optionName.es}` : '')).join(' + ');

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { createHmac } from 'node:crypto';
-import { PROMO_START, PROMO_END, servicePricing } from '../src/thanksgiving.js';
+import { PROMO_START, PROMO_END, servicePricing } from '../src/promotion.js';
 import worker from '../src/worker.js';
 import { resolveCart, cartTotals } from '../src/booking-cart.js';
 import { TERMS_VERSION, bookingTerms } from '../src/booking-terms.js';
@@ -158,7 +158,7 @@ test('quoted massage packages use the package deposit and store the exact terms 
   } finally { globalThis.fetch = original; db.close(); }
 });
 
-test('Thanksgiving prices count each service and zone independently and expire at Miami midnight', () => {
+test('Black Friday prices count each service and zone independently and expire at Miami midnight', () => {
   for (const when of [PROMO_START - 1, PROMO_END]) assert.deepEqual(servicePricing(55, when), { price: 55 });
   for (const when of [PROMO_START, PROMO_END - 1]) {
     for (const price of [null, 30, 50]) assert.deepEqual(servicePricing(price, when), { price });
@@ -167,13 +167,13 @@ test('Thanksgiving prices count each service and zone independently and expire a
       { serviceId: 'depilacion-cera', optionId: 'area-12' },
       { serviceId: 'fibroblast-plasma', optionId: 'area-4' },
     ], when);
-    assert.deepEqual(items.map(item => item.price), [50, 44, 240]);
+    assert.deepEqual(items.map(item => item.price), [50, 38.5, 210]);
     assert.equal(items[2].from, true);
-    assert.equal(cartTotals(items).knownCents, 33400);
+    assert.equal(cartTotals(items).knownCents, 29850);
   }
 });
 
-test('Thanksgiving signed checkout charges the right deposit and records the discounted balance', async t => {
+test('Black Friday signed checkout charges the right deposit and records the discounted balance', async t => {
   t.mock.method(Date, 'now', () => PROMO_START + 86400000);
   const {db, env} = setup();
   t.mock.method(globalThis, 'fetch', async () => mockConfig());
@@ -181,18 +181,31 @@ test('Thanksgiving signed checkout charges the right deposit and records the dis
     const items = [{serviceId: 'facial-detox'}, {serviceId: 'fibroblast-plasma', optionId:'area-5'}];
     const stale = await worker.fetch(req('/api/bookings', {...fields, items, quotedTotalCents: 17500}), env);
     assert.equal(stale.status, 409);
-    const res = await worker.fetch(req('/api/bookings', {...fields, items, quotedTotalCents: 15000}), env);
+    const res = await worker.fetch(req('/api/bookings', {...fields, items, quotedTotalCents: 13750}), env);
     assert.equal(res.status, 201);
     const { id, payment_url, deposit_cents } = await res.json();
     const url = new URL(payment_url), label = url.searchParams.get('desc');
-    assert.match(label, /Thanksgiving −20% · Ahorro US\$25/);
-    assert.equal(url.searchParams.get('tot'), '15000');
+    assert.match(label, /Black Friday −30% · Ahorro US\$37.5/);
+    assert.equal(url.searchParams.get('tot'), '13750');
     assert.equal(deposit_cents, 8000);
-    const canonical = `v2.0.0.${links['facial-detox']}.${deposit_cents}.15000.${label}`;
+    const canonical = `v2.0.0.${links['facial-detox']}.${deposit_cents}.13750.${label}`;
     assert.equal(url.searchParams.get('sig'), createHmac('sha256', 'test-secret').update(canonical).digest('hex'));
     const row = db.prepare('SELECT * FROM booking_requests WHERE id=?').get(id);
-    assert.equal(row.payment_total_cents, 15000);
-    assert.deepEqual(JSON.parse(row.items_json).map(item => item.price), [100, 50]);
-    assert.equal((await worker.fetch(await eventRequest(id, row.merktop_link_id, deposit_cents, 15000), env)).status, 200);
+    assert.equal(row.payment_total_cents, 13750);
+    assert.deepEqual(JSON.parse(row.items_json).map(item => item.price), [87.5, 50]);
+    assert.equal((await worker.fetch(await eventRequest(id, row.merktop_link_id, deposit_cents, 13750), env)).status, 200);
+  } finally { db.close(); }
+});
+
+test('the Black Friday discount never silently overcharges a service below the existing deposit', async t => {
+  t.mock.method(Date, 'now', () => PROMO_START + 86400000);
+  const items = [{ serviceId: 'depilacion-cera', optionId: 'area-12' }];
+  assert.equal(resolveCart(items)[0].price, 38.5);
+  const { db, env } = setup();
+  try {
+    const response = await worker.fetch(req('/api/bookings', { ...fields, items }), env);
+    assert.equal(response.status, 409);
+    assert.equal((await response.json()).error, 'deposit_policy_pending');
+    assert.equal(db.prepare('SELECT COUNT(*) n FROM booking_requests').get().n, 0);
   } finally { db.close(); }
 });

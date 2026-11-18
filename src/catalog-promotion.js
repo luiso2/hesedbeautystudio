@@ -1,4 +1,4 @@
-import { PROMO_END, servicePricing, thanksgivingActive } from './thanksgiving.js';
+import { discountPercent, PROMO_END, servicePricing, promotionActive } from './promotion.js';
 
 function updateOffers(fragment, now) {
   if (Array.isArray(fragment)) return fragment.forEach(node => updateOffers(node, now));
@@ -27,12 +27,12 @@ export async function serveCatalog(request, assets, now = Date.now()) {
   const headers = new Headers(asset.headers);
   for (const key of ['content-length', 'etag', 'last-modified']) headers.delete(key);
   headers.set('cache-control', 'no-store');
-  if (!thanksgivingActive(now) || request.method === 'HEAD') return new Response(asset.body, { headers });
+  if (!promotionActive(now) || request.method === 'HEAD') return new Response(asset.body, { headers });
   let html = await asset.text();
   html = html.replace(/<span data-service-price="([\d.]+)">US\$[\d.]+<\/span>/g, (original, amount) => {
     const price = servicePricing(Number(amount), now);
     return price.promotion
-      ? `<span data-service-price="${amount}"><del>US$${amount}</del> <b>US$${price.price}</b> <small>−20%</small></span>` : original;
+      ? `<span data-service-price="${amount}"><del>US$${amount}</del> <b>US$${price.price}</b> <small>−${discountPercent}%</small></span>` : original;
   });
   html = html.replace(/(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g, (_, open, content, close) => {
     const graph = JSON.parse(content);
