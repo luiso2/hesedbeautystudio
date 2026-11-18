@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true" focusable="false">
+  <defs>
+    <image id="mh-satin" href="/img/black-friday-bow.webp" x="150" y="125" width="305" height="215"/>
+    <clipPath id="mh-left-loop"><path d="M152 131H224Q262 145 283 182L285 197Q255 192 232 213L154 228Z"/></clipPath>
+    <clipPath id="mh-right-loop"><path d="M315 175Q344 126 384 125H454V201L374 214Q349 208 331 199L311 193Z"/></clipPath>
+    <clipPath id="mh-knot"><path d="M278 178Q289 168 296 172Q303 167 308 171Q317 167 321 176L316 201Q314 211 304 212Q289 215 281 206Q275 197 278 178Z"/></clipPath>
+    <clipPath id="mh-opening"><rect x="300" y="153" width="0" height="78" data-x="300;300;294;266;221;222" data-width="0;0;12;68;157;155"/></clipPath>
+    <linearGradient id="mh-left-silk" x1="0" y1=".15" x2=".86" y2=".92" gradientUnits="objectBoundingBox">
+      <stop stop-color="#69431f"/><stop offset=".24" stop-color="#e7c798"/><stop offset=".39" stop-color="#fff0cb"/><stop offset=".52" stop-color="#b28757"/><stop offset=".78" stop-color="#ddba88"/><stop offset="1" stop-color="#91693e"/>
+    </linearGradient>
+    <linearGradient id="mh-right-silk" x1="1" y1=".84" x2=".12" y2=".12">
+      <stop stop-color="#896037"/><stop offset=".27" stop-color="#bd945e"/><stop offset=".48" stop-color="#f3daa9"/><stop offset=".64" stop-color="#e0bc86"/><stop offset="1" stop-color="#87603e"/>
+    </linearGradient>
+  </defs>
+  <image href="/img/black-friday-paper.webp" x="219" y="153" width="162" height="78" clip-path="url(#mh-opening)"/>
+  <!-- The free ends grow as fabric is drawn out of each loop, then fall from the band. -->
+  <path fill="url(#mh-left-silk)" stroke="#9b7950" stroke-width=".8" stroke-linejoin="round"
+    data-d="M289 191 C254 185 213 219 170 303 L207 289 L220 318 C230 275 282 240 294 202 Z;
+            M289 191 C252 190 198 237 154 294 L194 283 L203 313 C224 268 278 237 295 201 Z;
+            M290 190 C246 192 162 211 99 248 L143 247 L152 276 C181 250 270 232 296 201 Z;
+            M262 188 C220 191 154 218 88 252 L129 255 L140 282 C179 249 236 240 286 209 Z;
+            M220 182 C192 187 171 263 120 309 L158 299 L168 328 C202 294 219 233 235 211 Z;
+            M220 182 C196 184 187 272 135 320 L172 309 L184 339 C212 299 223 232 235 211 Z"/>
+  <path fill="url(#mh-right-silk)" stroke="#9b7950" stroke-width=".8" stroke-linejoin="round"
+    data-d="M309 191 C348 198 381 253 413 303 L384 292 L364 333 C352 292 295 235 309 191 Z;
+            M309 191 C351 194 395 249 430 294 L397 286 L382 326 C366 288 302 238 309 191 Z;
+            M309 191 C351 194 399 234 449 280 L416 275 L406 308 C374 276 309 238 309 191 Z;
+            M335 187 C376 194 452 208 509 241 L473 243 L465 272 C417 249 343 225 311 207 Z;
+            M379 189 C404 185 441 258 498 285 L460 285 L458 313 C407 290 385 235 361 214 Z;
+            M379 189 C409 185 435 268 488 300 L450 296 L445 326 C404 298 380 235 361 214 Z"/>
+  <!-- The loop roots stay at the crossing until the corresponding tail slips free. -->
+  <g transform="translate(294 191)">
+    <g data-scale="1 1;0.98 0.94;0.19 0.38;0.01 0.06;0 0;0 0" data-rotate="0;1;9;0;0;0">
+      <g transform="translate(-294 -191)" clip-path="url(#mh-left-loop)"><use href="#mh-satin"/></g>
+    </g>
+  </g>
+  <g transform="translate(309 191)">
+    <g data-scale="1 1;1 0.98;0.84 0.91;0.13 0.32;0 0;0 0" data-rotate="0;-1;-3;-13;0;0">
+      <g transform="translate(-309 -191)" clip-path="url(#mh-right-loop)"><use href="#mh-satin"/></g>
+    </g>
+  </g>
+  <g transform="translate(299 191)">
+    <g data-scale="1 1;0.94 0.99;0.88 1;0.77 0.58;0.02 0.08;0 0" data-rotate="0;0;-4;-13;0;0"
+       data-opacity="1;1;1;.9;0;0">
+      <g transform="translate(-299 -191)" clip-path="url(#mh-knot)"><use href="#mh-satin"/></g>
+    </g>
+  </g>
+</svg>
