@@ -73,11 +73,14 @@
 }
 .holiday-offer__confetti {
   position: absolute;
-  inset: 0;
+  /* Let foil drift beyond the frame, up to the available viewport margin. */
+  inset-inline: max(-64px, calc((100% - 100vw) / 2));
+  inset-block: max(-42px, calc((100% - 100dvh) / 2));
   z-index: 1;
   overflow: hidden;
   container-type: size;
   pointer-events: none;
+  mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 93%, transparent);
 }
 .holiday-offer__confetti i {
   position: absolute;
@@ -88,6 +91,18 @@
   opacity: 0;
   border-radius: 1px;
   background: linear-gradient(115deg, var(--foil-color) 18%, #ffedc7 51%, var(--foil-color) 80%);
+}
+/* Interleave foil strips, small sequins and folded ribbons. */
+.holiday-offer__confetti i:nth-child(4n) {
+  width: var(--foil-width);
+  height: var(--foil-width);
+  border-radius: 50%;
+  background: radial-gradient(at 33% 29%, #fff3d6 5%, var(--foil-color) 55%, #a67847);
+}
+.holiday-offer__confetti i:nth-child(7n + 2) {
+  height: calc(var(--foil-height) * 1.5);
+  border-radius: 45% 12%;
+  background: linear-gradient(155deg, var(--foil-color) 15%, #ffedc7 38%, #99734e 50%, var(--foil-color) 72%, #f3d496);
 }
 @media (prefers-reduced-motion: no-preference) {
   .holiday-offer[open] .gift-bag { animation: bag-rock 2.4s ease-in-out infinite; }
@@ -112,7 +127,7 @@
   0%, 13% { opacity: 0; transform: translate(var(--launch-x), var(--launch-y)) scale(.25); animation-timing-function: ease-out; }
   20%, 74% { opacity: .94; }
   41% {
-    transform: translate(calc(var(--launch-x) * .3 + var(--lane) * .7), var(--crest))
+    transform: translate(calc(var(--launch-x) * .16 + var(--lane) * .84), var(--crest))
                rotate(var(--spin)) rotateY(46deg);
     animation-timing-function: ease-in;
   }

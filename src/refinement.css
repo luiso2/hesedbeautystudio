@@ -366,7 +366,7 @@ html:has(#black-friday-offer[open]) { overflow: hidden; }
 .holiday-offer {
   margin: auto; padding: 0; box-sizing: border-box; isolation: isolate;
   width: min(510px, calc(100vw - 28px)); max-width: none;
-  max-height: calc(100dvh - 32px); overflow: hidden; text-align: center;
+  max-height: calc(100dvh - 32px); overflow: visible; text-align: center;
   color: var(--ink); border: 1px solid #bda176; border-radius: 26px;
   background:
     radial-gradient(ellipse at 8% 0%, #e4cda766, transparent 56%),
