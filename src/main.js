@@ -45,7 +45,9 @@ function setLang(next) {
   );
   $(".svc-modal__close").setAttribute("aria-label", copy("Cerrar", "Close"));
   const holiday = $('#black-friday-offer');
-  holiday.querySelector('button').setAttribute('aria-label', copy('Cerrar', 'Close'));
+  holiday.querySelector('.holiday-offer__close').setAttribute('aria-label', copy('Cerrar', 'Close'));
+  holiday.querySelector('.holiday-offer__motion').setAttribute('aria-label',
+    copy('Pausar animación del regalo', 'Pause gift animation'));
   holiday.querySelector('.holiday-offer__dates').textContent = copy('Hasta el ', 'Through ') + offerEndLabel(lang) + '.';
   updateMenuLabel();
   updateCategoryButtons();
@@ -521,6 +523,11 @@ setLang(savedLang);
 
 const holiday = $('#black-friday-offer');
 if (promotionActive() && typeof holiday.showModal === 'function') {
+  const motionToggle = holiday.querySelector('.holiday-offer__motion');
+  motionToggle.addEventListener('click', () => {
+    const paused = holiday.classList.toggle('is-gift-paused');
+    motionToggle.setAttribute('aria-pressed', String(paused));
+  });
   let seen = false;
   try { seen = sessionStorage.getItem(campaignId) === 'seen'; } catch {}
   if (!seen) {
