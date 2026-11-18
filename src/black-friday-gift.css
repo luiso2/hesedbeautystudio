@@ -2,98 +2,35 @@
   position: relative;
   aspect-ratio: 1;
   width: 100%;
-  container-type: inline-size;
-  isolation: isolate;
   pointer-events: none;
 }
-.holiday-offer__gift::before {
-  content: "";
+.gift-bag {
   position: absolute;
-  inset: 87% 6% 0;
-  background: radial-gradient(ellipse, #44311f42, transparent 68%);
+  inset: 8% 4% 0;
+  transform-origin: 50% 93%;
 }
-.gift-box {
-  position: absolute;
-  inset: 0;
-  transform-origin: 50% 92%;
-}
-
-/* Draw the back rim first so the present and foil pass behind the front wall. */
-.gift-box__opening, .gift-box__opening::before {
+.gift-bag__photo {
   position: absolute;
   inset: 0;
-  clip-path: polygon(8% 49%, 29% 37%, 92% 43%, 71% 55%);
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 6px #503b2024);
 }
-.gift-box__opening {
-  background: linear-gradient(145deg, #d4b98d 14%, #665749 45%, #c5a981 63%, #41372e);
-}
-.gift-box__opening::before {
-  content: "";
-  background: linear-gradient(159deg, #373029 37%, #15120f 44%, #453b30 61%);
-  clip-path: polygon(10% 49%, 29.4% 38.2%, 90% 43.2%, 71% 54.2%);
-}
-.gift-box__front, .gift-box__side {
-  position: absolute;
-  height: 40%;
-  transform-origin: top left;
-  border-top: 1px solid #9f8770;
-  border-radius: 0 0 2px 2px;
-}
-.gift-box__front {
-  top: 49%;
-  left: 8%;
-  width: 63%;
-  transform: skewY(5.44deg);
-  background: linear-gradient(116deg, #39322e, #26221f 25%, #211e1b 65%, #322a23);
-  box-shadow: inset 1px 0 1px #655747, inset -1px 0 1px #0f0e0c;
-}
-.gift-box__side {
-  top: 55%;
-  left: 71%;
-  width: 21%;
-  transform: skewY(-29.75deg);
-  background: linear-gradient(110deg, #191613, #2b2520 80%, #473c30);
-}
-.gift-box__front::before, .gift-box__side::before {
-  content: "";
-  position: absolute;
-  inset: 14% 0 auto;
-  height: 12%;
-  background: linear-gradient(108deg, #96744b, #edcf9f 27%, #a68154 52%, #e4c398 83%, #bc976b);
-  box-shadow: inset 0 1px #f2dec288, 0 1px 1px #09070488;
-}
-.gift-box__side::before { background: linear-gradient(98deg, #90714b, #c6a374 76%, #a08159); }
-.gift-box__front::after {
-  content: "";
-  position: absolute;
-  inset: 57% 32% 12%;
-  background: linear-gradient(115deg, #b58d56, #f5e5bf 35%, #b59160 55%, #e5cb97);
-  -webkit-mask: url('/maria-hesed-monogram.webp') center / contain no-repeat;
-  mask: url('/maria-hesed-monogram.webp') center / contain no-repeat;
-}
-.gift-box__bow {
-  position: absolute;
-  top: -14%;
-  left: 24%;
-  width: 52%;
-  height: auto;
-}
-
 /* The smaller parcel is wrapped in champagne paper and crossed satin bands. */
-.gift-box__present {
+.gift-bag__present {
   position: absolute;
-  top: 43%;
+  top: 26%;
   left: 36%;
   width: 29%;
-  height: 23%;
+  height: 20%;
   border-radius: 2px;
   background:
     linear-gradient(90deg, transparent 36%, #655039 36%, #332b23 39%, #514337 48%, transparent 49%),
     linear-gradient(110deg, #f7dca3, #d8b172 53%, #b48a51);
   box-shadow: inset 0 1px #fff0c7, inset -2px -1px 2px #8d663a66;
-  transform: translate(0, -105%) rotate(-8deg);
+  transform: translate(10%, -117%) rotate(-8deg);
 }
-.gift-box__present::before {
+.gift-bag__present::before {
   content: "";
   position: absolute;
   right: -3%;
@@ -106,8 +43,8 @@
     linear-gradient(162deg, #ffedbf 4%, #ebc98f 34%, #bc925a 75%, #dcb97e);
   box-shadow: inset 0 1px #fff4d6, 0 2px 2px #78552c70;
 }
-/* Two foreshortened faces give the emerging parcel the same perspective as the box. */
-.gift-box__present i {
+/* The top and side folds catch the light at different angles. */
+.gift-bag__present i {
   position: absolute;
   inset: 0 0 auto;
   height: 12%;
@@ -115,7 +52,15 @@
   transform: skewX(-60deg) translateY(-100%);
   background: linear-gradient(90deg, #f2d7a4 36%, #5c4c3a 36%, #796448 49%, #f9e5bd 49%, #e4bf85);
 }
-.gift-box__present::after {
+.gift-bag__present img {
+  position: absolute;
+  top: -42%;
+  left: 21%;
+  width: 51%;
+  height: auto;
+  filter: drop-shadow(0 1px 1px #53361060);
+}
+.gift-bag__present::after {
   content: "";
   position: absolute;
   inset: 0 auto 0 100%;
@@ -126,46 +71,61 @@
     linear-gradient(to bottom, #c19963 24%, #805e37 25%, transparent 28%),
     linear-gradient(100deg, #ad8551, #987041);
 }
-.gift-box__confetti i {
+.holiday-offer__confetti {
   position: absolute;
-  left: 49%;
-  top: 51%;
-  width: 2.8%;
-  height: 1.6%;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  container-type: size;
+  pointer-events: none;
+}
+.holiday-offer__confetti i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--foil-width);
+  height: var(--foil-height);
   opacity: 0;
   border-radius: 1px;
-  background: linear-gradient(115deg, #94703e, #edd6a1 50%, #ac8248);
+  background: linear-gradient(115deg, var(--foil-color) 18%, #ffedc7 51%, var(--foil-color) 80%);
 }
-.gift-box__confetti i:nth-child(1) { --spread: -35cqw; --rise: -24cqw; --spin: -132deg; }
-.gift-box__confetti i:nth-child(2) { --spread: -24cqw; --rise: -37cqw; --spin: 106deg; height: 3.4%; width: 1.5%; }
-.gift-box__confetti i:nth-child(3) { --spread: -11cqw; --rise: -46cqw; --spin: 189deg; border-radius: 50%; width: 2%; height: 2%; }
-.gift-box__confetti i:nth-child(4) { --spread: 14cqw; --rise: -44cqw; --spin: -85deg; }
-.gift-box__confetti i:nth-child(5) { --spread: 27cqw; --rise: -36cqw; --spin: 159deg; width: 1.6%; height: 3%; }
-.gift-box__confetti i:nth-child(6) { --spread: 35cqw; --rise: -22cqw; --spin: -167deg; }
-
 @media (prefers-reduced-motion: no-preference) {
-  .holiday-offer[open] .gift-box { animation: box-rock 2.1s ease-in-out infinite; }
-  .holiday-offer[open] .gift-box__present { animation: parcel-pop 4.2s ease-in-out infinite; }
-  .holiday-offer[open] .gift-box__confetti i { animation: foil-burst 4.2s linear infinite; }
-  .holiday-offer[open] .gift-box__confetti i:nth-child(even) { animation-delay: .1s; }
-  .holiday-offer[open].is-gift-paused .gift-box,
-  .holiday-offer[open].is-gift-paused .gift-box * { animation-play-state: paused; }
+  .holiday-offer[open] .gift-bag { animation: bag-rock 2.4s ease-in-out infinite; }
+  .holiday-offer[open] .gift-bag__present { animation: parcel-pop 4.8s ease-in-out infinite; }
+  .holiday-offer[open] .foil--burst { animation: bag-confetti 4.8s linear var(--delay) infinite; }
+  .holiday-offer[open] .foil--rain { animation: poster-confetti var(--period) linear var(--delay) infinite; }
 }
-@keyframes box-rock {
-  0%, 100% { transform: translate(-1.2%, 0) rotate(-4deg); }
-  50% { transform: translate(1.2%, -2%) rotate(4deg); }
+@media (prefers-reduced-motion: reduce) {
+  .holiday-offer__confetti { display: none; }
+}
+@keyframes bag-rock {
+  0%, 100% { transform: translate(-.8%, 0) rotate(-2.6deg); }
+  50% { transform: translate(.8%, -1.5%) rotate(2.6deg); }
 }
 @keyframes parcel-pop {
-  0%, 13%, 89%, 100% { transform: translate(0, 50%) rotate(3deg) scale(.86); }
-  13% { animation-timing-function: cubic-bezier(.16,.78,.24,1); }
-  43% { transform: translate(-4%, -147%) rotate(-12deg) scale(1.02); }
-  62% { transform: translate(5%, -129%) rotate(5deg); }
-  89% { animation-timing-function: ease-out; }
+  0%, 12%, 88%, 100% { transform: translate(0, 35%) rotate(3deg) scale(.87); }
+  12% { animation-timing-function: cubic-bezier(.18,.68,.3,1); }
+  45% { transform: translate(14%, -166%) rotate(-11deg); }
+  61% { transform: translate(10%, -143%) rotate(-5deg); }
 }
-@keyframes foil-burst {
-  0%, 15%, 86%, 100% { opacity: 0; }
-  0%, 15% { transform: translate(0, 0) rotate(0); animation-timing-function: ease-out; }
-  26%, 58% { opacity: 1; }
-  49% { transform: translate(calc(var(--spread) * .78), var(--rise)) rotate(var(--spin)); animation-timing-function: ease-in; }
-  86%, 100% { transform: translate(var(--spread), calc(var(--rise) + 28cqw)) rotate(calc(var(--spin) + 95deg)); }
+@keyframes bag-confetti {
+  0%, 13% { opacity: 0; transform: translate(var(--launch-x), var(--launch-y)) scale(.25); animation-timing-function: ease-out; }
+  20%, 74% { opacity: .94; }
+  41% {
+    transform: translate(calc(var(--launch-x) * .3 + var(--lane) * .7), var(--crest))
+               rotate(var(--spin)) rotateY(46deg);
+    animation-timing-function: ease-in;
+  }
+  69% {
+    transform: translate(calc(var(--lane) - var(--drift)), calc(var(--crest) + 37cqh))
+               rotate(calc(var(--spin) + 125deg)) rotateY(153deg);
+  }
+  95%, 100% { opacity: 0; transform: translate(var(--lane), 105cqh) rotate(calc(var(--spin) + 260deg)) rotateY(228deg); }
+}
+@keyframes poster-confetti {
+  0% { opacity: 0; transform: translate(var(--lane), -3cqh) rotate(0deg); }
+  9%, 90% { opacity: .8; }
+  35% { transform: translate(calc(var(--lane) + var(--drift)), 32cqh) rotate(var(--spin)) rotateY(72deg); }
+  68% { transform: translate(calc(var(--lane) - var(--drift)), 68cqh) rotate(calc(var(--spin) + 110deg)) rotateY(143deg); }
+  100% { opacity: 0; transform: translate(var(--lane), 103cqh) rotate(calc(var(--spin) + 248deg)) rotateY(205deg); }
 }

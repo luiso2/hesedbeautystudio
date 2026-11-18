@@ -395,18 +395,6 @@ html:has(#black-friday-offer[open]) { overflow: hidden; }
 .holiday-offer__occasion::before, .holiday-offer__occasion::after { content: ""; width: 36px; height: 1px; background: #bb9b66; }
 .holiday-offer__thanks { margin-top: 14px; font-size: 13px; color: #65574a; }
 .holiday-offer__hero { display: grid; grid-template-columns: 1fr 1.15fr; align-items: center; gap: 4px; padding-top: 12px; margin: 14px -12px 20px; }
-.holiday-offer__motion {
-  position: absolute; z-index: 2; top: 12px; left: 12px;
-  width: 44px; height: 44px; padding: 0; display: grid; place-items: center;
-  border-radius: 50%; color: #705939;
-}
-.holiday-offer__motion::before {
-  content: ""; box-sizing: border-box; width: 10px; height: 11px; border-inline: 3px solid;
-}
-.holiday-offer__motion[aria-pressed="true"]::before {
-  width: 0; height: 0; border: solid transparent; border-width: 6px 0 6px 10px; border-left-color: currentColor;
-}
-.holiday-offer__motion:hover { background: #efe2cf; }
 .holiday-offer h2 { margin: 0; font-weight: 400; line-height: 1; }
 .holiday-offer h2 strong { display: flex; align-items: baseline; justify-content: center; gap: 5px; font-family: var(--font-display); font-weight: 400; font-size: 112px; letter-spacing: -.055em; }
 .holiday-offer h2 strong span { font-size: .6em; letter-spacing: -.04em; color: var(--gold); }
@@ -444,7 +432,6 @@ html:has(#black-friday-offer[open]) { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) {
   .holiday-offer[open], .holiday-offer::backdrop { animation: none; }
-  .holiday-offer__motion { display: none; }
   .holiday-offer :is(.holiday-offer__book,.holiday-offer__close) { transition: none; }
 }
 [data-service-price] del { font-size: .85em; font-weight: 400; color: #6a6057; }
