@@ -1,4 +1,4 @@
-import { mountGiftRibbon } from './gift-ribbon.js';
+import './black-friday-gift.css';
 import { campaignId, offerEndLabel, promotionActive } from './promotion.js';
 import { initReviews } from './reviews.js';
 import { EN } from "./i18n.js";
@@ -528,29 +528,11 @@ if (promotionActive() && typeof holiday.showModal === 'function') {
   try { seen = sessionStorage.getItem(campaignId) === 'seen'; } catch {}
   if (!seen) {
     holiday.showModal();
-    const ribbon = mountGiftRibbon(holiday.querySelector('.holiday-offer__ribbon'));
-    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     const motionToggle = holiday.querySelector('.holiday-offer__motion');
-    const syncRibbon = () => {
-      if (document.hidden || reducedMotion.matches || holiday.classList.contains('is-gift-paused')) {
-        ribbon.pauseAnimations();
-      } else {
-        ribbon.unpauseAnimations();
-      }
-    };
     motionToggle.addEventListener('click', () => {
       const paused = holiday.classList.toggle('is-gift-paused');
       motionToggle.setAttribute('aria-pressed', String(paused));
-      syncRibbon();
     });
-    reducedMotion.addEventListener('change', syncRibbon);
-    document.addEventListener('visibilitychange', syncRibbon);
-    holiday.addEventListener('close', () => {
-      ribbon.pauseAnimations();
-      reducedMotion.removeEventListener('change', syncRibbon);
-      document.removeEventListener('visibilitychange', syncRibbon);
-    }, { once: true });
-    syncRibbon();
     try { sessionStorage.setItem(campaignId, 'seen'); } catch {}
   }
   holiday.addEventListener('click', event => {
