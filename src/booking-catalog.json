@@ -1,7 +1,6 @@
 [
   {
     "id": "drenaje-linfatico-manual",
-    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Drenaje Linfático Manual",
@@ -11,7 +10,6 @@
   },
   {
     "id": "brazilian-slim",
-    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Brazilian Slim",
@@ -21,7 +19,6 @@
   },
   {
     "id": "maderoterapia-corporal",
-    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Maderoterapia Corporal",
@@ -31,7 +28,6 @@
   },
   {
     "id": "metalterapia-sculpt",
-    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Metalterapia Sculpt",
@@ -49,6 +45,24 @@
     "price": 65
   },
   {
+    "id": "cavitacion-ultrasonica",
+    "category": "corporal",
+    "name": {
+      "es": "Cavitación Ultrasónica",
+      "en": "Ultrasonic Cavitation"
+    },
+    "price": 65
+  },
+  {
+    "id": "vacuum-sculpt",
+    "category": "corporal",
+    "name": {
+      "es": "Vacuum Sculpt",
+      "en": "Vacuum Sculpt"
+    },
+    "price": 65
+  },
+  {
     "id": "kinesio-body",
     "category": "corporal",
     "name": {
@@ -59,7 +73,6 @@
   },
   {
     "id": "hesed-body-sculpt",
-    "offersMassagePackage": true,
     "category": "corporal",
     "name": {
       "es": "Hesed Body Sculpt",
@@ -68,13 +81,49 @@
     "price": 125
   },
   {
+    "id": "masaje-relajante-sueco",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje Relajante (sueco)",
+      "en": "Relaxing Massage (Swedish)"
+    },
+    "price": 95
+  },
+  {
+    "id": "masaje-piedras-calientes",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje con Piedras Calientes",
+      "en": "Hot Stone Massage"
+    },
+    "price": 115
+  },
+  {
+    "id": "masaje-aromaterapia",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje con Aromaterapia",
+      "en": "Aromatherapy Massage"
+    },
+    "price": 105
+  },
+  {
+    "id": "masaje-percusion",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje de Percusión",
+      "en": "Percussion Massage"
+    },
+    "price": 55
+  },
+  {
     "id": "facial-deep-clean",
     "category": "facial",
     "name": {
       "es": "Facial Deep Clean + Cóctel de Vitaminas",
       "en": "Facial Deep Clean + Vitamin Cocktail"
     },
-    "price": 125
+    "price": null
   },
   {
     "id": "salmon-dna",
@@ -83,7 +132,7 @@
       "es": "Salmon DNA",
       "en": "Salmon DNA"
     },
-    "price": 220
+    "price": null
   },
   {
     "id": "skin-rejuvenation",
@@ -92,7 +141,7 @@
       "es": "Skin Rejuvenation",
       "en": "Skin Rejuvenation"
     },
-    "price": 150
+    "price": null
   },
   {
     "id": "facial-detox",
@@ -101,7 +150,7 @@
       "es": "Facial Detox + Hidratación con Ácido Hialurónico",
       "en": "Detox Facial + Hyaluronic Acid Hydration"
     },
-    "price": 125
+    "price": null
   },
   {
     "id": "yoga-facial",
@@ -110,7 +159,7 @@
       "es": "Yoga facial y drenaje linfático facial",
       "en": "Facial Yoga & Facial Lymphatic Drainage"
     },
-    "price": 95
+    "price": null
   },
   {
     "id": "delux-facial",
