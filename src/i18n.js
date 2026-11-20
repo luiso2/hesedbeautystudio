@@ -7,6 +7,10 @@ export const EN = {
   "nav.about": "María Hesed",
   "nav.faq": "FAQ",
   "nav.cta": "Book now",
+  "offer.thanks": "Your moment. A gift for you.",
+  "offer.off": "off",
+  "offer.detail": "On each service over US$50. Your discount is applied automatically when you book.",
+  "offer.book": "Book with 30% OFF",
 
   "hero.eyebrow": "Miami · Facial & body aesthetics",
   "hero.t1": "Where technique",
