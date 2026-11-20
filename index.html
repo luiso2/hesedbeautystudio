@@ -1313,6 +1313,38 @@
       </section>
     </div>
 
+    <dialog class="holiday-offer" id="black-friday-offer" aria-labelledby="offer-title" aria-describedby="offer-detail">
+      <form method="dialog" class="holiday-offer__dismiss">
+        <button class="holiday-offer__close" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </form>
+      <div class="holiday-offer__confetti" aria-hidden="true"></div>
+      <div class="holiday-offer__content">
+        <img class="holiday-offer__logo" src="/maria-hesed-mark.webp" alt="María Hesed · Aesthetic Studio" width="990" height="571" decoding="async">
+        <p class="holiday-offer__occasion"><span>Black Friday<i class="foil-baseline" aria-hidden="true"></i></span></p>
+        <p class="holiday-offer__thanks" data-i18n="offer.thanks">Tu momento. Un regalo para ti.</p>
+        <div class="holiday-offer__hero">
+          <div class="holiday-offer__gift" aria-hidden="true">
+            <div class="gift-bag">
+              <div class="gift-bag__present">
+                <i></i><img src="/img/black-friday-bow.webp" alt="" width="305" height="215">
+              </div>
+              <img class="gift-bag__photo" src="/img/black-friday-gift-v1.webp" alt="" width="640" height="640">
+            </div>
+          </div>
+          <h2 id="offer-title"><strong><span class="holiday-offer__amount">30<i class="foil-baseline" aria-hidden="true"></i></span><span class="holiday-offer__percent">%<i class="foil-baseline" aria-hidden="true"></i></span></strong><span class="holiday-offer__discount" data-i18n="offer.off">de descuento</span></h2>
+        </div>
+        <p id="offer-detail" data-i18n="offer.detail">En cada servicio de más de US$50. El descuento se aplica automáticamente al reservar.</p>
+      </div>
+      <div class="holiday-offer__footer">
+        <a class="btn btn--gold holiday-offer__book" href="/reservar">
+          <span data-i18n="offer.book">Reservar con 30% OFF</span>
+          <span class="holiday-offer__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span>
+        </a>
+        <p class="holiday-offer__dates"></p>
+      </div>
+    </dialog>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

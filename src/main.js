@@ -442,16 +442,18 @@ document.addEventListener("keydown", (event) => {
   }
 });
 // Native horizontal scrolling supports touch, trackpads and keyboard navigation.
+// The carousel markup is optional; a static before/after does not use it.
 const resultsGallery = $(".results-gallery");
-const resultsTrack = $(".results-gallery__track", resultsGallery);
-const resultSlides = $$(".results-gallery__slide", resultsGallery);
-const resultDots = $$("[data-results-index]", resultsGallery);
-const resultPrev = $("[data-results-prev]", resultsGallery);
-const resultNext = $("[data-results-next]", resultsGallery);
-const resultCount = $(".results-gallery__count", resultsGallery);
+let resultsTrack = null;
+let resultSlides = [];
+let resultDots = [];
+let resultPrev = null;
+let resultNext = null;
+let resultCount = null;
 let resultIndex = 0;
 
 function updateResultsGallery() {
+  if (!resultsGallery) return;
   resultsGallery.setAttribute("aria-label", copy("Galería de resultados", "Results gallery"));
   resultsGallery.setAttribute("aria-roledescription", copy("carrusel", "carousel"));
   $(".results-gallery__dots", resultsGallery).setAttribute("aria-label", copy("Seleccionar imagen", "Choose an image"));
@@ -474,43 +476,52 @@ function updateResultsGallery() {
   });
 }
 
-function goToResult(index, animate = true) {
-  const target = Math.max(0, Math.min(resultSlides.length - 1, index));
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  resultsTrack.scrollTo({
-    left: resultSlides[target].offsetLeft - resultSlides[0].offsetLeft,
-    behavior: animate && !reducedMotion ? "smooth" : "auto",
-  });
-}
+if (resultsGallery) {
+  resultsTrack = $(".results-gallery__track", resultsGallery);
+  resultSlides = $$(".results-gallery__slide", resultsGallery);
+  resultDots = $$("[data-results-index]", resultsGallery);
+  resultPrev = $("[data-results-prev]", resultsGallery);
+  resultNext = $("[data-results-next]", resultsGallery);
+  resultCount = $(".results-gallery__count", resultsGallery);
 
-$(".results-gallery__controls", resultsGallery).hidden = false;
-resultCount.hidden = false;
-resultPrev.addEventListener("click", () => goToResult(resultIndex - 1));
-resultNext.addEventListener("click", () => goToResult(resultIndex + 1));
-resultDots.forEach((dot) => dot.addEventListener("click", () => goToResult(Number(dot.dataset.resultsIndex))));
-resultsTrack.addEventListener("keydown", (event) => {
-  if (event.target !== resultsTrack) return;
-  const targets = { ArrowLeft: resultIndex - 1, ArrowRight: resultIndex + 1, Home: 0, End: resultSlides.length - 1 };
-  if (!(event.key in targets)) return;
-  event.preventDefault();
-  goToResult(targets[event.key]);
-});
-let resultScrollFrame = 0;
-resultsTrack.addEventListener("scroll", () => {
-  if (resultScrollFrame) return;
-  resultScrollFrame = requestAnimationFrame(() => {
-    resultScrollFrame = 0;
-    const start = resultSlides[0].offsetLeft;
-    const nearest = resultSlides.reduce((best, slide, index) =>
-      Math.abs(slide.offsetLeft - start - resultsTrack.scrollLeft) <
-      Math.abs(resultSlides[best].offsetLeft - start - resultsTrack.scrollLeft) ? index : best, 0);
-    if (nearest !== resultIndex) {
-      resultIndex = nearest;
-      updateResultsGallery();
-    }
+  function goToResult(index, animate = true) {
+    const target = Math.max(0, Math.min(resultSlides.length - 1, index));
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    resultsTrack.scrollTo({
+      left: resultSlides[target].offsetLeft - resultSlides[0].offsetLeft,
+      behavior: animate && !reducedMotion ? "smooth" : "auto",
+    });
+  }
+
+  $(".results-gallery__controls", resultsGallery).hidden = false;
+  resultCount.hidden = false;
+  resultPrev.addEventListener("click", () => goToResult(resultIndex - 1));
+  resultNext.addEventListener("click", () => goToResult(resultIndex + 1));
+  resultDots.forEach((dot) => dot.addEventListener("click", () => goToResult(Number(dot.dataset.resultsIndex))));
+  resultsTrack.addEventListener("keydown", (event) => {
+    if (event.target !== resultsTrack) return;
+    const targets = { ArrowLeft: resultIndex - 1, ArrowRight: resultIndex + 1, Home: 0, End: resultSlides.length - 1 };
+    if (!(event.key in targets)) return;
+    event.preventDefault();
+    goToResult(targets[event.key]);
   });
-}, { passive: true });
-new ResizeObserver(() => goToResult(resultIndex, false)).observe(resultsTrack);
+  let resultScrollFrame = 0;
+  resultsTrack.addEventListener("scroll", () => {
+    if (resultScrollFrame) return;
+    resultScrollFrame = requestAnimationFrame(() => {
+      resultScrollFrame = 0;
+      const start = resultSlides[0].offsetLeft;
+      const nearest = resultSlides.reduce((best, slide, index) =>
+        Math.abs(slide.offsetLeft - start - resultsTrack.scrollLeft) <
+        Math.abs(resultSlides[best].offsetLeft - start - resultsTrack.scrollLeft) ? index : best, 0);
+      if (nearest !== resultIndex) {
+        resultIndex = nearest;
+        updateResultsGallery();
+      }
+    });
+  }, { passive: true });
+  new ResizeObserver(() => goToResult(resultIndex, false)).observe(resultsTrack);
+}
 
 $("#year").textContent = new Date().getFullYear();
 let savedLang = "es";
