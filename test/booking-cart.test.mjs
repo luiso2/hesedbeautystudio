@@ -65,8 +65,51 @@ test('mixed quoted/from-price services collect per-service deposits without asse
   const {db,env}=setup();const original=globalThis.fetch;globalThis.fetch=async()=>mockConfig();
   try{const response=await worker.fetch(req('/api/bookings',{...fields,items:[{serviceId:'facial-detox'},{serviceId:'fibroblast-parpado'}]}),env);assert.equal(response.status,201);const b=await response.json();const u=new URL(b.payment_url);assert.equal(u.searchParams.get('dep'),'8000');assert.equal(u.searchParams.get('tot'),'8000');const row=db.prepare('SELECT * FROM booking_requests WHERE id=?').get(b.id);assert.equal(row.price_cents,null);assert.equal(row.price_from,1)}finally{globalThis.fetch=original;db.close()}
 });
-test('low-price deposit decisions cannot silently overcharge',async()=>{
-  const {db,env}=setup();const r=await worker.fetch(req('/api/bookings',{...fields,items:[{serviceId:'depilacion-cera',optionId:'area-2'}]}),env);assert.equal(r.status,409);assert.equal(db.prepare('SELECT COUNT(*) n FROM booking_requests').get().n,0);db.close();
+test('a service priced below the standard deposit is paid in full when booking', async t => {
+  t.mock.method(Date, 'now', () => PROMO_START + 86400000);
+  // The deposit never exceeds what the service costs, with or without a campaign.
+  for (const service of catalog) for (const entry of service.options || [service]) {
+    if (entry.price == null) continue;
+    const item = resolveCart([{ serviceId: service.id, ...(service.options ? { optionId: entry.id } : {}) }])[0];
+    const totals = cartTotals([item]);
+    assert.equal(totals.depositCents, Math.min(4000, Math.round(item.price * 100)), `${service.id}/${entry.id || ''}`);
+    assert.ok(totals.depositCents <= totals.paymentTotalCents);
+    assert.equal(totals.policyPending, undefined);
+  }
+  const { db, env } = setup();
+  t.mock.method(globalThis, 'fetch', async () => mockConfig());
+  try {
+    // Upper lip costs US$10: the client pays those US$10 now and nothing remains.
+    const response = await worker.fetch(req('/api/bookings', { ...fields, items: [{ serviceId: 'depilacion-cera', optionId: 'area-2' }] }), env);
+    assert.equal(response.status, 201);
+    const { id, payment_url, deposit_cents } = await response.json();
+    const url = new URL(payment_url);
+    assert.equal(deposit_cents, 1000);
+    assert.equal(url.searchParams.get('dep'), '1000');
+    assert.equal(url.searchParams.get('tot'), '1000');
+    // Zones under US$40 have no Merktop link of their own; an active waxing link carries the signed amounts.
+    assert.equal(url.pathname, `/pay/d/${links['depilacion-cera/area-10']}`);
+    const label = url.searchParams.get('desc');
+    assert.match(label, /Labio superior/);
+    assert.equal(url.searchParams.get('sig'),
+      createHmac('sha256', 'test-secret').update(`v2.0.0.${links['depilacion-cera/area-10']}.1000.1000.${label}`).digest('hex'));
+    const row = db.prepare('SELECT * FROM booking_requests WHERE id=?').get(id);
+    assert.equal(row.deposit_cents, 1000);
+    assert.equal(row.payment_total_cents, 1000);
+    // Paying the standard US$40 for a US$10 service is not this booking's payment.
+    await worker.fetch(await eventRequest(id, row.merktop_link_id, 4000, 1000), env);
+    assert.equal(db.prepare('SELECT payment_status FROM booking_requests WHERE id=?').get(id).payment_status, 'awaiting_payment');
+    assert.equal((await worker.fetch(await eventRequest(id, row.merktop_link_id, 1000, 1000), env)).status, 200);
+    assert.equal(db.prepare('SELECT payment_status FROM booking_requests WHERE id=?').get(id).payment_status, 'paid');
+
+    // With a regular service in the cart, each one contributes its own deposit.
+    const mixed = await worker.fetch(req('/api/bookings', { ...fields, items: [{ serviceId: 'depilacion-cera', optionId: 'area-2' }, { serviceId: 'facial-detox' }] }), env);
+    assert.equal(mixed.status, 201);
+    const mixedUrl = new URL((await mixed.json()).payment_url);
+    assert.equal(mixedUrl.pathname, `/pay/d/${links['facial-detox']}`);
+    assert.equal(mixedUrl.searchParams.get('dep'), '5000');
+    assert.equal(mixedUrl.searchParams.get('tot'), '9750');
+  } finally { db.close(); }
 });
 test('only the admin can enable a Google composer, which replaces local reviews and personal invitations', async () => {
   const { db, env } = setup();
@@ -197,15 +240,30 @@ test('Black Friday signed checkout charges the right deposit and records the dis
   } finally { db.close(); }
 });
 
-test('the Black Friday discount never silently overcharges a service below the existing deposit', async t => {
+test('a Black Friday price below the standard deposit is collected in full, without asking the client to call', async t => {
   t.mock.method(Date, 'now', () => PROMO_START + 86400000);
   const items = [{ serviceId: 'depilacion-cera', optionId: 'area-12' }];
   assert.equal(resolveCart(items)[0].price, 38.5);
   const { db, env } = setup();
+  t.mock.method(globalThis, 'fetch', async () => mockConfig());
   try {
     const response = await worker.fetch(req('/api/bookings', { ...fields, items }), env);
-    assert.equal(response.status, 409);
-    assert.equal((await response.json()).error, 'deposit_policy_pending');
-    assert.equal(db.prepare('SELECT COUNT(*) n FROM booking_requests').get().n, 0);
+    assert.equal(response.status, 201);
+    const { id, payment_url, deposit_cents } = await response.json();
+    const url = new URL(payment_url);
+    assert.equal(deposit_cents, 3850);
+    assert.equal(url.pathname, `/pay/d/${links['depilacion-cera/area-12']}`);
+    assert.equal(url.searchParams.get('dep'), '3850');
+    assert.equal(url.searchParams.get('tot'), '3850');
+    const row = db.prepare('SELECT * FROM booking_requests WHERE id=?').get(id);
+    assert.equal(row.deposit_cents, 3850);
+    assert.equal((await worker.fetch(await eventRequest(id, row.merktop_link_id, 3850, 3850), env)).status, 200);
+    assert.equal(db.prepare('SELECT payment_status FROM booking_requests WHERE id=?').get(id).payment_status, 'paid');
+
+    const mixed = await worker.fetch(req('/api/bookings', { ...fields, items: [{ serviceId: 'facial-detox' }, ...items] }), env);
+    assert.equal(mixed.status, 201);
+    const mixedUrl = new URL((await mixed.json()).payment_url);
+    assert.equal(mixedUrl.searchParams.get('dep'), '7850');
+    assert.equal(mixedUrl.searchParams.get('tot'), '12600');
   } finally { db.close(); }
 });

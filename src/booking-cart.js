@@ -27,13 +27,15 @@ export function resolveCart(input, now = Date.now()) {
       ...servicePricing(selected.price, now), from: !!selected.from };
   });
 }
+export const STANDARD_DEPOSIT_CENTS = 4000;
+// A service that costs less than the standard deposit is paid in full when booking.
+export const itemDepositCents = (item) => item.price == null
+  ? STANDARD_DEPOSIT_CENTS : Math.min(STANDARD_DEPOSIT_CENTS, Math.round(item.price * 100));
 export function cartTotals(items) {
   const knownCents = items.reduce((sum, item) => sum + (item.price == null ? 0 : Math.round(item.price * 100)), 0);
   const hasUnknown = items.some((item) => item.price == null);
   const estimated = hasUnknown || items.some((item) => item.from);
-  // Existing low-price exceptions require the merchant's explicit decision.
-  const policyPending = items.some((item) => item.price != null && item.price < 40);
-  const depositCents = items.length * 4000;
-  return { knownCents, hasUnknown, estimated, policyPending, depositCents,
+  const depositCents = items.reduce((sum, item) => sum + itemDepositCents(item), 0);
+  return { knownCents, hasUnknown, estimated, depositCents,
     paymentTotalCents: estimated ? depositCents : knownCents };
 }

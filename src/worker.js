@@ -3,7 +3,7 @@ import { serveCatalog } from './catalog-promotion.js';
 import catalog from "./booking-catalog.json" with { type: "json" };
 import { serveVideo } from "./video-assets.js";
 import videoSizes from "./video-sizes.json" with { type: "json" };
-import { findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent, signCartPayment } from "./merktop.js";
+import { eligibleForDeposit, findDepositLink, paymentDescription, paymentLinkKey, verifyMerktopEvent, signCartPayment } from "./merktop.js";
 
 import { recordTerms } from './booking-terms.js';
 import { resolveCart, cartTotals } from './booking-cart.js';
@@ -98,7 +98,6 @@ async function createBooking(request, env) {
   const totals = cartTotals(items);
   if (body.quotedTotalCents !== undefined && body.quotedTotalCents !== totals.knownCents)
     return json({ error: 'price_changed' }, 409);
-  if (totals.policyPending) return json({ error: 'deposit_policy_pending' }, 409);
   const first = items[0];
   const service = catalog.find((entry) => entry.id === first.serviceId);
   const option = service.options?.find((entry) => entry.id === first.optionId);
@@ -135,7 +134,7 @@ async function createBooking(request, env) {
   let payment;
   try {
     // Use a known active link of the same checkout type as the entire cart.
-    const anchor = totals.estimated ? items.find((item) => item.price == null || item.from) : first;
+    const anchor = totals.estimated ? items.find((item) => item.price == null || item.from) : fixedPriceAnchor(items);
     const anchorService = catalog.find((entry) => entry.id === anchor.serviceId);
     const anchorOption = anchorService.options?.find((entry) => entry.id === anchor.optionId);
     const linkKey = anchor.massagePackage ? 'massage-package' : paymentLinkKey(anchorService, anchorOption);
@@ -183,6 +182,24 @@ async function createBooking(request, env) {
     return json({ id, status: "pending", payment_url: payment.url.toString(), deposit_cents: totals.depositCents }, 201);
   }
   return json({ id, status: "pending" }, 201);
+}
+
+// Merktop keeps a link only for selections whose published price covers the standard deposit.
+// A cart made only of cheaper services borrows an active fixed-price link; the signed amounts
+// and description still describe exactly what the client booked.
+function fixedPriceAnchor(items) {
+  const published = (item) => {
+    const service = catalog.find((entry) => entry.id === item.serviceId);
+    return service.options?.find((entry) => entry.id === item.optionId) || service;
+  };
+  const linked = (entry) => entry.price != null && !entry.from && eligibleForDeposit(entry);
+  const inCart = items.find((item) => linked(published(item)));
+  if (inCart) return inCart;
+  const service = catalog.find((entry) => entry.id === items[0].serviceId);
+  const sibling = service.options?.find(linked);
+  if (sibling) return { serviceId: service.id, optionId: sibling.id, price: sibling.price };
+  const other = catalog.find((entry) => !entry.options?.length && linked(entry));
+  return { serviceId: other.id, optionId: '', price: other.price };
 }
 
 async function merktopWebhook(request, env) {
