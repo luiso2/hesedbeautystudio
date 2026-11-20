@@ -108,7 +108,7 @@ function priceText(entry) {
 }
 const money = (cents) => `US$${(cents / 100).toLocaleString(lang === 'en' ? 'en-US' : 'es-US', { maximumFractionDigits: 2 })}`;
 const totals = () => cartTotals(selectedItems);
-const depositRequired = () => selectedItems.length > 0;
+const depositRequired = () => selectedItems.length > 0 && !totals().policyPending;
 // The "n × US$40" breakdown only holds when every service pays the standard deposit.
 const depositText = () => money(totals().depositCents) +
   (totals().depositCents === selectedItems.length * STANDARD_DEPOSIT_CENTS ? ` (${selectedItems.length} × US$40)` : '');
@@ -117,16 +117,18 @@ const totalText = () => totals().hasUnknown ? (totals().knownCents ? `${money(to
 Object.assign(translations.es, {
   step1title: 'Tu selección de tratamientos', step1lead: 'Combina los servicios que quieras en una misma cita. Agrega o quita tratamientos aquí.',
   addService: '+ Agregar servicio', remove: 'Quitar', added: 'Agregado', done: 'Listo', total: 'Total de tratamientos',
-  perService: 'Depósito de US$40 por cada servicio; si el servicio cuesta menos, se paga completo al reservar. Verás el total antes de pagar.',
+  perService: 'Depósito de US$40 por cada servicio; si con el descuento cuesta menos, se paga completo al reservar. Verás el total antes de pagar.',
   depositLead: 'Revisa tu selección. Continuarás a Merktop para pagar el depósito de los servicios elegidos. María confirmará tu horario personalmente.',
+  lowPricePending: 'El depósito de los servicios con precio inferior a US$40 está pendiente de confirmación. Consulta con María por WhatsApp antes de reservarlos.',
   priceChanged: 'El precio cambió. Revisa el total y vuelve a aceptar las condiciones antes de pagar.',
   maxItems: 'Puedes agregar hasta 12 servicios por solicitud.',
 });
 Object.assign(translations.en, {
   step1title: 'Your treatment selection', step1lead: 'Combine services in one appointment. Add or remove treatments here.',
   addService: '+ Add service', remove: 'Remove', added: 'Added', done: 'Done', total: 'Treatment total',
-  perService: 'US$40 deposit per service; a service that costs less is paid in full when you book. You will see the total before paying.',
+  perService: 'US$40 deposit per service; if a discount brings it below that, it is paid in full when you book. You will see the total before paying.',
   depositLead: 'Review your selection. Continue to Merktop to pay the deposit for your selected services. María will personally confirm your time.',
+  lowPricePending: 'The deposit for services priced below US$40 is awaiting confirmation. Please contact María on WhatsApp before booking these services.',
   priceChanged: 'Pricing has changed. Review the total and accept the terms again before paying.',
   maxItems: 'You can add up to 12 services per request.',
 });
@@ -285,7 +287,7 @@ function updateSummary() {
   });
   const total = document.createElement('p'); total.className = 'booking-summary__price'; total.textContent = `${tr('total')}: ${totalText()}`; root.append(total);
   const deposit = document.createElement('p'); deposit.className = 'booking-summary__deposit'; deposit.textContent = `${tr('depositLabel')}: ${depositText()}`; root.append(deposit);
-  const pending = document.createElement('p'); pending.className = 'booking-summary__pending'; pending.textContent = tr('depositPending'); root.append(pending);
+  const pending = document.createElement('p'); pending.className = 'booking-summary__pending'; pending.textContent = tr(totals().policyPending ? 'lowPricePending' : 'depositPending'); root.append(pending);
   if ($('#booking-date').value && $('#booking-time').value) {
     const when = document.createElement('p'); when.className = 'booking-summary__when'; when.textContent = `${$('#booking-date').value} · ${$('#booking-time').value} (Miami)`; root.append(when);
   }
@@ -329,6 +331,7 @@ function showStep(next, focus = true) {
 
 function validStep() {
   if (step === 1 && !selectedItems.length) { showError('selectServiceError'); $('#booking-add').focus(); return false; }
+  if (step === 1 && totals().policyPending) { showError('lowPricePending'); return false; }
   if (step === 2) {
     const date = $("#booking-date");
     const time = $("#booking-time");
@@ -453,6 +456,7 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
   event.preventDefault();
   if (step !== 4) return;
   if (!selectedItems.length) { showStep(1); showError('selectServiceError'); return; }
+  if (totals().policyPending) { showError('lowPricePending'); return; }
   const missing = $(".booking-terms input:required:not(:checked)");
   if (missing) {
     showError("required");

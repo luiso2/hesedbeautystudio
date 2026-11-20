@@ -28,14 +28,16 @@ export function resolveCart(input, now = Date.now()) {
   });
 }
 export const STANDARD_DEPOSIT_CENTS = 4000;
-// A service that costs less than the standard deposit is paid in full when booking.
+// When a discount brings a service below the standard deposit, its whole price is paid when booking.
 export const itemDepositCents = (item) => item.price == null
   ? STANDARD_DEPOSIT_CENTS : Math.min(STANDARD_DEPOSIT_CENTS, Math.round(item.price * 100));
 export function cartTotals(items) {
   const knownCents = items.reduce((sum, item) => sum + (item.price == null ? 0 : Math.round(item.price * 100)), 0);
   const hasUnknown = items.some((item) => item.price == null);
   const estimated = hasUnknown || items.some((item) => item.from);
+  // Services published below the deposit have no payment link; those carts still go through María.
+  const policyPending = items.some((item) => item.price != null && (item.basePrice ?? item.price) < 40);
   const depositCents = items.reduce((sum, item) => sum + itemDepositCents(item), 0);
-  return { knownCents, hasUnknown, estimated, depositCents,
+  return { knownCents, hasUnknown, estimated, policyPending, depositCents,
     paymentTotalCents: estimated ? depositCents : knownCents };
 }
