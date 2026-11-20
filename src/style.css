@@ -1742,6 +1742,22 @@ video[controls] {
   margin-top: 0;
   padding-top: 4px;
 }
+/* "Más buscado" pill, as on the printed relaxing-massage menu. */
+.card__tag {
+  align-self: flex-start;
+  font: 600 9px/1 var(--font-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b3884a;
+  border: 1px solid #b3884a;
+  border-radius: 999px;
+  padding: 5px 9px;
+}
+/* Two duration/price options on one line (60 min · $95 / 90 min · $135). */
+.card__price--dual {
+  flex-wrap: wrap;
+  row-gap: 2px;
+}
 
 /* María Hesed — the M | H identity supplied by the studio. */
 .brand-monogram {

@@ -79,6 +79,22 @@ export const EN = {
   "srv.sub2": "Body Contouring",
   "srv.sub3": "Hesed Signature",
   "srv.dur": "45–90 min",
+  "srv.sub4": "Relaxing Massages",
+  "srv.tag": "Most requested",
+  "srv.dur2": "60–90 min",
+  "srv.dur3": "30 min",
+  "srv.bn10": "Relaxing Massage (Swedish)",
+  "srv.bn11": "Hot Stone Massage",
+  "srv.bn12": "Aromatherapy Massage",
+  "srv.bn13": "Percussion Massage",
+  "srv.bd10":
+    "Classic Swedish massage with smooth, flowing strokes to relax body and mind and release built-up tension.",
+  "srv.bd11":
+    "Relaxing massage with warm volcanic stones that help loosen muscle tension and bring deep relaxation.",
+  "srv.bd12":
+    "Relaxing massage with selected essential oils to calm, balance and delight the senses.",
+  "srv.bd13":
+    "Percussion gun massage to release muscle tension, boost circulation and speed up recovery.",
   "srv.bn1": "Manual Lymphatic Drainage",
   "srv.bn2": "Brazilian Slim",
   "srv.bn3": "Body Wood Therapy",

@@ -68,6 +68,42 @@
     "price": 125
   },
   {
+    "id": "masaje-relajante-sueco",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje Relajante (sueco)",
+      "en": "Relaxing Massage (Swedish)"
+    },
+    "price": 95
+  },
+  {
+    "id": "masaje-piedras-calientes",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje con Piedras Calientes",
+      "en": "Hot Stone Massage"
+    },
+    "price": 115
+  },
+  {
+    "id": "masaje-aromaterapia",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje con Aromaterapia",
+      "en": "Aromatherapy Massage"
+    },
+    "price": 105
+  },
+  {
+    "id": "masaje-percusion",
+    "category": "corporal",
+    "name": {
+      "es": "Masaje de Percusión",
+      "en": "Percussion Massage"
+    },
+    "price": 55
+  },
+  {
     "id": "facial-deep-clean",
     "category": "facial",
     "name": {
