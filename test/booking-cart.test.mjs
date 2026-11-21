@@ -239,3 +239,22 @@ test('a Black Friday price below the standard deposit is collected in full, with
     assert.equal(mixedUrl.searchParams.get('tot'), '12600');
   } finally { db.close(); }
 });
+
+test('90-minute massages retain the menu price, campaign total and per-service deposit', () => {
+  const during = Date.parse('2026-11-21T12:00:00-05:00');
+  const after = Date.parse('2026-12-01T12:00:00-05:00');
+  for (const [serviceId, shortPrice, regular, discounted] of [
+    ['masaje-relajante-sueco', 95, 135, 94.5],
+    ['masaje-piedras-calientes', 115, 155, 108.5],
+    ['masaje-aromaterapia', 105, 145, 101.5],
+  ]) {
+    const selection = [{ serviceId, optionId: '90-min' }];
+    const items = resolveCart(selection, during);
+    assert.equal(items[0].price, discounted);
+    assert.equal(items[0].optionName.es, '90 min');
+    assert.equal(cartTotals(items).depositCents, 4000);
+    assert.equal(resolveCart(selection, after)[0].price, regular);
+    assert.equal(resolveCart([{ serviceId }], after)[0].price, shortPrice);
+    assert.throws(() => resolveCart([{ serviceId }, { serviceId, optionId: '60-min' }], during));
+  }
+});

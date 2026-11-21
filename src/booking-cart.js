@@ -9,8 +9,10 @@ export function resolveCart(input, now = Date.now()) {
   const seen = new Set();
   return input.map((item) => {
     const service = catalog.find((entry) => entry.id === item?.serviceId);
-    const option = service?.options?.find((entry) => entry.id === item?.optionId);
-    const key = itemKey(item || {});
+    // Older bookings for these massages used the service ID alone for 60 minutes.
+    const optionId = item?.optionId || service?.defaultOptionId;
+    const option = service?.options?.find((entry) => entry.id === optionId);
+    const key = itemKey({ ...item, optionId });
     if (!service || (service.options?.length && !option) || (!service.options?.length && item.optionId) || seen.has(key))
       throw new Error('invalid_service');
     seen.add(key);

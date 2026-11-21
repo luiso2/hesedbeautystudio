@@ -57,7 +57,8 @@ const priceLabel = (entry) =>
     : `${entry.from ? "Desde " : ""}<span data-service-price="${entry.price}">US$${entry.price}</span>`;
 
 function serviceRow(service) {
-  const price = service.options ? "Precios por zona" : priceLabel(service);
+  const optionLabel = service.optionType === "duration" ? "Precios por duración" : "Precios por zona";
+  const price = service.options ? optionLabel : priceLabel(service);
   const zones =
     service.options
       ?.map(

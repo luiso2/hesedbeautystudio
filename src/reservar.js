@@ -23,7 +23,7 @@ const translations = {
     noResults: "No encontramos ese tratamiento. Prueba otro nombre o mira todos los servicios.", viewAll: "Ver todos los servicios",
     selectedService: "Servicio seleccionado", changeService: "Cambiar servicio", returnSelection: "Volver a mi selección",
     selectionLead: "Comprueba tu elección. Puedes cambiar el servicio antes de continuar.",
-    serviceCount: "servicios", oneService: "servicio", chooseArea: "Selecciona la zona", areas: "Precios por zona",
+    serviceCount: "servicios", oneService: "servicio", chooseArea: "Selecciona la zona", areas: "Precios por zona", durations: "Duración",
     step2count: "PASO 02 / 04", step2title: "¿Cuándo te gustaría venir?", step2lead: "Indica una fecha y hora preferidas en Miami. Te confirmaremos la disponibilidad antes de fijar la cita.",
     date: "Fecha preferida", time: "Hora preferida · Miami", noLiveAvailability: "Todavía no mostramos horarios disponibles en tiempo real. Esta fecha y hora son una solicitud, no una cita confirmada.",
     step3count: "PASO 03 / 04", step3title: "Tus datos de contacto", step3lead: "María usará estos datos para confirmar la disponibilidad y los detalles de tu tratamiento.",
@@ -58,7 +58,7 @@ const translations = {
     noResults: "We couldn't find that treatment. Try another name or view all services.", viewAll: "View all services",
     selectedService: "Selected service", changeService: "Change service", returnSelection: "Back to my selection",
     selectionLead: "Check your selection. You can change your service before continuing.",
-    serviceCount: "services", oneService: "service", chooseArea: "Choose an area", areas: "Prices by area",
+    serviceCount: "services", oneService: "service", chooseArea: "Choose an area", areas: "Prices by area", durations: "Duration",
     step2count: "STEP 02 / 04", step2title: "When would you like to visit?", step2lead: "Choose your preferred date and time in Miami. We will confirm availability before setting the appointment.",
     date: "Preferred date", time: "Preferred time · Miami", noLiveAvailability: "Live availability is not shown yet. Your date and time are a request, not a confirmed appointment.",
     step3count: "STEP 03 / 04", step3title: "Your contact details", step3lead: "María will use these details to confirm availability and your treatment.",
@@ -189,7 +189,7 @@ function renderServices() {
       group.className = 'picker-areas';
       group.open = item.id === serviceId || !!searchQuery;
       const summary = document.createElement('summary');
-      summary.textContent = `${item.name[lang]} · ${tr('areas')}`;
+      summary.textContent = `${item.name[lang]} · ${tr(item.optionType === 'duration' ? 'durations' : 'areas')}`;
       group.append(summary);
       item.options.forEach((option) => group.append(serviceButton(item, option)));
       root.append(group);

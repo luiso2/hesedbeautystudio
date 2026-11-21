@@ -74,7 +74,27 @@
       "es": "Masaje Relajante (sueco)",
       "en": "Relaxing Massage (Swedish)"
     },
-    "price": 95
+    "price": 95,
+    "optionType": "duration",
+    "defaultOptionId": "60-min",
+    "options": [
+      {
+        "id": "60-min",
+        "name": {
+          "es": "60 min",
+          "en": "60 min"
+        },
+        "price": 95
+      },
+      {
+        "id": "90-min",
+        "name": {
+          "es": "90 min",
+          "en": "90 min"
+        },
+        "price": 135
+      }
+    ]
   },
   {
     "id": "masaje-piedras-calientes",
@@ -83,7 +103,27 @@
       "es": "Masaje con Piedras Calientes",
       "en": "Hot Stone Massage"
     },
-    "price": 115
+    "price": 115,
+    "optionType": "duration",
+    "defaultOptionId": "60-min",
+    "options": [
+      {
+        "id": "60-min",
+        "name": {
+          "es": "60 min",
+          "en": "60 min"
+        },
+        "price": 115
+      },
+      {
+        "id": "90-min",
+        "name": {
+          "es": "90 min",
+          "en": "90 min"
+        },
+        "price": 155
+      }
+    ]
   },
   {
     "id": "masaje-aromaterapia",
@@ -92,7 +132,27 @@
       "es": "Masaje con Aromaterapia",
       "en": "Aromatherapy Massage"
     },
-    "price": 105
+    "price": 105,
+    "optionType": "duration",
+    "defaultOptionId": "60-min",
+    "options": [
+      {
+        "id": "60-min",
+        "name": {
+          "es": "60 min",
+          "en": "60 min"
+        },
+        "price": 105
+      },
+      {
+        "id": "90-min",
+        "name": {
+          "es": "90 min",
+          "en": "90 min"
+        },
+        "price": 145
+      }
+    ]
   },
   {
     "id": "masaje-percusion",
