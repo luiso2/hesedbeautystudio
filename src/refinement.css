@@ -137,7 +137,19 @@ body { background: var(--paper); }
 .gifts__grid { gap: clamp(38px, 6vw, 90px); }
 .gifts__intro .title-xl { font-size: clamp(40px, 3.9vw, 56px); }
 .gifts__lead { font-size: 14px; line-height: 1.85; }
-.gift-card-preview { border-radius: 14px; box-shadow: 0 12px 28px #342b2112; margin-top: 28px; }
+/* The rim and stationary shadow carry the thickness of the printed card. */
+.gift-card-preview {
+  box-shadow: inset 0 1px 0 #dcc09266, inset -1px 0 0 #dcc09238,
+    0 1px 0 #b6925b, 0 3px 0 #342b21, 0 16px 30px -10px #342b2140;
+}
+.gift-card-preview__foil {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 16%, #dcc0920a 36%,
+    #dcc0922b 48%, #f7efe419 52%, #dcc09208 60%, transparent 79%);
+}
 .gift-form, .gifts__fallback { border-radius: 14px; background: #f6f0e7; padding: clamp(24px, 2.8vw, 36px); }
 .gift-form__legend { font-size: 30px; }
 .gift-form__presets button { border-radius: 7px; font-size: 11px; }
@@ -197,7 +209,7 @@ body { background: var(--paper); }
 .booking-input input, .booking-input textarea, .booking-option select { font-size: 16px; border-radius: 7px; }
 .booking-next, .booking-back { border-radius: 7px; }
 .booking-step:not([hidden]) { animation: booking-step-in .35s cubic-bezier(.22,1,.36,1); }
-@keyframes booking-step-in { from { opacity: .55; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+@keyframes booking-step-in { from { opacity: .78; } to { opacity: 1; } }
 @media (max-width: 1150px) {
   .category-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .category-choice, .category-choice:first-child, .category-choice:last-child { min-height: 242px; }
@@ -276,7 +288,6 @@ body { background: var(--paper); }
   .category-choice__button { min-height: 48px; font-size: 10px; padding: 9px 7px; }
   .category-choice__num { font-size: 8px; }
   .services__note { font-size: 11px; }
-  .services__detail-head { scroll-margin-top: 92px; }
   .book .eyebrow { color: #71501d; }
   .wa-float { width: 44px; height: 44px; right: 16px; bottom: 16px; }
 }

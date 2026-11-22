@@ -1,9 +1,13 @@
+import { attachGiftCardMotion } from "./gift-card-motion.js";
+
 // Short, progressive enhancements: content is visible even without animation.
 export function initSiteMotion() {
   const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
   const running = new Set();
   const seen = new WeakSet();
   let observer;
+  let stopCard;
+  let activeSection;
   let disposed = false;
   const nav = document.querySelector("#nav");
   const sections = [...document.querySelectorAll("#servicios, #maria, #resultados, #gift-cards, #faq")];
@@ -18,6 +22,8 @@ export function initSiteMotion() {
       if (section.getBoundingClientRect().top <= offset) current = section.id;
     });
     nav.classList.toggle("is-scrolled", window.scrollY > 20);
+    if (activeSection === current) return;
+    activeSection = current;
     links.forEach((link) => {
       if (link.getAttribute("href") === `#${current}`) link.setAttribute("aria-current", "location");
       else link.removeAttribute("aria-current");
@@ -43,27 +49,24 @@ export function initSiteMotion() {
 
   function reveal(element, delay = 0) {
     return animate(element, [
-      { opacity: .25, transform: "translateY(18px)" },
-      { opacity: 1, transform: "translateY(0)" },
+      { opacity: .78 }, { opacity: 1 },
     ], { delay, fill: "backwards" });
   }
 
   function observe() {
     if (preference.matches || disposed) return;
+    stopCard = attachGiftCardMotion(document.querySelector(".gift-card-stage"));
     if (!("IntersectionObserver" in window)) return;
     observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting || seen.has(entry.target)) return;
         seen.add(entry.target);
         observer.unobserve(entry.target);
-        const parent = entry.target.parentElement;
-        const siblings = [...parent.children].filter((node) => node.matches(".category-choice, .step"));
-        const delay = Math.max(0, siblings.indexOf(entry.target)) * 60;
-        reveal(entry.target, delay);
+        if (entry.boundingClientRect.top >= window.innerHeight) reveal(entry.target);
       });
-    }, { threshold: .08, rootMargin: "0px 0px -24px 0px" });
+    }, { rootMargin: "0px 0px 80px 0px" });
     document.querySelectorAll(
-      ".section-head, .category-choice, .about__media, .about__text, .step, .results-gallery, .gifts__intro, .gifts__purchase, .faq__head, .accordion, .book__inner",
+      ".section-head, .category-choice, .about__media, .about__text, .step, .faq__head",
     ).forEach((element) => observer.observe(element));
   }
 
@@ -72,8 +75,7 @@ export function initSiteMotion() {
       ".hero__eyebrow, .hero__title, .hero__lead, .hero__actions, .hero__care",
     ).forEach((element, index) => reveal(element, index * 55));
     animate(document.querySelector(".hero__photo-img"), [
-      { transform: "translateY(14px)", opacity: .75 },
-      { transform: "translateY(0)", opacity: 1 },
+      { opacity: .8 }, { opacity: 1 },
     ], { duration: 1000 });
     document.querySelectorAll(".hero__line-art path").forEach((path, index) =>
       animate(path, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }],
@@ -81,6 +83,7 @@ export function initSiteMotion() {
     observe();
   }
   preference.addEventListener("change", () => {
+    stopCard?.();
     observer?.disconnect();
     running.forEach((animation) => animation.cancel());
     running.clear();
@@ -89,6 +92,7 @@ export function initSiteMotion() {
   window.addEventListener("pagehide", () => {
     cancelAnimationFrame(frame);
     frame = 0;
+    stopCard?.();
     observer?.disconnect();
     running.forEach((animation) => animation.cancel());
     running.clear();

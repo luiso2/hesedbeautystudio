@@ -504,7 +504,7 @@ $("#booking-wizard").addEventListener("submit", async (event) => {
       `${tr("reference")}: ${result.id}`,
     ].join("\n");
     $("#booking-whatsapp").href = `https://wa.me/17867095791?text=${encodeURIComponent(message)}`;
-    success.scrollIntoView({ behavior: "smooth", block: "start" });
+    success.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
     success.focus({ preventScroll: true });
   } catch (error) {
     showError(["rateLimited", "paymentUnavailable", "required", "updated"].includes(error.message) ? error.message : "serverError");

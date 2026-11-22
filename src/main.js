@@ -88,7 +88,7 @@ function closeMenu(restoreFocus = false) {
   $("main").inert = false;
   $(".footer").inert = false;
   updateMenuLabel();
-  if (restoreFocus) burger.focus();
+  if (restoreFocus) burger.focus({ preventScroll: true });
 }
 burger.addEventListener("click", () => {
   if (menuOpen) return closeMenu(true);
@@ -102,7 +102,7 @@ burger.addEventListener("click", () => {
   $("main").inert = true;
   $(".footer").inert = true;
   updateMenuLabel();
-  $("a", menu).focus();
+  $("a", menu).focus({ preventScroll: true });
 });
 document.addEventListener("keydown", (event) => {
   if (!menuOpen) return;
@@ -404,7 +404,7 @@ function closeServiceModal(restoreFocus = false) {
     const element = $(selector);
     if (element) element.inert = false;
   });
-  if (restoreFocus && svcReturnFocus) svcReturnFocus.focus();
+  if (restoreFocus && svcReturnFocus) svcReturnFocus.focus({ preventScroll: true });
   // Discard the cloned player so a closed dialog cannot keep downloading.
   $(".svc-modal__media", svcModal).replaceChildren();
   visibleVideos.forEach(playAmbient);

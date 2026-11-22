@@ -19,6 +19,7 @@
   box-sizing: border-box;
 }
 html {
+  scrollbar-gutter: stable;
   scroll-behavior: smooth;
   scroll-padding-top: 104px;
   -webkit-text-size-adjust: 100%;
@@ -580,7 +581,6 @@ summary:focus-visible,
   margin: 72px 0 30px;
   padding-top: 42px;
   border-top: 1px solid var(--line);
-  scroll-margin-top: 110px;
 }
 .services__detail-head .eyebrow { margin-bottom: 12px; }
 .services__detail-head h3 { color: var(--ink); }
@@ -2743,9 +2743,15 @@ body.modal-open {
   font-size: 15px;
   line-height: 1.8;
 }
-.gift-card-preview {
+.gift-card-stage {
   max-width: 510px;
-  margin-top: 36px;
+  margin-top: 28px;
+  perspective: 1050px;
+}
+.gift-card-preview {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: clamp(24px, 3vw, 38px);
   border: 1px solid #b6925b;
   border-radius: 18px;
@@ -2986,7 +2992,7 @@ body.modal-open {
   }
   .gifts__intro .title-xl,
   .gifts__lead,
-  .gift-card-preview {
+  .gift-card-stage {
     max-width: none;
   }
 }
