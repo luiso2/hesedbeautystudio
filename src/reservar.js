@@ -1,3 +1,4 @@
+import { translations } from "./booking-translations.js";
 import { servicePricing, discountPercent } from './promotion.js';
 import { bookingTerms, TERMS_VERSION } from "./booking-terms.js";
 import catalog from "./booking-catalog.json";
@@ -13,81 +14,8 @@ const categories = [
   ["fibroblast", "Fibroblast", "Fibroblast"],
   ["cejas", "Cejas y depilación", "Brows & waxing"],
 ];
-const translations = {
-  es: {
-    skip: "Saltar a la reserva", close: "Cerrar", eyebrow: "MARÍA HESED · RESERVAS",
-    title: "Reserva tu momento.", intro: "Elige tu tratamiento, consulta el precio y dinos cuándo prefieres venir. María confirmará tu cita personalmente.",
-    progressService: "Servicio", progressDate: "Fecha", progressDetails: "Tus datos", progressReview: "Revisión",
-    step1count: "PASO 01 / 04", step1title: "Elige tu tratamiento", step1lead: "Busca tu tratamiento o elige una categoría. Toca el servicio que prefieras para continuar.",
-    searchService: "Buscar un servicio", searchPlaceholder: "Ej. facial, maderoterapia…", clearSearch: "Borrar búsqueda",
-    noResults: "No encontramos ese tratamiento. Prueba otro nombre o mira todos los servicios.", viewAll: "Ver todos los servicios",
-    selectedService: "Servicio seleccionado", changeService: "Cambiar servicio", returnSelection: "Volver a mi selección",
-    selectionLead: "Comprueba tu elección. Puedes cambiar el servicio antes de continuar.",
-    serviceCount: "servicios", oneService: "servicio", chooseArea: "Selecciona la zona", areas: "Precios por zona", durations: "Duración",
-    step2count: "PASO 02 / 04", step2title: "¿Cuándo te gustaría venir?", step2lead: "Indica una fecha y hora preferidas en Miami. Te confirmaremos la disponibilidad antes de fijar la cita.",
-    date: "Fecha preferida", time: "Hora preferida · Miami", noLiveAvailability: "Todavía no mostramos horarios disponibles en tiempo real. Esta fecha y hora son una solicitud, no una cita confirmada.",
-    step3count: "PASO 03 / 04", step3title: "Tus datos de contacto", step3lead: "María usará estos datos para confirmar la disponibilidad y los detalles de tu tratamiento.",
-    name: "Nombre completo", phone: "WhatsApp o teléfono", email: "Correo electrónico · opcional", note: "Algo que debamos saber · opcional",
-    consent: "Acepto que María Hesed use estos datos para contactarme sobre esta solicitud.",
-    step4count: "PASO 04 / 04", step4title: "Revisa tu solicitud", step4lead: "Comprueba los detalles antes de enviarlos. No se realizará ningún cobro ahora.",
-    depositLead: "Revisa tu solicitud. Al continuar irás a Merktop para pagar US$40 de depósito. María confirmará la disponibilidad y el saldo del tratamiento.",
-    depositLabel: "Depósito ahora", depositValue: "US$40", depositSubmit: "Continuar al pago",
-    depositPending: "Tu fecha y hora son una preferencia. María confirmará la disponibilidad después del pago.",
-    paymentUnavailable: "El pago no está disponible en este momento. Inténtalo más tarde o contacta a María por WhatsApp.",
-    pending: "Tu cita quedará pendiente hasta que María confirme la disponibilidad. Los tratamientos sin precio publicado se cotizarán personalmente.",
-    back: "Volver", continue: "Continuar", submit: "Enviar solicitud", sending: "Enviando…",
-    summaryEyebrow: "TU SELECCIÓN", summaryTitle: "Tu cita, a tu medida.", summaryFoot: "Cuidado personal en Miami",
-    summaryEmpty: "Selecciona un tratamiento para ver su precio y continuar.", price: "Precio", askPrice: "Consultar el precio",
-    from: "Desde", service: "Tratamiento", area: "Zona", preferred: "Fecha y hora preferidas", contact: "Contacto",
-    successKicker: "SOLICITUD ENVIADA", successTitle: "Tu solicitud está en manos de María.",
-    successText: "La cita todavía no está confirmada. María revisará tu horario preferido y te contactará para confirmar los detalles.",
-    whatsapp: "Enviar también por WhatsApp", home: "Volver al inicio", help: "¿Tienes preguntas?",
-    reference: "Referencia", selectServiceError: "Selecciona un tratamiento para continuar.",
-    selectAreaError: "Selecciona una zona para ver su precio y continuar.",
-    dateError: "Elige una fecha y hora válidas.", detailsError: "Revisa tu nombre, teléfono y correo electrónico.",
-    consentError: "Acepta el uso de tus datos para que María pueda contactarte.",
-    rateLimited: "Has enviado varias solicitudes. Espera una hora antes de volver a intentarlo.",
-    serverError: "No pudimos guardar tu solicitud. Inténtalo de nuevo o escríbenos por WhatsApp.",
-  },
-  en: {
-    skip: "Skip to booking", close: "Close", eyebrow: "MARÍA HESED · BOOKINGS",
-    title: "Book your moment.", intro: "Choose your treatment, see its price and tell us when you would like to visit. María will confirm your appointment personally.",
-    progressService: "Service", progressDate: "Date", progressDetails: "Your details", progressReview: "Review",
-    step1count: "STEP 01 / 04", step1title: "Choose your treatment", step1lead: "Search for a treatment or choose a category. Tap the service you would like to continue.",
-    searchService: "Search for a service", searchPlaceholder: "E.g. facial, wood therapy…", clearSearch: "Clear search",
-    noResults: "We couldn't find that treatment. Try another name or view all services.", viewAll: "View all services",
-    selectedService: "Selected service", changeService: "Change service", returnSelection: "Back to my selection",
-    selectionLead: "Check your selection. You can change your service before continuing.",
-    serviceCount: "services", oneService: "service", chooseArea: "Choose an area", areas: "Prices by area", durations: "Duration",
-    step2count: "STEP 02 / 04", step2title: "When would you like to visit?", step2lead: "Choose your preferred date and time in Miami. We will confirm availability before setting the appointment.",
-    date: "Preferred date", time: "Preferred time · Miami", noLiveAvailability: "Live availability is not shown yet. Your date and time are a request, not a confirmed appointment.",
-    step3count: "STEP 03 / 04", step3title: "Your contact details", step3lead: "María will use these details to confirm availability and your treatment.",
-    name: "Full name", phone: "WhatsApp or phone", email: "Email · optional", note: "Anything we should know · optional",
-    consent: "I agree that María Hesed may use these details to contact me about this request.",
-    step4count: "STEP 04 / 04", step4title: "Review your request", step4lead: "Check the details before sending them. No payment is taken now.",
-    depositLead: "Review your request. Continue to Merktop to pay a US$40 deposit. María will confirm availability and the remaining treatment balance.",
-    depositLabel: "Deposit now", depositValue: "US$40", depositSubmit: "Continue to payment",
-    depositPending: "Your date and time are a preference. María will confirm availability after payment.",
-    paymentUnavailable: "Payment is unavailable right now. Please try again later or contact María on WhatsApp.",
-    pending: "Your appointment remains pending until María confirms availability. Treatments without a published price will be quoted personally.",
-    back: "Back", continue: "Continue", submit: "Send request", sending: "Sending…",
-    summaryEyebrow: "YOUR SELECTION", summaryTitle: "Care made for you.", summaryFoot: "Personal care in Miami",
-    summaryEmpty: "Select a treatment to see its price and continue.", price: "Price", askPrice: "Ask for pricing",
-    from: "From", service: "Treatment", area: "Area", preferred: "Preferred date and time", contact: "Contact",
-    successKicker: "REQUEST SENT", successTitle: "María has received your request.",
-    successText: "Your appointment is not confirmed yet. María will review your preferred time and contact you to confirm the details.",
-    whatsapp: "Also send via WhatsApp", home: "Back to home", help: "Questions?",
-    reference: "Reference", selectServiceError: "Choose a treatment to continue.",
-    selectAreaError: "Choose an area to see its price and continue.",
-    dateError: "Choose a valid date and time.", detailsError: "Check your name, phone number and email.",
-    consentError: "Agree to the use of your details so María can contact you.",
-    rateLimited: "You have sent several requests. Please wait an hour before trying again.",
-    serverError: "We couldn't save your request. Please try again or contact us on WhatsApp.",
-  },
-};
 
-let lang = "es";
-try { lang = localStorage.getItem("hesed-lang") === "en" ? "en" : "es"; } catch {}
+let lang = document.documentElement.lang;
 let step = 1;
 let activeCategory = "corporal";
 let serviceId = byId.has(new URLSearchParams(location.search).get("service"))
@@ -114,24 +42,7 @@ const depositText = () => money(totals().depositCents) +
   (totals().depositCents === selectedItems.length * STANDARD_DEPOSIT_CENTS ? ` (${selectedItems.length} × US$40)` : '');
 const fullName = (item) => item.name[lang] + (item.optionName ? ` · ${item.optionName[lang]}` : '');
 const totalText = () => totals().hasUnknown ? (totals().knownCents ? `${money(totals().knownCents)} + ${tr('askPrice')}` : tr('askPrice')) : `${totals().estimated ? tr('from') + ' ' : ''}${money(totals().knownCents)}`;
-Object.assign(translations.es, {
-  step1title: 'Tu selección de tratamientos', step1lead: 'Combina los servicios que quieras en una misma cita. Agrega o quita tratamientos aquí.',
-  addService: '+ Agregar servicio', remove: 'Quitar', added: 'Agregado', done: 'Listo', total: 'Total de tratamientos',
-  perService: 'Depósito de US$40 por cada servicio; si con el descuento cuesta menos, se paga completo al reservar. Verás el total antes de pagar.',
-  depositLead: 'Revisa tu selección. Continuarás a Merktop para pagar el depósito de los servicios elegidos. María confirmará tu horario personalmente.',
-  lowPricePending: 'El depósito de los servicios con precio inferior a US$40 está pendiente de confirmación. Consulta con María por WhatsApp antes de reservarlos.',
-  priceChanged: 'El precio cambió. Revisa el total y vuelve a aceptar las condiciones antes de pagar.',
-  maxItems: 'Puedes agregar hasta 12 servicios por solicitud.',
-});
-Object.assign(translations.en, {
-  step1title: 'Your treatment selection', step1lead: 'Combine services in one appointment. Add or remove treatments here.',
-  addService: '+ Add service', remove: 'Remove', added: 'Added', done: 'Done', total: 'Treatment total',
-  perService: 'US$40 deposit per service; if a discount brings it below that, it is paid in full when you book. You will see the total before paying.',
-  depositLead: 'Review your selection. Continue to Merktop to pay the deposit for your selected services. María will personally confirm your time.',
-  lowPricePending: 'The deposit for services priced below US$40 is awaiting confirmation. Please contact María on WhatsApp before booking these services.',
-  priceChanged: 'Pricing has changed. Review the total and accept the terms again before paying.',
-  maxItems: 'You can add up to 12 services per request.',
-});
+
 
 function miamiToday() {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -389,7 +300,15 @@ function renderReview() {
 function setLang(next, save = false) {
   lang = next === "en" ? "en" : "es";
   document.documentElement.lang = lang;
-  document.title = lang === "en" ? "Book an appointment · María Hesed" : "Reservar mi cita · María Hesed";
+  if (save) {
+    const destination = new URL(document.querySelector(`link[hreflang="${lang}"]`).href);
+    history.replaceState(history.state, "", destination.pathname + location.search + location.hash);
+    document.querySelector('link[rel="canonical"]').href = destination.href;
+    document.title = translations[lang].pageTitle;
+    document.querySelectorAll('.booking-brand, .booking-close, a[data-t="home"]').forEach(link => {
+      link.href = lang === "en" ? "/en/" : "/";
+    });
+  }
   $$("[data-t]").forEach((item) => {
     if (item.dataset.t === "title") {
       item.innerHTML = lang === "en" ? "Book your <em>moment.</em>" : "Reserva tu <em>momento.</em>";

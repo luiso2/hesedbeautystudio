@@ -13,3 +13,6 @@ worker-configuration.d.ts
 # Catalog landing pages and sitemap generated before dev/build.
 /public/tratamientos/
 /public/sitemap.xml
+
+/en/
+/public/en/treatments/

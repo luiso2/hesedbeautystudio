@@ -27,7 +27,8 @@ function setLang(next) {
   $$(".lang__btn").forEach((button) => {
     const active = button.dataset.lang === lang;
     button.classList.toggle("is-active", active);
-    button.setAttribute("aria-pressed", String(active));
+    if (active) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
   });
   $(".nav__links").setAttribute(
     "aria-label",
@@ -61,9 +62,13 @@ function setLang(next) {
     /* Storage may be unavailable. */
   }
 }
-$$(".lang__btn").forEach((button) =>
-  button.addEventListener("click", () => setLang(button.dataset.lang)),
-);
+// Keep the visitor in the same section when switching to the translated page.
+$$(".lang__btn").forEach(link => {
+  link.addEventListener("click", () => {
+    link.hash = location.hash;
+    link.search = location.search;
+  });
+});
 
 // The mobile navigation supports keyboard users and never leaves focus behind it.
 const burger = $("#burger");
@@ -513,13 +518,7 @@ resultsTrack.addEventListener("scroll", () => {
 new ResizeObserver(() => goToResult(resultIndex, false)).observe(resultsTrack);
 
 $("#year").textContent = new Date().getFullYear();
-let savedLang = "es";
-try {
-  savedLang = localStorage.getItem("hesed-lang") || "es";
-} catch {
-  /* Keep Spanish default. */
-}
-setLang(savedLang);
+setLang(document.documentElement.lang);
 
 const holiday = $('#black-friday-offer');
 if (promotionActive() && typeof holiday.showModal === 'function') {

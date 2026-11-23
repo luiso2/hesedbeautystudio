@@ -154,3 +154,6 @@ footer {
 }
 [data-service-price] del { font-size: .85em; color: #6a6057; }
 [data-service-price] b { white-space: nowrap; }
+.guide { max-width: 72ch; margin: clamp(40px, 6vw, 80px) auto; }
+.guide p, article p:not(.price) { color: #605548; }
+footer { flex-wrap: wrap; }

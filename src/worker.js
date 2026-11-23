@@ -266,11 +266,16 @@ async function adminBookings(request, env, url) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (["/", "/index", "/index.html"].includes(url.pathname) || url.pathname.startsWith("/tratamientos/"))
+    if (url.hostname === "www.mariahesed.com" || (url.hostname === "mariahesed.com" && url.protocol === "http:")) {
+      url.protocol = "https:";
+      url.host = "mariahesed.com";
+      return Response.redirect(url.href, 308);
+    }
+    if (["/", "/en/", "/index", "/index.html"].includes(url.pathname) || url.pathname.startsWith("/tratamientos/") || url.pathname.startsWith("/en/treatments/"))
       return serveCatalog(request, env.ASSETS);
     if (url.pathname.startsWith("/videos/"))
       return serveVideo(request, env.ASSETS, videoSizes[url.pathname]);
-    if (!url.pathname.startsWith("/api/")) return json({ error: "not_found" }, 404);
+    if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
     if (!env.BOOKINGS_DB) return json({ error: "not_configured" }, 503);
     try {
       if (url.pathname === "/api/admin/session" && request.method === "GET") {

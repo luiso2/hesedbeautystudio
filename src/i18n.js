@@ -127,9 +127,6 @@ export const EN = {
     "Application of kinesiotape using specific taping techniques, integrated into personalized body protocols to provide support and complement the work on targeted areas.",
   "srv.bd8f":
     "The combination is determined by the area being treated and the individual assessment.",
-  "srv.category2": "Cleansing, hydration and personalized care for your skin's needs.",
-  "srv.category3": "Precise treatments by area, always preceded by an assessment.",
-  "srv.category4": "Brow design, eye-area care and waxing.",
   "srv.detail": "Services & prices",
   "srv.book": "Book this treatment",
   "srv.bookShort": "Book",
@@ -333,7 +330,7 @@ Object.assign(EN, {
   "hero.t1": "The art of",
   "hero.t2": "self-care.",
   "hero.lead":
-    "At my Miami studio, you can book facials, wood therapy and manual lymphatic drainage. Explore each treatment and check the price before requesting your appointment.",
+    "At my West Miami studio, you can book facials, wood therapy and manual lymphatic drainage. Explore each treatment and check the price before requesting your appointment.",
   "hero.cta1": "Explore treatments",
   "hero.cta2": "Book my assessment",
   "hero.care": "In the hands of María Hesed",
@@ -461,7 +458,7 @@ Object.assign(EN, {
 
 // Brand rename + humanized copy pass (2026-09-26).
 Object.assign(EN, {
-  "hero.eyebrow": "AESTHETIC STUDIO · MIAMI",
+  "hero.eyebrow": "AESTHETIC STUDIO · WEST MIAMI",
   "man.p2":
     "Every protocol at María Hesed · Aesthetic Studio combines latest-generation technology with precise manual technique: drainage, sculpting, radiofrequency and firming actives applied with rigor, in a space designed so you feel cared for from start to finish.",
   "abt.eyebrow": "The person behind it",

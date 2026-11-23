@@ -3,13 +3,14 @@
   "name": "hesedbeautystudio",
   "compatibility_date": "2026-09-17",
   "main": "src/worker.js",
+  "dev": { "host": "localhost" },
   "observability": {
     "enabled": true
   },
   "assets": {
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/", "/index", "/index.html", "/tratamientos/*", "/api/*", "/videos/*"]
+    "run_worker_first": true
   },
   "d1_databases": [
     {
