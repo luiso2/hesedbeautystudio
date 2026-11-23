@@ -4,9 +4,10 @@ export async function initReviews() {
     if (!response.ok) return;
     const { review_url } = await response.json();
     if (!review_url) return;
-    for (const link of document.querySelectorAll("[data-google-review]")) {
+    for (const template of document.querySelectorAll("template[data-google-review]")) {
+      const link = template.content.querySelector("a").cloneNode(true);
       link.href = review_url;
-      link.hidden = false;
+      template.replaceWith(link);
     }
   } catch {
     /* Keep the link hidden when the profile is unavailable. */
