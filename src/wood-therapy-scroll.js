@@ -16,7 +16,7 @@ export function initWoodTherapyScroll(chapter) {
     const bounds = chapter.getBoundingClientRect();
     const travel = Math.max(1, bounds.height - stage.offsetHeight);
     const progress = Math.min(1, Math.max(0, -bounds.top / travel));
-    if (!introFinished && progress === 0) {
+    if (!introFinished && bounds.top >= -1) {
       const visibleHeight = Math.max(0, innerHeight - Math.max(0, bounds.top));
       if (document.hidden || visibleHeight < stage.offsetHeight * .6 ||
           document.querySelector("dialog[open], .svc-modal.is-open")) {

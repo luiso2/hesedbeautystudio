@@ -33,6 +33,9 @@
 .wood-journey .skip-link:focus { position: absolute; top: 12px; left: 12px; }
 .wood-journey.still { height: auto; }
 body.menu-open .wood-journey { z-index: auto; }
+@media (max-width: 650px) {
+  .wood-journey { scroll-margin-top: -92px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .wood-journey { height: auto; }
   .wood-journey video { display: none; }
