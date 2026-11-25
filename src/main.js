@@ -1,4 +1,6 @@
 import './black-friday-gift.css';
+import './wood-therapy-scroll.css';
+import { initWoodTherapyScroll } from './wood-therapy-scroll.js';
 import { startOfferConfetti } from './offer-confetti.js';
 import { offerEndLabel, promotionActive } from './promotion.js';
 import { initReviews } from './reviews.js';
@@ -219,7 +221,8 @@ panels.forEach((panel) => {
 
 // Videos load only while visible, have an explicit playback control and
 // respect reduced motion until the visitor chooses to play one.
-const ambientVideos = $$("video");
+const ambientVideos = $$("video:not(.wood-journey video)");
+initWoodTherapyScroll($("#maderoterapia"));
 const visibleVideos = new Set();
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 function syncVideoControl(button, video) {
@@ -359,6 +362,14 @@ function openServiceModal(card) {
   $$(".card__body > p:not(.card__price):not(.card__eyebrow), .card__body > .card__list, .card__body > .wax-prices", card).forEach((node) =>
     descHost.append(node.cloneNode(true)),
   );
+  if (card.dataset.bookingId === "maderoterapia-corporal") {
+    const journey = document.createElement("a");
+    journey.className = "svc-modal__proof";
+    journey.href = "#maderoterapia";
+    journey.textContent = copy("Ver la maderoterapia en 3D", "Explore wood therapy in 3D");
+    journey.addEventListener("click", () => closeServiceModal());
+    descHost.append(journey);
+  }
   const proof = $(".card__proof", card);
   if (proof) {
     const link = proof.cloneNode(true);

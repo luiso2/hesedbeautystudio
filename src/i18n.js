@@ -1,6 +1,9 @@
 // English dictionary. Keys mirror data-i18n attributes in index.html.
 // Spanish is the source of truth in the markup and is captured at runtime.
 export const EN = {
+  "wood.title": "Wood therapy beneath the skin",
+  "wood.skip": "Skip to the treatment catalog",
+  "wood.description": "As you scroll, a wooden cup makes two passes over the skin. A 3D cutaway illustrates how tissue compresses and recovers its shape. Red identifies blood vessels and green identifies lymphatic vessels. Their size and color are adapted for visibility.",
   "reviews.google": "Write a Google review",
 
   "nav.services": "Treatments",
