@@ -3,7 +3,7 @@
 export const EN = {
   "wood.title": "Wood therapy beneath the skin",
   "wood.skip": "Skip to the treatment catalog",
-  "wood.description": "As you scroll, a wooden cup makes two passes over the skin. A 3D cutaway illustrates how tissue compresses and recovers its shape. Red identifies blood vessels and green identifies lymphatic vessels. Their size and color are adapted for visibility.",
+  "wood.description": "The video opens with María moving the wooden cup across the skin. As you scroll, the screen splits in half. One view follows the real session while the other shows how tissue compresses and rebounds during the same stroke in 3D. Red identifies blood vessels and green identifies lymphatic vessels. Their size and color are adapted for visibility.",
   "reviews.google": "Write a Google review",
 
   "nav.services": "Treatments",
