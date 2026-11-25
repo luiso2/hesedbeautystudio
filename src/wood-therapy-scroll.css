@@ -83,3 +83,6 @@ body.menu-open .wood-journey { z-index: auto; }
   .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
   .wood-notes li { display: block; margin: 0 auto 20px; }
 }
+
+.wood-journey .wood-pointer, .wood-journey .wood-notes { transition: opacity .32s ease; }
+.wood-journey .is-leaving :is(.wood-pointer, .wood-notes) { opacity: 0; }

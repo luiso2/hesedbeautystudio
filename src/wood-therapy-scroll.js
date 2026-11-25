@@ -9,6 +9,12 @@ export function initWoodTherapyScroll(chapter) {
   const introEnd = 1.625;
   let introFinished = false;
   let startingIntro = false;
+  const finalCue = anatomyCues.at(-1).start;
+  const scrubEnd = 17 - 1 / 24;
+  const services = document.querySelector("#servicios");
+  let finale = null;
+  let released = false;
+  let previousY = window.scrollY;
   let nearby = false;
   let frame = 0;
 
@@ -50,13 +56,81 @@ export function initWoodTherapyScroll(chapter) {
       ? `M ${x} ${y + radius + 2} L ${x} ${y + radius + 10} L ${endX} ${endY}` : "");
   }
 
+  function stopFinale() {
+    if (!finale) return;
+    finale = null;
+    released = true;
+    video.pause();
+    stage.classList.remove("is-leaving");
+  }
+
+  function startFinale() {
+    const run = { startY: window.scrollY, start: performance.now(), manual: false };
+    finale = run;
+    video.currentTime = finalCue;
+    video.play().catch(() => {
+      if (finale === run) run.manual = true;
+    });
+    schedule();
+  }
+
+  function advanceFinale() {
+    const now = performance.now();
+    let clockTime = finalCue + (now - finale.start) / 1000;
+    // Some mobile browsers accept play() and then suspend decoding.
+    if (!finale.manual && clockTime - video.currentTime > 1.25) {
+      clockTime = Math.max(finalCue, video.currentTime);
+      finale.start = now - (clockTime - finalCue) * 1000;
+      finale.manual = true;
+      video.pause();
+    }
+    if (!video.seeking) annotate(video.currentTime);
+    const time = finale.manual ? Math.min(video.duration, clockTime) : video.currentTime;
+    // Muted playback can be denied in low-power mode. The same clock drives seeking there.
+    if (finale.manual && !video.seeking) {
+      const target = Math.min(video.duration - 1 / 24, time);
+      if (Math.abs(video.currentTime - target) > 1 / 24) video.currentTime = target;
+    }
+    stage.classList.toggle("is-leaving", time >= 17.7);
+    const fraction = Math.max(0, Math.min(1, (time - 18.3) / 1.65));
+    if (!fraction && !video.ended) { schedule(); return; }
+    const goal = services.getBoundingClientRect().top + scrollY;
+    const distance = goal - finale.startY;
+    const next = finale.startY + distance * fraction * fraction * (3 - 2 * fraction);
+    if (fraction > 0 && next > scrollY) window.scrollTo({ top: next, behavior: "instant" });
+    if (video.ended || fraction === 1) {
+      stopFinale();
+      if (goal > scrollY) window.scrollTo({ top: goal, behavior: "instant" });
+      return;
+    }
+    schedule();
+  }
+
   function update() {
     frame = 0;
-    if (!nearby || reduced.matches || !Number.isFinite(video.duration) || video.seeking) return;
-    annotate(video.currentTime);
+    if (!nearby || reduced.matches || !Number.isFinite(video.duration)) return;
+    const y = window.scrollY;
+    const reverse = y < previousY - 1;
+    const forward = y > previousY;
+    previousY = y;
     const bounds = chapter.getBoundingClientRect();
     const travel = Math.max(1, bounds.height - stage.offsetHeight);
     const progress = Math.min(1, Math.max(0, -bounds.top / travel));
+    const target = introEnd + progress * (scrubEnd - introEnd);
+    if (finale) {
+      if (reverse || document.hidden || bounds.bottom < 0 ||
+          document.querySelector("dialog[open], .svc-modal.is-open, .menu-open")) stopFinale();
+      else { advanceFinale(); return; }
+    }
+    if (target < finalCue - .1) released = false;
+    if (released && bounds.bottom <= 1) return;
+    if (!released && forward && target >= finalCue && bounds.bottom > 1 &&
+        !document.hidden && !document.querySelector("dialog[open], .svc-modal.is-open, .menu-open")) {
+      startFinale();
+      return;
+    }
+    if (video.seeking) return;
+    annotate(video.currentTime);
     if (!introFinished && bounds.top >= -1) {
       const visibleHeight = Math.max(0, innerHeight - Math.max(0, bounds.top));
       if (document.hidden || visibleHeight < stage.offsetHeight * .6 ||
@@ -77,7 +151,6 @@ export function initWoodTherapyScroll(chapter) {
     }
     introFinished = true;
     video.pause();
-    const target = introEnd + progress * (video.duration - 1 / 24 - introEnd);
     if (Math.abs(video.currentTime - target) > 1 / 48) video.currentTime = target;
   }
 
@@ -90,9 +163,10 @@ export function initWoodTherapyScroll(chapter) {
     const axis = portrait.matches ? "v" : "h";
     const uhd = !navigator.connection?.saveData &&
       innerWidth * devicePixelRatio >= (portrait.matches ? 1440 : 2300);
-    const src = "/videos/madera-duo-" + axis + (uhd ? "-uhd" : "") + ".mp4";
+    const src = "/videos/madera-estudio-" + axis + (uhd ? "-uhd" : "") + ".mp4";
     if (video.getAttribute("src") !== src) {
       stage.classList.remove("has-frame");
+      stopFinale();
       video.src = src;
       video.load();
     }
@@ -104,9 +178,21 @@ export function initWoodTherapyScroll(chapter) {
     stage.classList.add("has-frame");
     schedule();
   });
+  // A visitor can take control again at any point during the automatic exit.
+  chapter.addEventListener("wheel", event => {
+    if (event.deltaY < 0) stopFinale();
+  }, { passive: true });
+  chapter.addEventListener("touchstart", stopFinale, { passive: true });
+  addEventListener("keydown", event => {
+    if (["ArrowUp", "PageUp", "Home"].includes(event.key)) stopFinale();
+  });
+  addEventListener("pagehide", stopFinale);
   video.addEventListener("seeked", schedule);
   video.addEventListener("playing", schedule);
-  document.addEventListener("visibilitychange", schedule);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopFinale();
+    else schedule();
+  });
   document.addEventListener("close", schedule, true);
   video.addEventListener("error", () => {
     stage.classList.remove("has-frame");
@@ -116,6 +202,7 @@ export function initWoodTherapyScroll(chapter) {
   });
   portrait.addEventListener("change", selectVideo);
   reduced.addEventListener("change", () => {
+    stopFinale();
     if (reduced.matches && video.hasAttribute("src")) {
       stage.classList.remove("has-frame");
       video.removeAttribute("src");
@@ -125,7 +212,7 @@ export function initWoodTherapyScroll(chapter) {
   const observer = new IntersectionObserver(([entry]) => {
     nearby = entry.isIntersecting;
     if (nearby) selectVideo();
-    else video.pause();
+    else { stopFinale(); video.pause(); }
   }, { rootMargin: "250px 0px" });
   observer.observe(chapter);
   addEventListener("scroll", schedule, { passive: true });
