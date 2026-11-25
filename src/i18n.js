@@ -1,8 +1,6 @@
 // English dictionary. Keys mirror data-i18n attributes in index.html.
 // Spanish is the source of truth in the markup and is captured at runtime.
 export const EN = {
-  "wood.enableMotion": "Watch the animated walkthrough",
-  "wood.disableMotion": "Return to the still view",
   "wood.pressureTitle": "Under the cup",
   "wood.pressureText": "The cup presses against the skin. Watch the tissue give way directly beneath the point of contact.",
   "wood.fluidTitle": "From tissue to lymph",

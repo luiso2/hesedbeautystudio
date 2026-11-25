@@ -36,10 +36,10 @@ body.menu-open .wood-journey { z-index: auto; }
 @media (max-width: 650px) {
   .wood-journey { scroll-margin-top: -92px; }
 }
-@media (prefers-reduced-motion: reduce), (scripting: none) {
-  .wood-journey:not(.wood-motion-enabled) { height: auto; }
-  .wood-journey:not(.wood-motion-enabled) video { display: none; }
-  .wood-journey:not(.wood-motion-enabled) .has-frame picture { visibility: visible; }
+@media (scripting: none) {
+  .wood-journey { height: auto; }
+  .wood-journey video { display: none; }
+  .wood-journey .has-frame picture { visibility: visible; }
 }
 
 .wood-pointer,
@@ -76,15 +76,14 @@ body.menu-open .wood-journey { z-index: auto; }
 .wood-journey.still picture { position: relative; display: block; height: 74svh; }
 .wood-journey.still .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
 .wood-journey.still .wood-notes li { display: block; margin: 0 auto 20px; }
-@media (prefers-reduced-motion: reduce), (scripting: none) {
-  .wood-journey:not(.wood-motion-enabled) figure { position: relative; height: auto; }
-  .wood-journey:not(.wood-motion-enabled) picture { position: relative; display: block; height: 74svh; }
-  .wood-journey:not(.wood-motion-enabled) .wood-pointer, .wood-journey:not(.wood-motion-enabled) .wood-notes::before { display: none; }
-  .wood-journey:not(.wood-motion-enabled) .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
-  .wood-journey:not(.wood-motion-enabled) .wood-notes li { display: block; margin: 0 auto 20px; }
+@media (scripting: none) {
+  .wood-journey figure { position: relative; height: auto; }
+  .wood-journey picture { position: relative; display: block; height: 74svh; }
+  .wood-journey .wood-pointer, .wood-journey .wood-notes::before { display: none; }
+  .wood-journey .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
+  .wood-journey .wood-notes li { display: block; margin: 0 auto 20px; }
 }
 
-.wood-journey .wood-pointer, .wood-journey .wood-notes { transition: opacity .32s ease; }
 .wood-journey .is-leaving :is(.wood-pointer, .wood-notes) { opacity: 0; }
 
 #maderoterapia + #servicios {
@@ -96,6 +95,7 @@ body.menu-open .wood-journey { z-index: auto; }
   to { opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: no-preference) {
+  .wood-journey .wood-pointer, .wood-journey .wood-notes { transition: opacity .32s ease; }
   .has-frame .wood-notes li.is-current { animation: wood-caption-in .18s ease-out both; }
 }
 .wood-journey.is-joining:not(.still) figure {
@@ -131,22 +131,3 @@ body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav:focus-within
   opacity: 1;
   pointer-events: auto;
 }
-
-.wood-motion-choice {
-  position: absolute;
-  z-index: 2;
-  top: 18px;
-  min-height: 44px;
-  right: 20px;
-  padding: 11px 18px;
-  border: 1px solid #bda787;
-  border-radius: 30px;
-  background: #231b14;
-  color: #fffaf3;
-  font: 500 13px/1.5 var(--font-body);
-  cursor: pointer;
-}
-.wood-motion-choice[hidden],
-.wood-motion-choice span:last-child,
-.wood-motion-enabled .wood-motion-choice span:first-child { display: none; }
-.wood-motion-enabled .wood-motion-choice span:last-child { display: inline; }

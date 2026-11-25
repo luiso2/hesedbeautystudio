@@ -13,7 +13,6 @@ export function initWoodTherapyScroll(chapter) {
   }
   const desktop = matchMedia("(min-width: 761px) and (orientation: landscape) and (any-pointer: fine)");
   const panoramic = matchMedia("(min-width: 761px) and (min-aspect-ratio: 43/20) and (any-pointer: fine)");
-  const motionChoice = stage.querySelector(".wood-motion-choice");
   const portrait = matchMedia("(orientation: portrait)");
   const unsupportedUhd = new Set();
   let panoramaFailed = false;
@@ -36,8 +35,6 @@ export function initWoodTherapyScroll(chapter) {
   let frame = 0;
   let lastStep = 0;
   let finishRequested = false;
-
-  const allowMotion = () => !reduced.matches || chapter.classList.contains("wood-motion-enabled");
 
   const notes = [...chapter.querySelectorAll("[data-anatomy]")];
   const pointer = chapter.querySelector(".wood-pointer");
@@ -172,7 +169,7 @@ export function initWoodTherapyScroll(chapter) {
 
   function update() {
     frame = 0;
-    if (!nearby || !allowMotion() || !Number.isFinite(video.duration)) return;
+    if (!nearby || !Number.isFinite(video.duration)) return;
     const y = window.scrollY;
     const reverse = y < previousY - 1;
     const forward = y > previousY;
@@ -181,6 +178,18 @@ export function initWoodTherapyScroll(chapter) {
     joinCatalog(bounds);
     const travel = Math.max(1, bounds.height - stage.offsetHeight);
     const progress = Math.min(1, Math.max(0, -bounds.top / travel));
+    if (reduced.matches) {
+      // Scrub the entire film with native scrolling, including its intro and
+      // the last stroke as the catalog covers the viewport.
+      const covered = Math.min(1, Math.max(0, 1 - bounds.bottom / stage.offsetHeight));
+      const time = catalogStart * progress + (catalogEnd - catalogStart) * covered;
+      stage.classList.toggle("is-leaving", time >= 17.5);
+      if (!video.seeking) {
+        annotate(video.currentTime);
+        if (Math.abs(video.currentTime - time) > 1 / 48) video.currentTime = time;
+      }
+      return;
+    }
     let target = introEnd + progress * (scrubEnd - introEnd);
     if (finale) {
       if (reverse || document.hidden || bounds.bottom < 0 ||
@@ -241,7 +250,7 @@ export function initWoodTherapyScroll(chapter) {
   }
 
   function selectVideo() {
-    if (!nearby || !allowMotion()) return;
+    if (!nearby) return;
     const axis = portrait.matches ? "v" : panoramic.matches && !panoramaFailed ? "pano" : "h";
     // Cover can enlarge the image beyond the viewport width on tall phones.
     const baseWidth = portrait.matches ? 1080 : 1920;
@@ -254,7 +263,7 @@ export function initWoodTherapyScroll(chapter) {
     if (video.getAttribute("src") !== src) {
       stage.classList.remove("has-frame");
       stopFinale();
-      if (desktop.matches) video.preload = "auto";
+      if (desktop.matches || reduced.matches) video.preload = "auto";
       video.src = src;
       video.load();
     }
@@ -306,31 +315,14 @@ export function initWoodTherapyScroll(chapter) {
   });
   portrait.addEventListener("change", selectVideo);
   panoramic.addEventListener("change", selectVideo);
-  function refreshMotion() {
-    motionChoice.hidden = !desktop.matches || !reduced.matches;
-    if (motionChoice.hidden) chapter.classList.remove("wood-motion-enabled");
+  desktop.addEventListener("change", selectVideo);
+  reduced.addEventListener("change", () => {
     stopFinale();
-    chapter.classList.remove("is-joining");
-    navigation?.style.removeProperty("--wood-nav-opacity");
-    navigation?.classList.remove("wood-nav-visible");
-    if (!allowMotion() && video.hasAttribute("src")) {
-      stage.classList.remove("has-frame");
-      video.removeAttribute("src");
-      video.load();
-    } else selectVideo();
-  }
-  desktop.addEventListener("change", refreshMotion);
-  reduced.addEventListener("change", refreshMotion);
-  motionChoice.addEventListener("click", () => {
-    chapter.classList.toggle("wood-motion-enabled");
-    introFinished = false;
+    video.pause();
     released = false;
     catalogOrigin = null;
-    refreshMotion();
-    window.scrollTo({ top: chapter.getBoundingClientRect().top + scrollY, behavior: "instant" });
     schedule();
   });
-  refreshMotion();
   const observer = new IntersectionObserver(([entry]) => {
     nearby = entry.isIntersecting;
     if (nearby) selectVideo();
