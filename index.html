@@ -211,11 +211,17 @@
       <section id="maderoterapia" class="wood-journey" aria-labelledby="wood-title">
         <figure>
           <a class="skip-link" href="#servicios" data-i18n="wood.skip">Saltar al catálogo de tratamientos</a>
+          <button class="wood-motion-choice" type="button" hidden>
+            <span data-i18n="wood.enableMotion">Ver el recorrido animado</span>
+            <span data-i18n="wood.disableMotion">Volver a la vista estática</span>
+          </button>
           <video playsinline muted preload="none" disablepictureinpicture disableremoteplayback aria-describedby="wood-description"></video>
           <picture aria-hidden="true">
             <source media="(prefers-reduced-motion: reduce) and (orientation: portrait), (scripting: none) and (orientation: portrait)" data-still-media="(orientation: portrait)" srcset="/img/madera-luz-corte-v.webp">
+            <source media="(prefers-reduced-motion: reduce) and (min-width: 761px) and (min-aspect-ratio: 43/20) and (any-pointer: fine), (scripting: none) and (min-width: 761px) and (min-aspect-ratio: 43/20) and (any-pointer: fine)" data-still-media="(min-width: 761px) and (min-aspect-ratio: 43/20) and (any-pointer: fine)" srcset="/img/madera-luz-corte-pano.webp">
             <source media="(prefers-reduced-motion: reduce), (scripting: none)" data-still-media="all" srcset="/img/madera-luz-corte-h.webp">
             <source media="(orientation: portrait)" srcset="/img/madera-luz-inicio-v.webp">
+            <source media="(min-width: 761px) and (min-aspect-ratio: 43/20) and (any-pointer: fine)" srcset="/img/madera-luz-inicio-pano.webp">
             <img src="/img/madera-luz-inicio-h.webp" alt="" loading="lazy" decoding="async">
           </picture>
           <svg class="wood-pointer" aria-hidden="true" focusable="false">

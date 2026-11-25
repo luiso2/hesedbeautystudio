@@ -37,9 +37,9 @@ body.menu-open .wood-journey { z-index: auto; }
   .wood-journey { scroll-margin-top: -92px; }
 }
 @media (prefers-reduced-motion: reduce), (scripting: none) {
-  .wood-journey { height: auto; }
-  .wood-journey video { display: none; }
-  .wood-journey .has-frame picture { visibility: visible; }
+  .wood-journey:not(.wood-motion-enabled) { height: auto; }
+  .wood-journey:not(.wood-motion-enabled) video { display: none; }
+  .wood-journey:not(.wood-motion-enabled) .has-frame picture { visibility: visible; }
 }
 
 .wood-pointer,
@@ -77,11 +77,11 @@ body.menu-open .wood-journey { z-index: auto; }
 .wood-journey.still .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
 .wood-journey.still .wood-notes li { display: block; margin: 0 auto 20px; }
 @media (prefers-reduced-motion: reduce), (scripting: none) {
-  .wood-journey figure { position: relative; height: auto; }
-  .wood-journey picture { position: relative; display: block; height: 74svh; }
-  .wood-pointer, .wood-notes::before { display: none; }
-  .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
-  .wood-notes li { display: block; margin: 0 auto 20px; }
+  .wood-journey:not(.wood-motion-enabled) figure { position: relative; height: auto; }
+  .wood-journey:not(.wood-motion-enabled) picture { position: relative; display: block; height: 74svh; }
+  .wood-journey:not(.wood-motion-enabled) .wood-pointer, .wood-journey:not(.wood-motion-enabled) .wood-notes::before { display: none; }
+  .wood-journey:not(.wood-motion-enabled) .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
+  .wood-journey:not(.wood-motion-enabled) .wood-notes li { display: block; margin: 0 auto 20px; }
 }
 
 .wood-journey .wood-pointer, .wood-journey .wood-notes { transition: opacity .32s ease; }
@@ -97,37 +97,56 @@ body.menu-open .wood-journey { z-index: auto; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .has-frame .wood-notes li.is-current { animation: wood-caption-in .18s ease-out both; }
-  .wood-journey.is-joining:not(.still) figure {
-    position: fixed;
-    inset: 0;
-    transform: translateZ(0);
-    clip-path: inset(0 0 var(--wood-covered, 0px));
-  }
-  .wood-journey.is-joining:not(.still) + .services {
-    position: relative;
-    z-index: 102;
-    background: var(--paper);
-  }
-  .wood-journey.is-joining:not(.still) + .services::before {
-    content: "";
-    position: absolute;
-    inset: auto 0 calc(100% - 1px);
-    height: min(34svh, 310px);
-    pointer-events: none;
-    background:
-      linear-gradient(to top, var(--paper) 0%, rgb(255 251 245 / 90%) 18%, rgb(255 251 245 / 40%) 50%, transparent 90%),
-      radial-gradient(ellipse at 87% 100%, rgb(255 251 245 / 84%) 0%, transparent 70%);
-  }
-  body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav {
-    z-index: 103;
-    opacity: var(--wood-nav-opacity, 0);
-    pointer-events: none;
-  }
-  body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav.wood-nav-visible {
-    pointer-events: auto;
-  }
-  body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav:focus-within {
-    opacity: 1;
-    pointer-events: auto;
-  }
 }
+.wood-journey.is-joining:not(.still) figure {
+  position: fixed;
+  inset: 0;
+  transform: translateZ(0);
+  clip-path: inset(0 0 var(--wood-covered, 0px));
+}
+.wood-journey.is-joining:not(.still) + .services {
+  position: relative;
+  z-index: 102;
+  background: var(--paper);
+}
+.wood-journey.is-joining:not(.still) + .services::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 calc(100% - 1px);
+  height: min(34svh, 310px);
+  pointer-events: none;
+  background:
+    linear-gradient(to top, var(--paper) 0%, rgb(255 251 245 / 90%) 18%, rgb(255 251 245 / 40%) 50%, transparent 90%),
+    radial-gradient(ellipse at 87% 100%, rgb(255 251 245 / 84%) 0%, transparent 70%);
+}
+body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav {
+  z-index: 103;
+  opacity: var(--wood-nav-opacity, 0);
+  pointer-events: none;
+}
+body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav.wood-nav-visible {
+  pointer-events: auto;
+}
+body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.wood-motion-choice {
+  position: absolute;
+  z-index: 2;
+  top: 18px;
+  min-height: 44px;
+  right: 20px;
+  padding: 11px 18px;
+  border: 1px solid #bda787;
+  border-radius: 30px;
+  background: #231b14;
+  color: #fffaf3;
+  font: 500 13px/1.5 var(--font-body);
+  cursor: pointer;
+}
+.wood-motion-choice[hidden],
+.wood-motion-choice span:last-child,
+.wood-motion-enabled .wood-motion-choice span:first-child { display: none; }
+.wood-motion-enabled .wood-motion-choice span:last-child { display: inline; }

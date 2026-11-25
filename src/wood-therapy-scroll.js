@@ -11,14 +11,18 @@ export function initWoodTherapyScroll(chapter) {
       source.media = open ? source.dataset.stillMedia : defaultMedia;
     }
   }
+  const desktop = matchMedia("(min-width: 761px) and (orientation: landscape) and (any-pointer: fine)");
+  const panoramic = matchMedia("(min-width: 761px) and (min-aspect-ratio: 43/20) and (any-pointer: fine)");
+  const motionChoice = stage.querySelector(".wood-motion-choice");
   const portrait = matchMedia("(orientation: portrait)");
   const unsupportedUhd = new Set();
+  let panoramaFailed = false;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   // The opening contains only the original footage. The divider opens after it.
   const introEnd = 1.625;
   let introFinished = false;
   let startingIntro = false;
-  const finalCue = anatomyCues.at(-1).start;
+  const finalCue = anatomyCues[anatomyCues.length - 1].start;
   const scrubEnd = 17 - 1 / 24;
   const catalogStart = 16.9;
   const catalogEnd = 19.95;
@@ -30,6 +34,10 @@ export function initWoodTherapyScroll(chapter) {
   let previousY = window.scrollY;
   let nearby = false;
   let frame = 0;
+  let lastStep = 0;
+  let finishRequested = false;
+
+  const allowMotion = () => !reduced.matches || chapter.classList.contains("wood-motion-enabled");
 
   const notes = [...chapter.querySelectorAll("[data-anatomy]")];
   const pointer = chapter.querySelector(".wood-pointer");
@@ -39,7 +47,8 @@ export function initWoodTherapyScroll(chapter) {
   let activeCue = -1;
 
   function annotate(time) {
-    const index = anatomyCues.findLastIndex(cue => time >= cue.start);
+    const next = anatomyCues.findIndex(cue => cue.start > time);
+    const index = next === -1 ? anatomyCues.length - 1 : next - 1;
     if (index !== activeCue) {
       notes[activeCue]?.classList.remove("is-current");
       notes[index]?.classList.add("is-current");
@@ -55,9 +64,10 @@ export function initWoodTherapyScroll(chapter) {
     // Map the landmark from the encoded anatomical pane through object-fit: cover.
     const w = stage.clientWidth, h = stage.clientHeight;
     const tall = video.videoHeight > video.videoWidth;
+    const wide = video.videoWidth / video.videoHeight > 2;
     const imageW = Math.max(w, h * video.videoWidth / video.videoHeight);
     const imageH = imageW * video.videoHeight / video.videoWidth;
-    const x = (w - imageW) / 2 + imageW * (tall ? at(1) : (1 + at(0)) / 2);
+    const x = (w - imageW) / 2 + imageW * (tall ? at(1) : (1 + at(wide ? 3 : 0)) / 2);
     const y = (h - imageH) / 2 + imageH * (tall ? (1 + at(2)) / 2 : at(2));
     const note = notes[index].parentElement;
     const endX = note.offsetLeft + notes[index].offsetLeft + 2;
@@ -71,6 +81,8 @@ export function initWoodTherapyScroll(chapter) {
   }
 
   function stopFinale() {
+    finishRequested = false;
+    lastStep = 0;
     if (!finale) return;
     finale = null;
     released = true;
@@ -140,9 +152,27 @@ export function initWoodTherapyScroll(chapter) {
     schedule();
   }
 
+  // A wheel notch can span half a second of footage. Decode the intervening
+  // frames without consuming wheel events or changing the native page scroll.
+  function scrub(target) {
+    const delta = target - video.currentTime;
+    if (Math.abs(delta) <= 1 / 48) { lastStep = 0; return; }
+    if (!desktop.matches || Math.abs(delta) <= 1 / 24) {
+      lastStep = 0;
+      video.currentTime = target;
+      return;
+    }
+    const now = performance.now();
+    const elapsed = lastStep ? Math.min(now - lastStep, 64) : 1000 / 60;
+    lastStep = now;
+    const step = Math.max(1 / 24, Math.abs(delta) * (1 - Math.exp(-elapsed / 105)));
+    video.currentTime += Math.sign(delta) * Math.min(step, Math.abs(delta));
+    // The next step is scheduled by seeked, after this frame is available.
+  }
+
   function update() {
     frame = 0;
-    if (!nearby || reduced.matches || !Number.isFinite(video.duration)) return;
+    if (!nearby || !allowMotion() || !Number.isFinite(video.duration)) return;
     const y = window.scrollY;
     const reverse = y < previousY - 1;
     const forward = y > previousY;
@@ -159,11 +189,16 @@ export function initWoodTherapyScroll(chapter) {
     }
     if (target < finalCue - .1) { released = false; catalogOrigin = null; }
     if (released && bounds.bottom <= 1) return;
-    if (!released && forward && target >= finalCue && bounds.bottom > 1 &&
+    if (!released && !reverse && (forward || finishRequested) && target >= finalCue && bounds.bottom > 1 &&
         !document.hidden && !document.querySelector("dialog[open], .svc-modal.is-open, .menu-open")) {
-      startFinale();
-      return;
-    }
+      if (!desktop.matches || video.currentTime >= finalCue - 1 / 24) {
+        finishRequested = false;
+        startFinale();
+        return;
+      }
+      finishRequested = true;
+      target = finalCue;
+    } else finishRequested = false;
     // Retrace the same eased reveal on the way back from the catalog.
     if (chapter.classList.contains("is-joining") && (released || reverse) && target >= finalCue) {
       const goal = y + bounds.bottom;
@@ -198,7 +233,7 @@ export function initWoodTherapyScroll(chapter) {
     }
     introFinished = true;
     video.pause();
-    if (Math.abs(video.currentTime - target) > 1 / 48) video.currentTime = target;
+    scrub(target);
   }
 
   function schedule() {
@@ -206,10 +241,11 @@ export function initWoodTherapyScroll(chapter) {
   }
 
   function selectVideo() {
-    if (!nearby || reduced.matches) return;
-    const axis = portrait.matches ? "v" : "h";
+    if (!nearby || !allowMotion()) return;
+    const axis = portrait.matches ? "v" : panoramic.matches && !panoramaFailed ? "pano" : "h";
     // Cover can enlarge the image beyond the viewport width on tall phones.
-    const [baseWidth, baseHeight] = portrait.matches ? [1080, 1920] : [1920, 1080];
+    const baseWidth = portrait.matches ? 1080 : 1920;
+    const baseHeight = axis === "v" ? 1920 : axis === "pano" ? 720 : 1080;
     const scale = Math.max(innerWidth / baseWidth, innerHeight / baseHeight) * devicePixelRatio;
     const connection = navigator.connection;
     const constrained = connection?.saveData || ["slow-2g", "2g", "3g"].includes(connection?.effectiveType);
@@ -218,6 +254,7 @@ export function initWoodTherapyScroll(chapter) {
     if (video.getAttribute("src") !== src) {
       stage.classList.remove("has-frame");
       stopFinale();
+      if (desktop.matches) video.preload = "auto";
       video.src = src;
       video.load();
     }
@@ -251,9 +288,13 @@ export function initWoodTherapyScroll(chapter) {
   video.addEventListener("error", () => {
     stage.classList.remove("has-frame");
     const source = video.getAttribute("src");
-    if (source?.endsWith("-uhd.mp4")) {
-      unsupportedUhd.add(source.endsWith("-v-uhd.mp4") ? "v" : "h");
+    const uhd = source?.match(/-(h|v|pano)-uhd\.mp4$/);
+    if (uhd) {
+      unsupportedUhd.add(uhd[1]);
       video.src = source.replace("-uhd.mp4", ".mp4");
+    } else if (source?.endsWith("-pano.mp4")) {
+      panoramaFailed = true;
+      selectVideo();
     } else if (source) {
       useCutaway(true);
       stopFinale();
@@ -264,17 +305,32 @@ export function initWoodTherapyScroll(chapter) {
     }
   });
   portrait.addEventListener("change", selectVideo);
-  reduced.addEventListener("change", () => {
+  panoramic.addEventListener("change", selectVideo);
+  function refreshMotion() {
+    motionChoice.hidden = !desktop.matches || !reduced.matches;
+    if (motionChoice.hidden) chapter.classList.remove("wood-motion-enabled");
     stopFinale();
     chapter.classList.remove("is-joining");
     navigation?.style.removeProperty("--wood-nav-opacity");
     navigation?.classList.remove("wood-nav-visible");
-    if (reduced.matches && video.hasAttribute("src")) {
+    if (!allowMotion() && video.hasAttribute("src")) {
       stage.classList.remove("has-frame");
       video.removeAttribute("src");
       video.load();
     } else selectVideo();
+  }
+  desktop.addEventListener("change", refreshMotion);
+  reduced.addEventListener("change", refreshMotion);
+  motionChoice.addEventListener("click", () => {
+    chapter.classList.toggle("wood-motion-enabled");
+    introFinished = false;
+    released = false;
+    catalogOrigin = null;
+    refreshMotion();
+    window.scrollTo({ top: chapter.getBoundingClientRect().top + scrollY, behavior: "instant" });
+    schedule();
   });
+  refreshMotion();
   const observer = new IntersectionObserver(([entry]) => {
     nearby = entry.isIntersecting;
     if (nearby) selectVideo();
