@@ -133,6 +133,22 @@ body { background: var(--paper); }
 .results-gallery__image { border: 1px solid #d5c4aa; border-radius: 12px; background: #fffbf5; }
 .results-gallery__controls { border-color: #d5c4aa; }
 .results-gallery__nav:disabled { opacity: .7; }
+.results-gallery__dots button { width: clamp(33px, 10.6vw, 46px); }
+.results-gallery__dots button::before {
+  box-sizing: border-box;
+  width: clamp(27px, 8vw, 34px); height: auto; aspect-ratio: 1;
+  border: 1px solid var(--edge); border-radius: 6px;
+  background: var(--paper) url("/img/resultados-miniaturas.webp") var(--crop, 0%) center / 400% 100% no-repeat;
+}
+.results-gallery__dots button:nth-child(2) { --crop: 33.3333%; }
+.results-gallery__dots button:nth-child(3) { --crop: 66.6667%; }
+.results-gallery__dots button:nth-child(4) { --crop: 100%; }
+.results-gallery__dots button[aria-current="true"]::before {
+  outline: 2px solid var(--gold); outline-offset: 2px;
+}
+@media (forced-colors: active) {
+  .results-gallery__dots button[aria-current="true"]::before { outline-color: Highlight; }
+}
 .gifts { background: var(--paper); }
 .gifts__grid { gap: clamp(38px, 6vw, 90px); }
 .gifts__intro .title-xl { font-size: clamp(40px, 3.9vw, 56px); }
@@ -141,6 +157,10 @@ body { background: var(--paper); }
 .gift-card-preview {
   box-shadow: inset 0 1px 0 #dcc09266, inset -1px 0 0 #dcc09238,
     0 1px 0 #b6925b, 0 3px 0 #342b21, 0 16px 30px -10px #342b2140;
+}
+.gift-card-preview__surface {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2;
+  object-fit: cover; object-position: right center; pointer-events: none;
 }
 .gift-card-preview__foil {
   position: absolute;

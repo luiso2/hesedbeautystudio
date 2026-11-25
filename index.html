@@ -190,6 +190,8 @@
           <img
             class="hero__photo-img"
             src="/img/maria-hesed-portrait.webp"
+            srcset="/img/maria-hesed-portrait-560.webp 560w, /img/maria-hesed-portrait.webp 945w"
+            sizes="(max-width: 510px) calc(100vw - 48px), 460px"
             alt="María Hesed en su estudio, con un instrumento de maderoterapia"
             width="945"
             height="1665"
@@ -211,10 +213,10 @@
           <a class="skip-link" href="#servicios" data-i18n="wood.skip">Saltar al catálogo de tratamientos</a>
           <video playsinline muted preload="none" disablepictureinpicture disableremoteplayback aria-describedby="wood-description"></video>
           <picture aria-hidden="true">
-            <source media="(prefers-reduced-motion: reduce) and (orientation: portrait)" srcset="/img/madera-contacto-corte-v.webp">
-            <source media="(prefers-reduced-motion: reduce)" srcset="/img/madera-contacto-corte-h.webp">
-            <source media="(orientation: portrait)" srcset="/img/madera-contacto-inicio-v.webp">
-            <img src="/img/madera-contacto-inicio-h.webp" alt="" loading="lazy" decoding="async">
+            <source media="(prefers-reduced-motion: reduce) and (orientation: portrait), (scripting: none) and (orientation: portrait)" data-still-media="(orientation: portrait)" srcset="/img/madera-luz-corte-v.webp">
+            <source media="(prefers-reduced-motion: reduce), (scripting: none)" data-still-media="all" srcset="/img/madera-luz-corte-h.webp">
+            <source media="(orientation: portrait)" srcset="/img/madera-luz-inicio-v.webp">
+            <img src="/img/madera-luz-inicio-h.webp" alt="" loading="lazy" decoding="async">
           </picture>
           <svg class="wood-pointer" aria-hidden="true" focusable="false">
             <path class="wood-leader"></path>
@@ -1074,43 +1076,43 @@
               <div class="results-gallery__track" id="results-gallery-track" tabindex="0" aria-describedby="results-gallery-hint">
                 <figure class="results-gallery__slide" role="group" aria-roledescription="diapositiva" aria-label="1 de 4">
                   <div class="results-gallery__image">
-                    <img src="/img/resultados-corporal-frontal.webp" alt="Comparativa del contorno corporal en vista frontal" data-i18n-alt="res.gallery1Alt" width="1312" height="1199" loading="lazy" decoding="async" />
+                    <img src="/img/resultados-corporal-frontal.webp" srcset="/img/resultados-corporal-frontal-640.webp 640w, /img/resultados-corporal-frontal.webp 1312w" sizes="auto, (max-width: 760px) 90vw, 560px" alt="Comparativa del contorno corporal en vista frontal" data-i18n-alt="res.gallery1Alt" width="1312" height="1199" loading="lazy" decoding="async" />
                   </div>
-                  <figcaption data-i18n="res.gallery1">Contorno corporal · vista frontal</figcaption>
+                  <figcaption id="result-caption-1" data-i18n="res.gallery1">Contorno corporal · vista frontal</figcaption>
                 </figure>
                 <figure class="results-gallery__slide" role="group" aria-roledescription="diapositiva" aria-label="2 de 4">
                   <div class="results-gallery__image">
-                    <img src="/img/resultados-corporal-abdomen.webp" alt="Comparativa de abdomen y vista lateral de un tratamiento corporal" data-i18n-alt="res.gallery2Alt" width="1279" height="1230" loading="lazy" decoding="async" />
+                    <img src="/img/resultados-corporal-abdomen.webp" srcset="/img/resultados-corporal-abdomen-640.webp 640w, /img/resultados-corporal-abdomen.webp 1279w" sizes="auto, (max-width: 760px) 90vw, 560px" alt="Comparativa de abdomen y vista lateral de un tratamiento corporal" data-i18n-alt="res.gallery2Alt" width="1279" height="1230" loading="lazy" decoding="async" />
                   </div>
-                  <figcaption data-i18n="res.gallery2">Cuidado corporal · abdomen</figcaption>
+                  <figcaption id="result-caption-2" data-i18n="res.gallery2">Cuidado corporal · abdomen</figcaption>
                 </figure>
                 <figure class="results-gallery__slide" role="group" aria-roledescription="diapositiva" aria-label="3 de 4">
                   <div class="results-gallery__image">
-                    <img src="/img/resultados-abdomen-antes-despues.webp" alt="Abdomen antes y después en una comparativa vertical" data-i18n-alt="res.gallery3Alt" width="1206" height="1503" loading="lazy" decoding="async" />
+                    <img src="/img/resultados-abdomen-antes-despues.webp" srcset="/img/resultados-abdomen-antes-despues-640.webp 640w, /img/resultados-abdomen-antes-despues.webp 1206w" sizes="auto, (max-width: 760px) 90vw, 560px" alt="Abdomen antes y después en una comparativa vertical" data-i18n-alt="res.gallery3Alt" width="1206" height="1503" loading="lazy" decoding="async" />
                   </div>
-                  <figcaption data-i18n="res.gallery3">Abdomen · antes y después</figcaption>
+                  <figcaption id="result-caption-3" data-i18n="res.gallery3">Abdomen · antes y después</figcaption>
                 </figure>
                 <figure class="results-gallery__slide" role="group" aria-roledescription="diapositiva" aria-label="4 de 4">
                   <div class="results-gallery__image results-gallery__pair">
                     <div>
-                      <img src="/img/drenaje-antes.webp" alt="Abdomen antes del drenaje linfático" data-i18n-alt="res.drainageBeforeAlt" width="800" height="1067" loading="lazy" decoding="async" />
+                      <img src="/img/drenaje-antes.webp" srcset="/img/drenaje-antes-360.webp 360w, /img/drenaje-antes.webp 800w" sizes="auto, (max-width: 760px) 45vw, 278px" alt="Abdomen antes del drenaje linfático" data-i18n-alt="res.drainageBeforeAlt" width="800" height="1067" loading="lazy" decoding="async" />
                       <span data-i18n="res.before">Antes</span>
                     </div>
                     <div>
-                      <img src="/img/drenaje-despues.webp" alt="Abdomen después del drenaje linfático" data-i18n-alt="res.drainageAfterAlt" width="800" height="1067" loading="lazy" decoding="async" />
+                      <img src="/img/drenaje-despues.webp" srcset="/img/drenaje-despues-360.webp 360w, /img/drenaje-despues.webp 800w" sizes="auto, (max-width: 760px) 45vw, 278px" alt="Abdomen después del drenaje linfático" data-i18n-alt="res.drainageAfterAlt" width="800" height="1067" loading="lazy" decoding="async" />
                       <span data-i18n="res.after">Después</span>
                     </div>
                   </div>
-                  <figcaption data-i18n="res.f4">Drenaje linfático manual · antes y después</figcaption>
+                  <figcaption id="result-caption-4" data-i18n="res.f4">Drenaje linfático manual · antes y después</figcaption>
                 </figure>
               </div>
               <div class="results-gallery__controls" hidden>
                 <button class="results-gallery__nav" type="button" data-results-prev aria-controls="results-gallery-track" disabled><span data-i18n="res.previous">Anterior</span></button>
                 <div class="results-gallery__dots" role="group" aria-label="Seleccionar imagen">
-                  <button type="button" data-results-index="0" aria-controls="results-gallery-track" aria-label="Ver imagen 1 de 4" aria-current="true"></button>
-                  <button type="button" data-results-index="1" aria-controls="results-gallery-track" aria-label="Ver imagen 2 de 4"></button>
-                  <button type="button" data-results-index="2" aria-controls="results-gallery-track" aria-label="Ver imagen 3 de 4"></button>
-                  <button type="button" data-results-index="3" aria-controls="results-gallery-track" aria-label="Ver imagen 4 de 4"></button>
+                  <button type="button" data-results-index="0" aria-describedby="result-caption-1" aria-controls="results-gallery-track" aria-label="Ver imagen 1 de 4" aria-current="true"></button>
+                  <button type="button" data-results-index="1" aria-describedby="result-caption-2" aria-controls="results-gallery-track" aria-label="Ver imagen 2 de 4"></button>
+                  <button type="button" data-results-index="2" aria-describedby="result-caption-3" aria-controls="results-gallery-track" aria-label="Ver imagen 3 de 4"></button>
+                  <button type="button" data-results-index="3" aria-describedby="result-caption-4" aria-controls="results-gallery-track" aria-label="Ver imagen 4 de 4"></button>
                 </div>
                 <button class="results-gallery__nav" type="button" data-results-next aria-controls="results-gallery-track"><span data-i18n="res.next">Siguiente</span></button>
               </div>
@@ -1130,6 +1132,7 @@
             <p class="gifts__lead" data-i18n="gift.intro">Tú eliges el monto. Esa persona especial elige su momento y su tratamiento con María.</p>
             <div class="gift-card-stage">
               <div class="gift-card-preview">
+                <img class="gift-card-preview__surface" src="/img/tarjeta-relieve.webp" alt="" width="1440" height="960" loading="lazy" decoding="async">
                 <span class="gift-card-preview__foil" aria-hidden="true"></span>
                 <div class="gift-card-preview__top">
                   <img class="studio-logo" src="/maria-hesed-mark.webp" alt="María Hesed · Aesthetic Studio" loading="lazy" width="990" height="571">

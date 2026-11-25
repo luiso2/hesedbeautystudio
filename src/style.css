@@ -2343,7 +2343,7 @@ body { background: var(--paper); }
 .results-gallery__dots { display: flex; align-items: center; }
 .results-gallery__dots button { display: grid; place-items: center; width: 30px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; }
 .results-gallery__dots button::before { content: ""; width: 6px; height: 6px; border: 1px solid var(--gold); border-radius: 50%; }
-.results-gallery__dots button[aria-current="true"]::before { background: var(--gold); }
+.results-gallery__dots button[aria-current="true"]::before { background-color: var(--gold); }
 .results-gallery__count { margin-top: 2px; color: var(--muted); text-align: center; font-size: 11px; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
 .results-gallery__track:focus-visible, .results-gallery__controls button:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; border-radius: 6px; }
 .results__aside > p:not(.eyebrow) { max-width: 320px; color: var(--muted); font-size: 15px; line-height: 1.7; margin: 18px 0 24px; }

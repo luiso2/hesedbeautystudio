@@ -36,7 +36,7 @@ body.menu-open .wood-journey { z-index: auto; }
 @media (max-width: 650px) {
   .wood-journey { scroll-margin-top: -92px; }
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce), (scripting: none) {
   .wood-journey { height: auto; }
   .wood-journey video { display: none; }
   .wood-journey .has-frame picture { visibility: visible; }
@@ -48,8 +48,8 @@ body.menu-open .wood-journey { z-index: auto; }
 .has-frame .wood-pointer.is-visible { visibility: visible; }
 .wood-focus-ring { fill: #fff9e91f; stroke: #fffae9; stroke-width: 1.4; }
 .wood-focus-dot { fill: #fff9df; stroke: #664d36; stroke-width: 1; }
-.wood-leader { fill: none; stroke: #fff8e6cc; stroke-width: 1; }
-.wood-pointer { filter: drop-shadow(0 1px 2px #38261690); }
+.wood-leader { fill: none; stroke: #fff8e6cc; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
+.wood-focus, .wood-leader { filter: drop-shadow(0 1px 1px #382616a6); }
 .wood-notes {
   left: 50%; right: 0; bottom: 0; margin: 0; list-style: none;
   padding: 0 clamp(20px, 3vw, 54px) max(26px, env(safe-area-inset-bottom));
@@ -76,7 +76,7 @@ body.menu-open .wood-journey { z-index: auto; }
 .wood-journey.still picture { position: relative; display: block; height: 74svh; }
 .wood-journey.still .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
 .wood-journey.still .wood-notes li { display: block; margin: 0 auto 20px; }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce), (scripting: none) {
   .wood-journey figure { position: relative; height: auto; }
   .wood-journey picture { position: relative; display: block; height: 74svh; }
   .wood-pointer, .wood-notes::before { display: none; }
@@ -91,7 +91,12 @@ body.menu-open .wood-journey { z-index: auto; }
   padding-block-start: clamp(98px, 8.5vw, 134px);
 }
 
+@keyframes wood-caption-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: none; }
+}
 @media (prefers-reduced-motion: no-preference) {
+  .has-frame .wood-notes li.is-current { animation: wood-caption-in .18s ease-out both; }
   .wood-journey.is-joining:not(.still) figure {
     position: fixed;
     inset: 0;

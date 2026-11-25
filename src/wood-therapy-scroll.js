@@ -3,7 +3,16 @@ import { anatomyCues } from './wood-anatomy-track.js';
 export function initWoodTherapyScroll(chapter) {
   const video = chapter.querySelector("video");
   const stage = chapter.querySelector("figure");
+  const cutawaySources = [...chapter.querySelectorAll("source[data-still-media]")].map(source => ({
+    source, defaultMedia: source.media,
+  }));
+  function useCutaway(open) {
+    for (const { source, defaultMedia } of cutawaySources) {
+      source.media = open ? source.dataset.stillMedia : defaultMedia;
+    }
+  }
   const portrait = matchMedia("(orientation: portrait)");
+  const unsupportedUhd = new Set();
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   // The opening contains only the original footage. The divider opens after it.
   const introEnd = 1.625;
@@ -51,7 +60,8 @@ export function initWoodTherapyScroll(chapter) {
     const x = (w - imageW) / 2 + imageW * (tall ? at(1) : (1 + at(0)) / 2);
     const y = (h - imageH) / 2 + imageH * (tall ? (1 + at(2)) / 2 : at(2));
     const note = notes[index].parentElement;
-    const endX = note.offsetLeft + 14, endY = note.offsetTop + notes[index].offsetTop - 6;
+    const endX = note.offsetLeft + notes[index].offsetLeft + 2;
+    const endY = note.offsetTop + notes[index].offsetTop - 8;
     focus.setAttribute("transform", `translate(${x} ${y})`);
     const fluid = notes[index].dataset.anatomy === "fluid";
     const radius = fluid ? 15 - 9 * (sample / (cue.points.length - 1)) : 10;
@@ -198,9 +208,13 @@ export function initWoodTherapyScroll(chapter) {
   function selectVideo() {
     if (!nearby || reduced.matches) return;
     const axis = portrait.matches ? "v" : "h";
-    const uhd = !navigator.connection?.saveData &&
-      innerWidth * devicePixelRatio >= (portrait.matches ? 1440 : 2300);
-    const src = "/videos/madera-contacto-" + axis + (uhd ? "-uhd" : "") + ".mp4";
+    // Cover can enlarge the image beyond the viewport width on tall phones.
+    const [baseWidth, baseHeight] = portrait.matches ? [1080, 1920] : [1920, 1080];
+    const scale = Math.max(innerWidth / baseWidth, innerHeight / baseHeight) * devicePixelRatio;
+    const connection = navigator.connection;
+    const constrained = connection?.saveData || ["slow-2g", "2g", "3g"].includes(connection?.effectiveType);
+    const uhd = scale >= 1.3 && !constrained && !unsupportedUhd.has(axis);
+    const src = "/videos/madera-luz-" + axis + (uhd ? "-uhd" : "") + ".mp4";
     if (video.getAttribute("src") !== src) {
       stage.classList.remove("has-frame");
       stopFinale();
@@ -211,7 +225,10 @@ export function initWoodTherapyScroll(chapter) {
   }
 
   video.addEventListener("loadeddata", () => {
-    chapter.classList.remove("still");
+    if (chapter.classList.contains("still")) {
+      useCutaway(false);
+      chapter.classList.remove("still");
+    }
     stage.classList.add("has-frame");
     schedule();
   });
@@ -234,8 +251,17 @@ export function initWoodTherapyScroll(chapter) {
   video.addEventListener("error", () => {
     stage.classList.remove("has-frame");
     const source = video.getAttribute("src");
-    if (source?.endsWith("-uhd.mp4")) video.src = source.replace("-uhd.mp4", ".mp4");
-    else if (source) chapter.classList.add("still");
+    if (source?.endsWith("-uhd.mp4")) {
+      unsupportedUhd.add(source.endsWith("-v-uhd.mp4") ? "v" : "h");
+      video.src = source.replace("-uhd.mp4", ".mp4");
+    } else if (source) {
+      useCutaway(true);
+      stopFinale();
+      chapter.classList.remove("is-joining");
+      navigation?.style.removeProperty("--wood-nav-opacity");
+      navigation?.classList.remove("wood-nav-visible");
+      chapter.classList.add("still");
+    }
   });
   portrait.addEventListener("change", selectVideo);
   reduced.addEventListener("change", () => {

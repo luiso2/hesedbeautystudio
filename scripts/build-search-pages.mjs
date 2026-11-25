@@ -46,13 +46,16 @@ function categoryPage(category, lang) {
       },
     }],
   };
+  const cover = category.id === "corporal"
+    ? `<a class="intro__journey" href="${home[lang]}#maderoterapia"><img src="/img/madera-luz-corte-h.webp" alt="" width="1440" height="810"><span>${lang === "en" ? "See wood therapy in 3D" : "Ver la maderoterapia en 3D"}</span></a>`
+    : `<img src="/img/${category.image}.webp" alt="${escape(c.alt)}" width="480" height="360">`;
   const other = lang === "es" ? "en" : "es";
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escape(title)}</title><meta name="description" content="${escape(c.description)}"><link rel="canonical" href="${url}">${alternateTags(paths)}<meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="website"><meta property="og:locale" content="${lang}_US"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(c.description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${domain}/img/${category.image}.webp"><meta property="og:image:alt" content="${escape(c.alt)}"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/maria-hesed-icon.png" type="image/png"><link rel="stylesheet" href="/marca.css"><link rel="stylesheet" href="/studio-fonts.css"><link rel="stylesheet" href="/catalogo.css"><script type="application/ld+json">${JSON.stringify(graph).replaceAll("<", "\\u003c")}</script></head>
 <body class="studio-page"><header><a class="brand" href="${home[lang]}"><img class="studio-logo" src="/maria-hesed-mark.webp" alt="${business.name}" width="990" height="571"></a><a href="${paths[other]}" hreflang="${other}" lang="${other}">${other === "en" ? "English" : "Español"}</a></header>
-<main><div class="intro"><div><h1>${escape(c.title)}</h1><p>${escape(c.description)}</p></div><img src="/img/${category.image}.webp" alt="${escape(c.alt)}" width="480" height="360"></div>
+<main><div class="intro"><div><h1>${escape(c.title)}</h1><p>${escape(c.description)}</p></div>${cover}</div>
 <div class="services">${services.map(service => serviceRow(service, lang)).join("\n")}</div>
 <section class="guide"><h2>${escape(c.heading)}</h2>${c.paragraphs.map(p => `<p>${escape(p)}</p>`).join("\n")}<a href="${home[lang]}#servicios">${lang === "en" ? "Explore all treatments" : "Explorar todos los tratamientos"}</a></section></main>
 <footer><a href="${home[lang]}">${business.name}</a><span>West Miami 33144</span><a href="tel:+17867095791">(786) 709-5791</a><a href="https://www.merktop.com">Powered by Merktop</a></footer></body></html>`;
