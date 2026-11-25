@@ -1,3 +1,5 @@
+import { anatomyCues } from './wood-anatomy-track.js';
+
 export function initWoodTherapyScroll(chapter) {
   const video = chapter.querySelector("video");
   const stage = chapter.querySelector("figure");
@@ -10,9 +12,48 @@ export function initWoodTherapyScroll(chapter) {
   let nearby = false;
   let frame = 0;
 
+  const notes = [...chapter.querySelectorAll("[data-anatomy]")];
+  const pointer = chapter.querySelector(".wood-pointer");
+  const focus = pointer.querySelector(".wood-focus");
+  const ring = pointer.querySelector(".wood-focus-ring");
+  const leader = pointer.querySelector(".wood-leader");
+  let activeCue = -1;
+
+  function annotate(time) {
+    const index = anatomyCues.findLastIndex(cue => time >= cue.start);
+    if (index !== activeCue) {
+      notes[activeCue]?.classList.remove("is-current");
+      notes[index]?.classList.add("is-current");
+      pointer.classList.toggle("is-visible", index >= 0);
+      activeCue = index;
+    }
+    if (index < 0) return;
+    const cue = anatomyCues[index];
+    const sample = Math.min((time - cue.start) * 4, cue.points.length - 1);
+    const first = Math.floor(sample);
+    const a = cue.points[first], b = cue.points[Math.min(first + 1, cue.points.length - 1)];
+    const at = axis => a[axis] + (b[axis] - a[axis]) * (sample - first);
+    // Map the landmark from the encoded anatomical pane through object-fit: cover.
+    const w = stage.clientWidth, h = stage.clientHeight;
+    const tall = video.videoHeight > video.videoWidth;
+    const imageW = Math.max(w, h * video.videoWidth / video.videoHeight);
+    const imageH = imageW * video.videoHeight / video.videoWidth;
+    const x = (w - imageW) / 2 + imageW * (tall ? at(1) : (1 + at(0)) / 2);
+    const y = (h - imageH) / 2 + imageH * (tall ? (1 + at(2)) / 2 : at(2));
+    const note = notes[index].parentElement;
+    const endX = note.offsetLeft + 14, endY = note.offsetTop + notes[index].offsetTop - 6;
+    focus.setAttribute("transform", `translate(${x} ${y})`);
+    const fluid = notes[index].dataset.anatomy === "fluid";
+    const radius = fluid ? 15 - 9 * (sample / (cue.points.length - 1)) : 10;
+    ring.setAttribute("r", String(radius));
+    leader.setAttribute("d", endY > y + radius + 12
+      ? `M ${x} ${y + radius + 2} L ${x} ${y + radius + 10} L ${endX} ${endY}` : "");
+  }
+
   function update() {
     frame = 0;
     if (!nearby || reduced.matches || !Number.isFinite(video.duration) || video.seeking) return;
+    annotate(video.currentTime);
     const bounds = chapter.getBoundingClientRect();
     const travel = Math.max(1, bounds.height - stage.offsetHeight);
     const progress = Math.min(1, Math.max(0, -bounds.top / travel));
@@ -59,6 +100,7 @@ export function initWoodTherapyScroll(chapter) {
   }
 
   video.addEventListener("loadeddata", () => {
+    chapter.classList.remove("still");
     stage.classList.add("has-frame");
     schedule();
   });
@@ -70,7 +112,7 @@ export function initWoodTherapyScroll(chapter) {
     stage.classList.remove("has-frame");
     const source = video.getAttribute("src");
     if (source?.endsWith("-uhd.mp4")) video.src = source.replace("-uhd.mp4", ".mp4");
-    else chapter.classList.add("still");
+    else if (source) chapter.classList.add("still");
   });
   portrait.addEventListener("change", selectVideo);
   reduced.addEventListener("change", () => {

@@ -1,8 +1,8 @@
 .wood-journey {
   position: relative;
   z-index: 101;
-  height: 255vh;
-  height: 255lvh;
+  height: 445vh;
+  height: 445lvh;
   scroll-margin-top: -104px;
 }
 .wood-journey figure {
@@ -40,4 +40,46 @@ body.menu-open .wood-journey { z-index: auto; }
   .wood-journey { height: auto; }
   .wood-journey video { display: none; }
   .wood-journey .has-frame picture { visibility: visible; }
+}
+
+.wood-pointer,
+.wood-notes { pointer-events: none; position: absolute; }
+.wood-pointer { inset: 0; width: 100%; height: 100%; visibility: hidden; }
+.has-frame .wood-pointer.is-visible { visibility: visible; }
+.wood-focus-ring { fill: #fff9e91f; stroke: #fffae9; stroke-width: 1.4; }
+.wood-focus-dot { fill: #fff9df; stroke: #664d36; stroke-width: 1; }
+.wood-leader { fill: none; stroke: #fff8e6cc; stroke-width: 1; }
+.wood-pointer { filter: drop-shadow(0 1px 2px #38261690); }
+.wood-notes {
+  left: 50%; right: 0; bottom: 0; margin: 0; list-style: none;
+  padding: 0 clamp(20px, 3vw, 54px) max(26px, env(safe-area-inset-bottom));
+  color: #fffbf3;
+}
+.wood-notes:has(.is-current)::before {
+  content: ""; position: absolute; inset: -58px 0 0; pointer-events: none;
+  background: linear-gradient(0deg, #20170ff5, #281c14d9 48%, transparent);
+}
+.wood-notes li { display: none; position: relative; max-width: 34rem; }
+.has-frame .wood-notes li.is-current { display: block; }
+.wood-notes strong { display: block; margin: 0 0 5px; font: 400 clamp(24px, 2.3vw, 39px)/1.05 var(--font-display); }
+.wood-notes span { display: block; text-wrap: pretty; font: 500 clamp(14px, 1.07vw, 18px)/1.45 var(--font-body); }
+@media (orientation: portrait) {
+  .wood-notes { left: 0; padding: 0 20px max(17px, env(safe-area-inset-bottom)); }
+}
+@media (max-height: 540px) and (orientation: landscape) {
+  .wood-notes { padding: 0 14px 10px; }
+  .wood-notes strong { font-size: 20px; }
+  .wood-notes span { font-size: 13px; }
+}
+.wood-journey.still .wood-pointer, .wood-journey.still .wood-notes::before { display: none; }
+.wood-journey.still figure { position: relative; height: auto; }
+.wood-journey.still picture { position: relative; display: block; height: 74svh; }
+.wood-journey.still .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
+.wood-journey.still .wood-notes li { display: block; margin: 0 auto 20px; }
+@media (prefers-reduced-motion: reduce) {
+  .wood-journey figure { position: relative; height: auto; }
+  .wood-journey picture { position: relative; display: block; height: 74svh; }
+  .wood-pointer, .wood-notes::before { display: none; }
+  .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
+  .wood-notes li { display: block; margin: 0 auto 20px; }
 }

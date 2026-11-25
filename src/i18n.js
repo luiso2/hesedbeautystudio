@@ -1,6 +1,16 @@
 // English dictionary. Keys mirror data-i18n attributes in index.html.
 // Spanish is the source of truth in the markup and is captured at runtime.
 export const EN = {
+  "wood.pressureTitle": "Under the cup",
+  "wood.pressureText": "The cup presses against the skin. Watch the tissue give way directly beneath the point of contact.",
+  "wood.fluidTitle": "From tissue to lymph",
+  "wood.fluidText": "Follow the light dot into the green vessel. It shows how a lymphatic capillary collects fluid from between cells.",
+  "wood.bloodTitle": "Blood in motion",
+  "wood.bloodText": "Watch red blood cells travel through the red vessel as the surrounding tissue moves with the cup.",
+  "wood.releaseTitle": "As the cup passes",
+  "wood.releaseText": "The pressure eases. Follow the marked area as the tissue returns to its resting shape.",
+  "wood.surfaceTitle": "At the surface",
+  "wood.surfaceText": "Mechanical massage may temporarily make cellulite look less noticeable. Results vary.",
   "wood.title": "Wood therapy beneath the skin",
   "wood.skip": "Skip to the treatment catalog",
   "wood.description": "The video opens with María moving the wooden cup across the skin. As you scroll, the screen splits in half. One view follows the real session while the other shows how tissue compresses and rebounds during the same stroke in 3D. Red identifies blood vessels and green identifies lymphatic vessels. Their size and color are adapted for visibility.",
