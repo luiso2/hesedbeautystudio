@@ -86,3 +86,43 @@ body.menu-open .wood-journey { z-index: auto; }
 
 .wood-journey .wood-pointer, .wood-journey .wood-notes { transition: opacity .32s ease; }
 .wood-journey .is-leaving :is(.wood-pointer, .wood-notes) { opacity: 0; }
+
+#maderoterapia + #servicios {
+  padding-block-start: clamp(98px, 8.5vw, 134px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wood-journey.is-joining:not(.still) figure {
+    position: fixed;
+    inset: 0;
+    transform: translateZ(0);
+    clip-path: inset(0 0 var(--wood-covered, 0px));
+  }
+  .wood-journey.is-joining:not(.still) + .services {
+    position: relative;
+    z-index: 102;
+    background: var(--paper);
+  }
+  .wood-journey.is-joining:not(.still) + .services::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 calc(100% - 1px);
+    height: min(34svh, 310px);
+    pointer-events: none;
+    background:
+      linear-gradient(to top, var(--paper) 0%, rgb(255 251 245 / 90%) 18%, rgb(255 251 245 / 40%) 50%, transparent 90%),
+      radial-gradient(ellipse at 87% 100%, rgb(255 251 245 / 84%) 0%, transparent 70%);
+  }
+  body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav {
+    z-index: 103;
+    opacity: var(--wood-nav-opacity, 0);
+    pointer-events: none;
+  }
+  body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav.wood-nav-visible {
+    pointer-events: auto;
+  }
+  body:has(.wood-journey.is-joining:not(.still)):not(.menu-open) .nav:focus-within {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

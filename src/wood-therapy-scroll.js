@@ -11,8 +11,12 @@ export function initWoodTherapyScroll(chapter) {
   let startingIntro = false;
   const finalCue = anatomyCues.at(-1).start;
   const scrubEnd = 17 - 1 / 24;
+  const catalogStart = 16.9;
+  const catalogEnd = 19.95;
   const services = document.querySelector("#servicios");
+  const navigation = document.querySelector("#nav");
   let finale = null;
+  let catalogOrigin = null;
   let released = false;
   let previousY = window.scrollY;
   let nearby = false;
@@ -64,8 +68,28 @@ export function initWoodTherapyScroll(chapter) {
     stage.classList.remove("is-leaving");
   }
 
+  // Keep the shot at viewport size while the actual catalog moves over it.
+  // Derive the overlap from layout so that scrolling back retraces the same seam.
+  function joinCatalog(chapterBounds) {
+    const screen = stage.offsetHeight;
+    const joining = chapterBounds.top < 0 && chapterBounds.bottom > 0 &&
+      chapterBounds.bottom < screen * 1.38 && !chapter.classList.contains("still");
+    chapter.classList.toggle("is-joining", joining);
+    if (joining) {
+      // A short catalog can expose the following section before the shot has finished.
+      stage.style.setProperty("--wood-covered", Math.max(0, screen - chapterBounds.bottom) + "px");
+      const opacity = Math.max(0, Math.min(1, 1 - chapterBounds.bottom / (screen * .34)));
+      navigation?.style.setProperty("--wood-nav-opacity", opacity.toFixed(3));
+      navigation?.classList.toggle("wood-nav-visible", opacity > .5);
+    } else {
+      navigation?.style.removeProperty("--wood-nav-opacity");
+      navigation?.classList.remove("wood-nav-visible");
+    }
+  }
+
   function startFinale() {
     const run = { startY: window.scrollY, start: performance.now(), manual: false };
+    catalogOrigin = run.startY;
     finale = run;
     video.currentTime = finalCue;
     video.play().catch(() => {
@@ -91,8 +115,8 @@ export function initWoodTherapyScroll(chapter) {
       const target = Math.min(video.duration - 1 / 24, time);
       if (Math.abs(video.currentTime - target) > 1 / 24) video.currentTime = target;
     }
-    stage.classList.toggle("is-leaving", time >= 17.7);
-    const fraction = Math.max(0, Math.min(1, (time - 18.3) / 1.65));
+    stage.classList.toggle("is-leaving", time >= 17.5);
+    const fraction = Math.max(0, Math.min(1, (time - catalogStart) / (catalogEnd - catalogStart)));
     if (!fraction && !video.ended) { schedule(); return; }
     const goal = services.getBoundingClientRect().top + scrollY;
     const distance = goal - finale.startY;
@@ -114,21 +138,34 @@ export function initWoodTherapyScroll(chapter) {
     const forward = y > previousY;
     previousY = y;
     const bounds = chapter.getBoundingClientRect();
+    joinCatalog(bounds);
     const travel = Math.max(1, bounds.height - stage.offsetHeight);
     const progress = Math.min(1, Math.max(0, -bounds.top / travel));
-    const target = introEnd + progress * (scrubEnd - introEnd);
+    let target = introEnd + progress * (scrubEnd - introEnd);
     if (finale) {
       if (reverse || document.hidden || bounds.bottom < 0 ||
           document.querySelector("dialog[open], .svc-modal.is-open, .menu-open")) stopFinale();
       else { advanceFinale(); return; }
     }
-    if (target < finalCue - .1) released = false;
+    if (target < finalCue - .1) { released = false; catalogOrigin = null; }
     if (released && bounds.bottom <= 1) return;
     if (!released && forward && target >= finalCue && bounds.bottom > 1 &&
         !document.hidden && !document.querySelector("dialog[open], .svc-modal.is-open, .menu-open")) {
       startFinale();
       return;
     }
+    // Retrace the same eased reveal on the way back from the catalog.
+    if (chapter.classList.contains("is-joining") && (released || reverse) && target >= finalCue) {
+      const goal = y + bounds.bottom;
+      const origin = catalogOrigin ?? y + bounds.top + travel * (finalCue - introEnd) / (scrubEnd - introEnd);
+      if (y > origin && goal > origin) {
+        const fraction = Math.min(1, (y - origin) / (goal - origin));
+        const timeFraction = .5 - Math.sin(Math.asin(1 - 2 * fraction) / 3);
+        target = catalogStart + timeFraction * (catalogEnd - catalogStart);
+        released = true;
+      }
+    }
+    stage.classList.toggle("is-leaving", target >= 17.5);
     if (video.seeking) return;
     annotate(video.currentTime);
     if (!introFinished && bounds.top >= -1) {
@@ -163,7 +200,7 @@ export function initWoodTherapyScroll(chapter) {
     const axis = portrait.matches ? "v" : "h";
     const uhd = !navigator.connection?.saveData &&
       innerWidth * devicePixelRatio >= (portrait.matches ? 1440 : 2300);
-    const src = "/videos/madera-estudio-" + axis + (uhd ? "-uhd" : "") + ".mp4";
+    const src = "/videos/madera-contacto-" + axis + (uhd ? "-uhd" : "") + ".mp4";
     if (video.getAttribute("src") !== src) {
       stage.classList.remove("has-frame");
       stopFinale();
@@ -203,6 +240,9 @@ export function initWoodTherapyScroll(chapter) {
   portrait.addEventListener("change", selectVideo);
   reduced.addEventListener("change", () => {
     stopFinale();
+    chapter.classList.remove("is-joining");
+    navigation?.style.removeProperty("--wood-nav-opacity");
+    navigation?.classList.remove("wood-nav-visible");
     if (reduced.matches && video.hasAttribute("src")) {
       stage.classList.remove("has-frame");
       video.removeAttribute("src");
@@ -212,7 +252,13 @@ export function initWoodTherapyScroll(chapter) {
   const observer = new IntersectionObserver(([entry]) => {
     nearby = entry.isIntersecting;
     if (nearby) selectVideo();
-    else { stopFinale(); video.pause(); }
+    else {
+      stopFinale();
+      chapter.classList.remove("is-joining");
+      navigation?.style.removeProperty("--wood-nav-opacity");
+      navigation?.classList.remove("wood-nav-visible");
+      video.pause();
+    }
   }, { rootMargin: "250px 0px" });
   observer.observe(chapter);
   addEventListener("scroll", schedule, { passive: true });
