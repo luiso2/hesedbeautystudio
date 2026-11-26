@@ -1,8 +1,8 @@
 .wood-journey {
   position: relative;
   z-index: 101;
-  height: 445vh;
-  height: 445lvh;
+  height: 524vh;
+  height: 524lvh;
   scroll-margin-top: -104px;
 }
 .wood-journey figure {
@@ -71,17 +71,17 @@ body.menu-open .wood-journey { z-index: auto; }
   .wood-notes strong { font-size: 20px; }
   .wood-notes span { font-size: 13px; }
 }
-.wood-journey.still .wood-pointer, .wood-journey.still .wood-notes::before { display: none; }
+.wood-notes span[hidden], .wood-still-note,
+.wood-journey.still :is(video, .wood-pointer, .wood-notes, #wood-description) { display: none; }
 .wood-journey.still figure { position: relative; height: auto; }
 .wood-journey.still picture { position: relative; display: block; height: 74svh; }
-.wood-journey.still .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
-.wood-journey.still .wood-notes li { display: block; margin: 0 auto 20px; }
+.wood-still-note { margin: 0; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
+.wood-journey.still .wood-still-note { display: block; }
 @media (scripting: none) {
   .wood-journey figure { position: relative; height: auto; }
   .wood-journey picture { position: relative; display: block; height: 74svh; }
-  .wood-journey .wood-pointer, .wood-journey .wood-notes::before { display: none; }
-  .wood-journey .wood-notes { position: relative; inset: auto; padding: 24px var(--gutter); background: var(--paper); color: var(--ink); }
-  .wood-journey .wood-notes li { display: block; margin: 0 auto 20px; }
+  .wood-journey :is(.wood-pointer, .wood-notes, #wood-description) { display: none; }
+  .wood-journey .wood-still-note { display: block; }
 }
 
 .wood-journey .is-leaving :is(.wood-pointer, .wood-notes) { opacity: 0; }

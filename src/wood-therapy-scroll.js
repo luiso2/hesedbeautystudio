@@ -1,4 +1,4 @@
-import { anatomyCues } from './wood-anatomy-track.js';
+import { anatomyCues, filmTime, scrollPosition } from './wood-anatomy-track.js';
 
 export function initWoodTherapyScroll(chapter) {
   const video = chapter.querySelector("video");
@@ -23,6 +23,7 @@ export function initWoodTherapyScroll(chapter) {
   let startingIntro = false;
   const finalCue = anatomyCues[anatomyCues.length - 1].start;
   const scrubEnd = 17 - 1 / 24;
+  const scrubDistance = scrollPosition(scrubEnd) - scrollPosition(introEnd);
   const catalogStart = 16.9;
   const catalogEnd = 19.95;
   const services = document.querySelector("#servicios");
@@ -39,21 +40,25 @@ export function initWoodTherapyScroll(chapter) {
   const notes = [...chapter.querySelectorAll("[data-anatomy]")];
   const pointer = chapter.querySelector(".wood-pointer");
   const focus = pointer.querySelector(".wood-focus");
-  const ring = pointer.querySelector(".wood-focus-ring");
   const leader = pointer.querySelector(".wood-leader");
+  const fluidCaptions = [...chapter.querySelectorAll('[data-anatomy="fluid"] span')];
   let activeCue = -1;
 
   function annotate(time) {
     const next = anatomyCues.findIndex(cue => cue.start > time);
     const index = next === -1 ? anatomyCues.length - 1 : next - 1;
+    const cue = anatomyCues[index];
     if (index !== activeCue) {
       notes[activeCue]?.classList.remove("is-current");
       notes[index]?.classList.add("is-current");
-      pointer.classList.toggle("is-visible", index >= 0);
+      pointer.classList.toggle("is-visible", Boolean(cue?.points));
       activeCue = index;
     }
-    if (index < 0) return;
-    const cue = anatomyCues[index];
+    if (cue?.phases) {
+      const phase = cue.phases.filter(start => time >= start).length - 1;
+      fluidCaptions.forEach((caption, i) => { caption.hidden = i !== phase; });
+    }
+    if (!cue?.points) return;
     const sample = Math.min((time - cue.start) * 4, cue.points.length - 1);
     const first = Math.floor(sample);
     const a = cue.points[first], b = cue.points[Math.min(first + 1, cue.points.length - 1)];
@@ -70,9 +75,7 @@ export function initWoodTherapyScroll(chapter) {
     const endX = note.offsetLeft + notes[index].offsetLeft + 2;
     const endY = note.offsetTop + notes[index].offsetTop - 8;
     focus.setAttribute("transform", `translate(${x} ${y})`);
-    const fluid = notes[index].dataset.anatomy === "fluid";
-    const radius = fluid ? 15 - 9 * (sample / (cue.points.length - 1)) : 10;
-    ring.setAttribute("r", String(radius));
+    const radius = 11;
     leader.setAttribute("d", endY > y + radius + 12
       ? `M ${x} ${y + radius + 2} L ${x} ${y + radius + 10} L ${endX} ${endY}` : "");
   }
@@ -182,7 +185,7 @@ export function initWoodTherapyScroll(chapter) {
       // Scrub the entire film with native scrolling, including its intro and
       // the last stroke as the catalog covers the viewport.
       const covered = Math.min(1, Math.max(0, 1 - bounds.bottom / stage.offsetHeight));
-      const time = catalogStart * progress + (catalogEnd - catalogStart) * covered;
+      const time = filmTime(scrollPosition(catalogStart) * progress) + (catalogEnd - catalogStart) * covered;
       stage.classList.toggle("is-leaving", time >= 17.5);
       if (!video.seeking) {
         annotate(video.currentTime);
@@ -190,7 +193,7 @@ export function initWoodTherapyScroll(chapter) {
       }
       return;
     }
-    let target = introEnd + progress * (scrubEnd - introEnd);
+    let target = filmTime(scrollPosition(introEnd) + progress * scrubDistance);
     if (finale) {
       if (reverse || document.hidden || bounds.bottom < 0 ||
           document.querySelector("dialog[open], .svc-modal.is-open, .menu-open")) stopFinale();
@@ -211,7 +214,7 @@ export function initWoodTherapyScroll(chapter) {
     // Retrace the same eased reveal on the way back from the catalog.
     if (chapter.classList.contains("is-joining") && (released || reverse) && target >= finalCue) {
       const goal = y + bounds.bottom;
-      const origin = catalogOrigin ?? y + bounds.top + travel * (finalCue - introEnd) / (scrubEnd - introEnd);
+      const origin = catalogOrigin ?? y + bounds.top + travel * (scrollPosition(finalCue) - scrollPosition(introEnd)) / scrubDistance;
       if (y > origin && goal > origin) {
         const fraction = Math.min(1, (y - origin) / (goal - origin));
         const timeFraction = .5 - Math.sin(Math.asin(1 - 2 * fraction) / 3);
@@ -259,7 +262,7 @@ export function initWoodTherapyScroll(chapter) {
     const connection = navigator.connection;
     const constrained = connection?.saveData || ["slow-2g", "2g", "3g"].includes(connection?.effectiveType);
     const uhd = scale >= 1.3 && !constrained && !unsupportedUhd.has(axis);
-    const src = "/videos/madera-luz-" + axis + (uhd ? "-uhd" : "") + ".mp4";
+    const src = "/videos/madera-micro-" + axis + (uhd ? "-uhd" : "") + ".mp4";
     if (video.getAttribute("src") !== src) {
       stage.classList.remove("has-frame");
       stopFinale();
