@@ -32,7 +32,14 @@ const files = [
   "manifest.webmanifest",
 ];
 for (const file of files) await copyFile("client/" + file, dir + "/" + file);
-const brandFiles = ["maria-hesed-mark.webp", "studio-light.webp", "maria-hesed-icon.png", "marca.css"];
+await mkdir(dir + "/fonts", { recursive: true });
+const brandFiles = [
+  "maria-hesed-mark.webp", "studio-light.webp", "maria-hesed-icon.png", "marca.css",
+  "studio-fonts.css", "fonts/bodoni-moda-roman-latin.woff2", "fonts/jost-latin.woff2",
+];
+for (const license of ["bodonimoda-OFL.txt", "jost-OFL.txt"]) {
+  await copyFile("../public/fonts/" + license, dir + "/fonts/" + license);
+}
 for (const file of brandFiles) await copyFile("../public/" + file, dir + "/" + file);
 const html = (await readFile("client/index.html", "utf8")).replace("/waiver.js", "/" + script);
 const pages = ["index.html", "panel.html", "estudio.html", "app.html"];

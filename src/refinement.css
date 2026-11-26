@@ -8,7 +8,7 @@
 body { background: var(--paper); }
 .title-xl { font-size: clamp(40px, 4.05vw, 58px); line-height: 1.12; }
 .lead { font-size: 16px; line-height: 1.8; }
-.eyebrow { font-size: 10px; letter-spacing: .17em; }
+.eyebrow { font-size: 10px; letter-spacing: .22em; }
 .eyebrow .line, .hero__eyebrow .line { width: 26px; }
 .nav { height: 88px; background: #fffbf5f5; border-color: var(--line); box-shadow: none; transition: background .3s, box-shadow .3s; }
 .nav.is-scrolled { background: #fffbf5f5; box-shadow: 0 4px 24px #17130f08; }
@@ -43,7 +43,7 @@ body { background: var(--paper); }
 }
 .hero__content { grid-column: 1; grid-row: 1; text-align: left; max-width: 620px; margin: 0; padding: 20px 0; }
 .hero__eyebrow { justify-content: flex-start; margin-bottom: 26px; font-size: 10px; font-weight: 500; }
-.hero__title { font-size: clamp(76px, 7vw, 104px); line-height: 1.02; letter-spacing: -.035em; }
+.hero__title { font-size: clamp(76px, 7vw, 104px); line-height: 1.02; letter-spacing: .004em; }
 .hero__title em { color: #a98556; font-size: 1.04em; line-height: 1.04; }
 .hero__lead { max-width: 440px; margin: 26px 0 30px; font-size: 15px; line-height: 1.9; }
 .hero__actions { justify-content: flex-start; gap: 24px; }
